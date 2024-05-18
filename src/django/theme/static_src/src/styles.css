@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    @font-face {
+        font-family: 'Metropolis';
+        src: url(./font-face/Metropolis-Regular.otf) format('otf');
+    }
+    @font-face {
+        font-family: 'Metropolis';
+        font-weight: 800;
+        src: url(./font-face/Metropolis-Black.otf) format('otf');
+    }
+
+    h1, h2, h3 {
+        @apply font-sans font-semibold !important;
+    }
+
+    label {
+        @apply mb-4;
+    }
+
+    input[type='text'], input[type='password'] {
+        @apply border-b border-gray-300 bg-gray-900 rounded-full !important;
+    }
+
+    .main-action-button {
+        @apply p-2 mb-4 rounded-full bg-accent-500 hover:bg-accent-100 cursor-pointer font-extrabold;
+    }
+}
