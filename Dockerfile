@@ -1,6 +1,9 @@
 # Define the name of the image that will be using
 FROM python:3.9-alpine3.13
+
+
 LABEL maintainer="quien_mantiene_esto"
+
 
 # Esto para mostrar los outputs de python en la consola inmediatamente
 ENV PYTHONUNBUFFERED 1
@@ -24,6 +27,18 @@ EXPOSE 8000
 #( this will be overriden by docker-compose file's value of DEV arg)
 ARG DEV=false
 
+
+ENV NODE_PACKAGE_URL  https://unofficial-builds.nodejs.org/download/release/v22.2.0/node-v22.2.0-linux-x64-musl.tar.gz
+RUN apk add libstdc++
+
+RUN wget $NODE_PACKAGE_URL
+RUN mkdir -p /app/nodejs
+RUN tar -zxvf *.tar.gz --directory /app/nodejs --strip-components=1
+RUN rm *.tar.gz
+RUN ln -s /app/nodejs/bin/node /usr/local/bin/node
+RUN ln -s /app/nodejs/bin/npm /usr/local/bin/npm
+
+
 # RUN -> Comando para instalar las dependencias
 # Utliza todo concatenado para evitar crear muchas capas de imagenes
 # si se utilizara un RUN por cada comando
@@ -31,6 +46,8 @@ ARG DEV=false
 RUN python -m venv /py && \
     # instala pip en el venv
     /py/bin/pip install --upgrade pip && \
+    # Node.js
+    # apk add --update --no-cache nodejs npm &&\
     # add postgresdb adaptor
     apk add --update --no-cache postgresql-client &&\
     apk add --update --no-cache --virtual .tmp-build-deps\
@@ -52,14 +69,27 @@ RUN python -m venv /py && \
         --disabled-password \
         --no-create-home \
         #especifica el nombre del usuario
-        django-user
+        django-user\
+        && chown django-user:django-user -R /home
 
-RUN chown -R django-user ./src
-    
+# RUN apk add --update --no-cache ca-certificates curl gnupg \
+# && mkdir -p /etc/apk/keys \
+# && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apk/keys/nodesource.gpg \
+# && echo "@nodesource https://deb.nodesource.com/node_$NODE_MAJOR.x" >> /etc/apk/repositories \
+# && apk add --update --no-cache nodejs@nodesource \
+# && rm -rf /var/cache/apk/*
+
+
 # actualiza la variable de ambiente dentro de la imagen
 # el atributo path, para no evitar correr /py/bin cada vez que corremos un comando
 # aca le agregamos el system path
 ENV PATH="/py/bin:$PATH"
 
 # cambiamos el usuario que se utilizara en adelante (para evitar usar el root-user)
-USER django-user
+# USER django-user
+
+# RUN  python manage.py tailwind install --no-input && \
+#     python manage.py tailwind build --no-input && \
+#     python manage.py collectstatic --no-input
+
+CMD ["python", "manage.py", "runserver"]
