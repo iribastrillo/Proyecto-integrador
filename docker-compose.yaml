@@ -1,35 +1,44 @@
-# version of the docker compose sintax
 version: '3.9'
+
+
+x-app: &default-app
+  build:
+    context: .
+    args:
+      - DEV=true
+  volumes:
+    - ./src:/src
 
 services:
   app:
-    build:
-      #build the docker file inside our current directory we are running docker-compose
-      context: .
-      # if we are running this docker-compose set build argument Dev=true
-      args:
-        - DEV=true
-    #port 8000 on local to port 8000 in container
+    <<: *default-app
+    # build:
+    #   context: .
+    #   args:
+    #     - DEV=true
     ports:
       - "8000:8000"
-    # mapping our system to docker container, to reflect local changes in project to running container (avoiding rebuilding the container)
-    volumes:
-      - ./src:/src
+    # volumes:
+    #   - ./src:/src
     command: >
       sh -c "python src/django/manage.py  migrate &&
              python src/django/manage.py runserver 0.0.0.0:8000"
-    #2 Add environment variables to app service
     environment:
       - DB_HOST=db
       - DB_NAME=devdb
       - DB_USER=devuser
       - DB_PASS=changeme
-    #3 tell docker compose that app service depends on db to start
     depends_on:
       db:
         condition: service_healthy
 
-  #1 add db config and dev credentials only for local development db
+  tailwind:
+    <<: *default-app
+    command: >
+      sh -c "python src/django/manage.py tailwind start"
+
+    tty: true
+
   db:
     image: postgres:13-alpine
     volumes:
@@ -40,7 +49,6 @@ services:
       - POSTGRES_PASSWORD=changeme
     healthcheck:
       test: ["CMD", "pg_isready", "-q", "-d", "devdb", "-U", "devuser"]
-
 
 volumes:
   dev-db-data:
