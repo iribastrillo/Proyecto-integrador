@@ -1,0 +1,21 @@
+<h1>Listado de Profesores</h1>
+
+<ul>
+    {% comment %} {%for teacher in object_list%}   {% endcomment %}
+    {% comment %} check lecture 98 list view, discuss when working with a web dev how to rename object_list {% endcomment %}
+    {%for profesor in lista_profesores%}
+
+    <li>
+        <a href="/domain/profesor_detail/{{profesor.id}}">{{profesor.nombre}} {{profesor.apellido}}</a>
+        <ul>
+            <li>
+                <a href="/domain/update_profesor/{{profesor.id}}">Editar</a>
+            </li>
+            <li>
+                <a href="/domain/delete_profesor/{{profesor.id}}">Eliminar</a>
+            </li>
+        </ul>
+    </li>
+
+   {% endfor %}
+</ul>

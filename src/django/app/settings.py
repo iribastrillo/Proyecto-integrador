@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     "profiles",
     "tailwind",
     "theme",
-    "utils"
+    "utils",
+    "domain",
 ]
 
 MIDDLEWARE = [
@@ -97,6 +98,7 @@ else:
         }
     }
     
+
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
@@ -145,4 +147,6 @@ STATICFILES_DIRS = (
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-NPM_BIN_PATH = "/usr/local/bin/npm"
+
+NPM_BIN_PATH = which("npm")
+

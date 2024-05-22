@@ -32,12 +32,12 @@ services:
       db:
         condition: service_healthy
 
-  tailwind:
-    <<: *default-app
-    command: >
-      sh -c "python src/django/manage.py tailwind start"
+  # tailwind:
+  #   <<: *default-app
+  #   command: >
+  #     sh -c "python src/django/manage.py tailwind start"
 
-    tty: true
+  #   tty: true
 
   db:
     image: postgres:13-alpine
