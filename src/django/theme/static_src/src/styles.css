@@ -5,12 +5,12 @@
 @layer base {
     @font-face {
         font-family: 'Metropolis';
-        src: url(./font-face/Metropolis-Regular.otf) format('otf');
+        src: url(../../static_src/src/font-face/Metropolis-Black.woff2) format('woff2');
     }
     @font-face {
         font-family: 'Metropolis';
         font-weight: 800;
-        src: url(./font-face/Metropolis-Black.otf) format('otf');
+        src: url(../../static_src/src/font-face/Metropolis-Black.woff2) format('woff2');
     }
 
     h1, h2, h3 {
@@ -22,10 +22,10 @@
     }
 
     input[type='text'], input[type='password'] {
-        @apply border-b border-gray-300 bg-gray-900 rounded-full !important;
+        @apply border-b border-gray-300 bg-gray-900 rounded !important;
     }
 
     .main-action-button {
-        @apply p-2 mb-4 rounded-full bg-accent-500 hover:bg-accent-100 cursor-pointer font-extrabold;
+        @apply p-2 mb-4 rounded bg-accent-500 hover:bg-accent-100 cursor-pointer font-extrabold;
     }
 }
