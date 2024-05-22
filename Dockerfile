@@ -1,5 +1,5 @@
      # Define the name of the image that will be using
-     FROM python:3.9-alpine3.13
+     FROM nikolaik/python-nodejs:python3.9-nodejs22-alpine
 
      LABEL maintainer="quien_mantiene_esto"
 
@@ -27,18 +27,16 @@
 
 
     # install nodejs usin unofficial builds
-    ENV NODE_PACKAGE_URL  https://unofficial-builds.nodejs.org/download/release/v22.2.0/node-v22.2.0-linux-x64-musl.tar.gz
+    # ENV NODE_PACKAGE_URL  https://unofficial-builds.nodejs.org/download/release/v22.2.0/node-v22.2.0-linux-x64-musl.tar.gz
     # RUN
 
-    RUN apk add libstdc++ &&\
-    wget $NODE_PACKAGE_URL &&\
-      mkdir -p /app/nodejs &&\
-      tar -zxvf *.tar.gz --directory /app/nodejs --strip-components=1 &&\
-       rm *.tar.gz &&\
-      ln -s /app/nodejs/bin/node /usr/local/bin/node &&\
-      ln -s /app/nodejs/bin/npm /usr/local/bin/npm &&\
-      node -v && npm -v
-
+    # RUN apk add libstdc++ &&\
+    # wget $NODE_PACKAGE_URL &&\
+    #   mkdir -p /app/nodejs &&\
+    #   tar -zxvf *.tar.gz --directory /app/nodejs --strip-components=1 &&\
+    #    rm *.tar.gz &&\
+    #   ln -s /app/nodejs/bin/node /usr/local/bin/node &&\
+    #   ln -s /app/nodejs/bin/npm /usr/local/bin/npm &&\
 
     # RUN mkdir -p static/css && cd static/css && npm init -y && \
     #       npm install tailwindcss postcss-cli autoprefixer &&\

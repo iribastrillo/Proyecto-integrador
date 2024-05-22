@@ -5,12 +5,12 @@
 @layer base {
     @font-face {
         font-family: 'Metropolis';
-        src: url(../../../static/fonts/Metropolis-Regular.otf) format('otf');
+        src: url(../../static_src/src/font-face/Metropolis-Black.woff2) format('woff2');
     }
     @font-face {
         font-family: 'Metropolis';
         font-weight: 800;
-        src: url(../../../static/fonts/Metropolis-Black.otf) format('otf');
+        src: url(../../static_src/src/font-face/Metropolis-Black.woff2) format('woff2');
     }
 
     h1, h2, h3 {
