@@ -30,7 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+DEV = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -94,6 +94,24 @@ DATABASES = {
     }
 }
 
+if not DEV:
+    DATABASES = {
+     'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.environ.get('DB_HOST'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASS'),
+        }
+    }
+else:
+    DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+    
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
@@ -144,8 +162,4 @@ STATICFILES_DIRS = (
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# NPM_BIN_PATH = which("npm")
-NPM_BIN_PATH = r"/app/nodejs/bin/npm"
-
-# NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+NPM_BIN_PATH = "/usr/local/bin/npm"
