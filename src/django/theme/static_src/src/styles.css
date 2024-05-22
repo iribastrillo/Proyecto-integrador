@@ -22,10 +22,10 @@
     }
 
     input[type='text'], input[type='password'] {
-        @apply border-b border-gray-300 bg-gray-900 rounded-full !important;
+        @apply border-b border-gray-300 bg-gray-900 rounded !important;
     }
 
     .main-action-button {
-        @apply p-2 mb-4 rounded-full bg-accent-500 hover:bg-accent-100 cursor-pointer font-extrabold;
+        @apply p-2 mb-4 rounded bg-accent-500 hover:bg-accent-100 cursor-pointer font-extrabold;
     }
 }

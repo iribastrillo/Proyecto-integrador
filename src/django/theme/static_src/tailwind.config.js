@@ -50,6 +50,9 @@ module.exports = {
                 accent: {
                     500: '#BF7a31',
                     100: '#D1904B'
+                },
+                light: {
+                    100: '#D8C1B5'
                 }
             }
         },
