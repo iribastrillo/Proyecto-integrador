@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+<div class="card-title mb-4">
+    <h1 class="text-3xl">Formulario profesor</h1>
+</div>
+
+{% block content %}
+  <section class="bg-gray-950 p-8 lg:rounded mx-auto pt-32 shadow-md lg:pt-8 w-full lg:w-auto">
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Submit" />
+    </form>
+  </section>
+{% endblock %}
+

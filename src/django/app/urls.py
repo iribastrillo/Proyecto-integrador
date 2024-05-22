@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.urls import path
+from django.urls import path,include
 
 from . import views
 
@@ -27,5 +27,6 @@ urlpatterns = [
         "accounts/login/",
         auth_views.LoginView.as_view(next_page="home"),
         name="login"
-    ),
+    ), path(
+        "domain/",include('domain.urls')),
 ]
