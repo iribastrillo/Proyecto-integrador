@@ -28,4 +28,9 @@ urlpatterns = [
         auth_views.LoginView.as_view(next_page="home"),
         name="login"
     ),
+    path(
+        "accounts/logout/",
+        auth_views.LogoutView.as_view(next_page="login"),
+        name="logout"
+    ),
 ]
