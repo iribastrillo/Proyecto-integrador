@@ -11,11 +11,15 @@
 	</head>
 	<body class="bg-gray-800 text-gray-50">
 
-		{% block navbar %} {% endblock %}
-
 		<main class="flex">
-			{% block content %} {% endblock %}
+			<div class="wrapper">
+				{% block sidebar %} {% endblock %}
+			</div>
+			<div class="flex flex-col w-full">
+				{% block navbar %} {% endblock %}
+				{% block content %} {% endblock %}
+			</div>
 		</main>
-		
+
 	</body>
 </html>
