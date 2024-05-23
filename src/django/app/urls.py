@@ -25,7 +25,7 @@ urlpatterns = [
     path("", views.home, name="home"),
     path(
         "accounts/login/",
-        auth_views.LoginView.as_view(next_page="home"),
+        auth_views.LoginView.as_view(redirect_authenticated_user=True, next_page="home"),
         name="login"
 
     ), path(
