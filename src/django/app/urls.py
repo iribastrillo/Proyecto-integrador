@@ -30,8 +30,6 @@ urlpatterns = [
 
     ), path(
         "domain/",include('domain.urls')),
-
-    ),
     path(
         "accounts/logout/",
         auth_views.LogoutView.as_view(next_page="login"),
