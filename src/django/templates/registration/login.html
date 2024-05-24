@@ -4,22 +4,22 @@
 {% block navbar%}
 
 <nav
-	class="relative lg:flex hidden w-full h-16 flex-wrap items-center justify-between bg-zinc-50 py-4 px-4 shadow-md dark:bg-gray-950 lg:py-4 mb-8">
+	class="relative lg:flex hidden w-full h-16 flex-wrap items-center justify-between  py-4 px-4 shadow-md bg-gray-950 lg:py-4 mb-8">
 </nav>
 
 {% endblock%}
 
 {% block content %}
 
-<section class="bg-gray-950 p-8 lg:rounded mx-auto pt-32 shadow-md lg:pt-8 w-full lg:w-auto"> 
-    
+<section class="bg-gray-950 p-8 lg:rounded mx-auto pt-32 shadow-md lg:pt-8 w-full lg:w-auto">
+
     <img class="h-24 mb-8" src="{% static 'app/conservatorio-rodo-logo-beige-512px.png' %}" alt="">
 
     <div class="card-title mb-4">
         <h1 class="text-3xl">Iniciá sesión</h1>
     </div>
 
-    
+
     <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
         <div class="flex flex-col mb-4">
@@ -31,15 +31,15 @@
             {{ form.password }}
         </div>
         <div class="flex flex-col card-actions">
-            <input class="main-action-button" type="submit" value="INGRESAR">
+            <input class="main-action-button" type="submit" value="Ingresar">
             <input type="hidden" name="next" value="{{ next }}">
-            <input class="p-2 rounded bg-gray-800 outline-gray-300 cursor-pointer font-extrabold mb-8" type="submit" value="QUIERO ESTUDIAR ACÁ">
+            <input class="p-2 rounded bg-gray-800 outline-gray-300 cursor-pointer font-extrabold mb-8" type="button" value="Quiero estudiar acá">
         </div>
         <div class='text-center'>
             <a class='uppercase underline text-blue-400 text-xs'>¿Olvidaste la contraseña?</a>
         </div>
     </form>
-        
+
     </section>
 
 {% endblock %}
