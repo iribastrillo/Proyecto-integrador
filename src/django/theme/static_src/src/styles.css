@@ -28,4 +28,8 @@
     .main-action-button {
         @apply p-2 mb-4 rounded bg-accent-500 hover:bg-accent-100 cursor-pointer font-extrabold;
     }
+
+    small {
+        font-size: x-small;
+    }
 }
