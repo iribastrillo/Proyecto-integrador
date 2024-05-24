@@ -9,3 +9,8 @@ Repositorio del código para el proyecto final de la carrera Analista en Tecnolo
 3. Tailwind CSS.
 4. NodeJS.
 
+## Instalación
+
+Para la instalación local de la aplicación es necesario iniciar un entorno virtual e instalar las dependencias. Requiere NodeJS para usar en conjunto con TailwindCSS.
+
+`pip install -r requirements.txt`
