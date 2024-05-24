@@ -29,3 +29,8 @@ class LoginTests(TestCase):
         self.assertFalse (loggedin)
         self.assertEquals (response.status_code, 302)
         
+class TestHome(TestCase):
+        
+    def test_unauthenticated_user_cant_reach_home (self) -> None:
+        response = self.client.get (reverse('home'))
+        self.assertEquals (response.status_code, 302)
