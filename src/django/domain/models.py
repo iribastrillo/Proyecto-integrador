@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 import datetime
 
 class Persona(models.Model):
@@ -33,6 +34,9 @@ class Curso(models.Model):
     activo=models.BooleanField(default=True)
     def __str__(self):
         return self.nombre
+    def get_absolute_url(self):
+        return reverse("home")
+    
 
 class Previas(models.Model):
     curso=models.ForeignKey(Curso, on_delete=models.CASCADE, related_name='curso')
