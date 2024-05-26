@@ -12,12 +12,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 class ProfesorCreateView(LoginRequiredMixin,CreateView):
     model=Profesor
-    fields = ['nombre', 'apellido', 'dni', 'fecha_nacimiento', 'direccion', 'telefono','email']
-    success_url=reverse_lazy('profesores:list-professors')
+    fields = ['nombre', 'apellido', 'dni', 'fecha_nacimiento', 'direccion', 'telefono','email','cursos']
+    success_url=reverse_lazy('profesores:home-professor')
 
 class ProfesorListView(LoginRequiredMixin,ListView):
     model=Profesor
-    template_name = 'profesores/listar_profesores.html'
+    # template_name = 'profesores/listar_profesores.html'
+    context_object_name='lista_profesores'
 
 class ProfesorDetailView(LoginRequiredMixin,DetailView):
     model=Profesor

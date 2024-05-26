@@ -1,21 +1,38 @@
-<h1>Listado de Profesores</h1>
+{% extends 'base.html' %}
 
-<ul>
-    {% comment %} {%for teacher in object_list%}   {% endcomment %}
-    {% comment %} check lecture 98 list view, discuss when working with a web dev how to rename object_list {% endcomment %}
-    {%for profesor in lista_profesores%}
+{% block navbar %}
+  {% include 'base/components/navbar.html' %}
+{% endblock %}
 
-    <li>
-        <a href="/domain/profesor_detail/{{profesor.id}}">{{profesor.nombre}} {{profesor.apellido}}</a>
-        <ul>
+{% block sidebar %}
+  {% include 'base/components/sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+  <div class="bg-gray-950 p-8 lg:rounded mx-auto pt-32 shadow-md lg:pt-8 w-full lg:w-auto">
+    {% comment %} <div class="bg-gray-100 py-2 px-4">
+      <h2 class="text-xl font-semibold text-gray-800">Profesores</h2>
+    </div> {% endcomment %}
+
+    <ul >
+      {% for profesor in lista_profesores %}
+        <li class="flex items-center py-4 px-6">
+          <span class="text-gray-700 text-lg font-medium mr-4">1.</span>
+          {% comment %} <img class="w-12 h-12 rounded-full object-cover mr-4" src="https://randomuser.me/api/portraits/women/72.jpg" alt="User avatar" /> {% endcomment %}
+          <div class="flex-1">
+            <h3 class="text-lg font-medium text-gray-800">{{ profesor.nombre }}</h3>
+            <p class="text-gray-600 text-base">{{ profesor.apellido }}</p>
+            <a href="/profesores/detalle-profesor/{{ profesor.id }}">Detalles</a>
+
             <li>
-                <a href="/domain/update_profesor/{{profesor.id}}">Editar</a>
+              <a href="/profesores/editar-profesor/{{ profesor.id }}">Editar</a>
             </li>
             <li>
-                <a href="/domain/delete_profesor/{{profesor.id}}">Eliminar</a>
+              <a href="/profesores/eliminar-profesor/{{ profesor.id }}">Eliminar</a>
             </li>
-        </ul>
-    </li>
-
-   {% endfor %}
-</ul>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

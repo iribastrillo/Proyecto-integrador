@@ -1,15 +1,16 @@
 from django.db import models
 from django.urls import reverse
 import datetime
+from utils.validators import EmailValidator  # adjust the import statement based on your project structure
 
 class Persona(models.Model):
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     dni = models.CharField(max_length=8)
-    fecha_nacimiento = models.DateField()
+    fecha_nacimiento = models.DateField(null=True, blank=True)
     direccion = models.CharField(max_length=100)
     telefono = models.CharField(max_length=20)
-    email = models.EmailField()
+    email = models.EmailField(validators=[EmailValidator()])
     fecha_baja = models.DateField(null=True, blank=True)
     fecha_alta = models.DateField(auto_now_add=True)
     activo=models.BooleanField(default=True)
@@ -36,7 +37,7 @@ class Curso(models.Model):
         return self.nombre
     def get_absolute_url(self):
         return reverse("home")
-    
+
 
 class Previas(models.Model):
     curso=models.ForeignKey(Curso, on_delete=models.CASCADE, related_name='curso')
