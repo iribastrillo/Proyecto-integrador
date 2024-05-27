@@ -15,6 +15,7 @@ WEEKDAYS=[('Lunes', 'Lunes'),
 
 
 class Curso(models.Model):
+    
     nombre = models.CharField(max_length=50)
     descripcion = models.TextField()
     duracion_meses = models.IntegerField()

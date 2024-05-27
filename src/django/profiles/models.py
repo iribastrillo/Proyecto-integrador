@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
+
 from utils.validators import EmailValidator
 
 
-# Create your models here.
 class Persona(models.Model):
+    user = models.ForeignKey (User, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     dni = models.CharField(max_length=8)
@@ -29,4 +30,10 @@ class Alumno(Persona):
 class Profesor(Persona):
     cursos = models.ManyToManyField('domain.Curso')
     def __str__(self):
-        return 'Profesor: '+self.nombre + ' ' + self.apellido
+        return 'Profesor: '+self.nombre + ' ' + self.apellido 
+
+    def save(self, *args, **kwargs):
+        user = User.objects.create_user(username=self.apellido, password=self.dni)
+        user.save()
+        self.user = user
+        super().save(*args, **kwargs)

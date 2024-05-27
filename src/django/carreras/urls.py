@@ -14,4 +14,5 @@ urlpatterns = [
     path('cursos/<pk>/detalle', views.DetailCourse.as_view(), name='detail-course'),
     path('cursos/<pk>/editar', views.UpdateCourse.as_view(), name='update-course'),
     path('cursos/<pk>/eliminar', views.DeleteCourse.as_view(), name='delete-course'),
+
 ]
