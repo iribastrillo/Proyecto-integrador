@@ -36,8 +36,8 @@ class Curso(models.Model):
     def __str__(self):
         return self.nombre
     def get_absolute_url(self):
-        return reverse("home")
-
+        return reverse("courses")
+    
 
 class Previas(models.Model):
     curso=models.ForeignKey(Curso, on_delete=models.CASCADE, related_name='curso')
