@@ -1,11 +1,10 @@
-from django.shortcuts import render
 from domain.models import (Profesor)
 from django.views.generic import (CreateView,
                                   ListView,
                                   DetailView,
                                   UpdateView,
                                   DeleteView)
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
