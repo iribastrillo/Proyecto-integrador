@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+  {% include 'base/components/navbar.html' %}
+{% endblock %}
+
+{% block sidebar %}
+  {% include 'base/components/sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+{%if lista_profesores %}
+<div
+  class="flex flex-col bg-gray-950 p-2 lg:rounded mx-auto "
+>
+  <ul>
+    {% for profesor in lista_profesores %}
+
+    <li class="flex list-none py-4 px-6 border-b-blue-100 ">
+      <div class="flex items-center p-2">
+        <img
+          src="{{ profesor.foto.url }}"
+          alt="profesor"
+          class="w-12 h-12 rounded-full "
+        />
+        <div class="ml-4 p-2">
+          <h2 class="text-lg font-semibold text-yellow-400">
+            {{ profesor.nombre }}
+          </h2>
+          <span class="text-sm text-gray-400">{{ profesor.email }}</span>
+        </div>
+      </div>
+      <div class="ml-auto p-2">
+        <a
+        href="/profesores/detalle-profesor/{{ profesor.id }}"
+          class="text-accent-500 hover:text-accent-100"
+          >Ver</a
+        >
+      </div>
+      <div class="ml-auto p-2">
+        <a href="/profesores/editar-profesor/{{ profesor.id }}">Editar</a>
+
+      </div>
+    </li>
+  </ul>
+  {% endfor %}
+</div>
+{%else%}
+<div
+  class="container bg-gray-950 p-8 lg:rounded mx-auto pt-32 shadow-md lg:pt-8 max-w-lg lg:w-auto"
+>
+  <h2 class="text-xl font-semibold text-yellow-400 mx-auto">
+    No hay profesores
+  </h2>
+</div>
+{%endif%} {% endblock %}

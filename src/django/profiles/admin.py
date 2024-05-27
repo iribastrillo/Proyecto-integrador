@@ -1,9 +1,7 @@
 from django.contrib import admin
 
-from .models import PrincipalProfile
+from .models import Alumno, Profesor
 
 
-class PrincipalAdmin (admin.ModelAdmin):
-    pass
-
-admin.site.register (PrincipalProfile, PrincipalAdmin)
+admin.site.register(Alumno)
+admin.site.register(Profesor)

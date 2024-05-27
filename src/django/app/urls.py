@@ -26,11 +26,14 @@ urlpatterns = [
     path(
         "accounts/login/",
         auth_views.LoginView.as_view(redirect_authenticated_user=True, next_page="home"),
-        name="login"), 
+        name="login"),
     path(
         "domain/",include('domain.urls')),
     path(
         "carreras/",include('carreras.urls')),
+    path(
+        "profesores/",include('profesores.urls')),
+
     path(
         "accounts/logout/",
         auth_views.LogoutView.as_view(next_page="login"),

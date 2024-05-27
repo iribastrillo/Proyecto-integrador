@@ -24,15 +24,36 @@
         </a>
       </li>
       <li class='mb-4 max-h-10'>
-        <a href="#"
+        <a href="{% url 'courses' %}"
+          class="text-[15px] block hover:bg-gray-800 hover:text-white px-8 py-2.5 transition-all rounded">
+          Lista de cursos
+        </a>
+      </li>
+      <li class='mb-4 max-h-10'>
+        <a href="{% url 'create-career' %}"
           class="text-[15px] block hover:bg-gray-800 hover:text-white px-8 py-2.5 transition-all rounded">
           Alta de carrera
         </a>
       </li>
       <li class='mb-4 max-h-10'>
-        <a href="#"
+        <a href="{% url 'careers' %}"
+          class="text-[15px] block hover:bg-gray-800 hover:text-white px-8 py-2.5 transition-all rounded">
+          Lista de carreras
+        </a>
+      </li>
+      <li class='mb-4 max-h-10'>
+        <a href="{% url 'profesores:create-professor' %}"
           class="text-[15px] block hover:bg-gray-800 hover:text-white px-8 py-2.5 transition-all rounded">
           Alta de profesor
+        </a>
+      </li>
+      <li class='mb-2 border-b border-gray-800 p-2'>
+        <small>LISTADOS</small>
+      </li>
+      <li class='mb-4 max-h-10'>
+        <a href="{% url 'profesores:list-professors' %}"
+          class="text-[15px] block hover:bg-gray-800 hover:text-white px-8 py-2.5 transition-all rounded">
+          Profesores
         </a>
       </li>
     </ul>

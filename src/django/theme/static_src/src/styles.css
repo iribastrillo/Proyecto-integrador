@@ -22,7 +22,7 @@
     }
 
     input[type='text'], input[type='password'], input[type='number'], textarea {
-        @apply border-b border-gray-300 bg-gray-900 rounded !important;
+        @apply border-b border-gray-300 bg-inherit rounded !important;
     }
 
     .main-action-button {
