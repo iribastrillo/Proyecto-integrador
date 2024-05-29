@@ -10,12 +10,10 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 		{% tailwind_css %}
 	</head>
-	<body class="bg-gray-950 text-gray-50">
+	<body class="bg-gray-950 text-gray-100">
 
-		<main class="flex">
-			<div class="flex flex-col w-full">
-                <section class="bg-gray-950 p-8 lg:rounded mx-auto pt-32 shadow-md lg:pt-8 w-full lg:w-auto">
-
+		<main class="flex flex-col p-4 lg:p-8">
+                <section class="p-4 lg:p-8 mx-auto mb-16 py-8 shadow-md lg:pt-8 w-full lg:w-auto border border-gray-700 rounded bg-gray-900">
                     <img class="h-24 mb-8" src="{% static 'app/conservatorio-rodo-logo-beige-512px.png' %}" alt="">
                 
                     <div class="card-title mb-4">
@@ -42,11 +40,9 @@
                             <a class='uppercase underline text-blue-400 text-xs'>¿Olvidaste la contraseña?</a>
                         </div>
                     </form>
-                
-                    </section>
-				    </div>
-				</div>
-			</div>
+                 
+                </section>
+                {% include 'base/components/footer.html' %}
 		</main>
 
 	</body>
