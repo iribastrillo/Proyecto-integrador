@@ -26,7 +26,7 @@ class UpdateCourse(LoginRequiredMixin, UpdateView):
     
 class CreateCareer (LoginRequiredMixin, CreateView):
     model = Carrera
-    fields = ['nombre', 'descripcion', 'duracion_meses', 'costo', 'fecha_baja', 'fecha_alta', 'cursos']
+    fields = ['nombre', 'descripcion', 'duracion_meses', 'fecha_baja', 'fecha_alta', 'cursos']
     
 class ListCareer (LoginRequiredMixin, ListView):
     model = Carrera

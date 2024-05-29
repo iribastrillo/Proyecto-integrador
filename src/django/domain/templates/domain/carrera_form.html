@@ -2,68 +2,51 @@
 
 {% block navbar %}
 
-{% include 'base/components/navbar.html' %}
+{% include "base/components/navbar.html" %}
 
 {% endblock %}
 
 {% block sidebar %}
-
-{% include 'base/components/sidebar.html' %}
+ 
+{% include "base/components/sidebar.html" %}
 
 {% endblock %}
 
 {% block content %}
 
-<section class="lg:rounded w-full lg:w-auto grid grid-cols-4 gap-4 px-8">
-    <div class='col-span-3'>
-        <form method="post">{% csrf_token %}
-            <div class='flex flex-col gap-4'>
-                <div class="flex flex-col rounded bg-gray-300 p-4 text-gray-900">
-                    <div class='flex flex-col'>
-                        {{ form.nombre.label_tag }}
-                        {{ form.nombre }}
-                    </div>
-                    <div class="flex flex-col mb-4">
-                        {{ form.descripcion.label_tag }}
-                        {{ form.descripcion }}
-                    </div>
-                </div>
-                <div>
-                    <div class="flex flex-col mb-4">
-                        {{ form.duracion_meses.label_tag }}
-                        {{ form.duracion_meses }}
-                    </div>
-                </div>
-                <div>
-                    <div class="flex flex-col mb-4">
-                        {{ form.costo.label_tag }}
-                        {{ form.costo }}
-                    </div>
-                    <div class="flex flex-col mb-4">
-                        {{ form.fecha_alta.label_tag }}
-                        {{ form.fecha_alta }}
-                    </div>
-                    <div class="flex flex-col mb-4">
-                        {{ form.fecha_baja.label_tag }}
-                        {{ form.fecha_baja }}
-                    </div>
-                    <div class="flex flex-col mb-4">
-                        {{ form.cursos.label_tag }}
-                        {{ form.cursos }}
-                    </div>
-                </div>
-            </div>
-            <input class='main-action-button' type="submit" value="Ingresar">
-        </form>
-    </div>
-    <div class='flex flex-col gap-4'>
-        <div class='bg-gray-300 rounded h-32 p-4'>
-            <h1>Factos</h1>
+<div class='col-span-2 bg-gray-900 border border-gray-700 rounded p-4'>
+    <form class="max-w-md mx-auto">
+        <div class="relative z-0 w-full mb-5 group">
+            {{form.nombre.label_tag}}
+            {{form.nombre}}
         </div>
-        <div class='bg-accent-100 rounded h-auto p-4'>
-            <h1>Datos</h1>
+        <div class="relative z-0 w-full mb-5 group">
+            {{form.descripcion.label_tag}}
+            {{form.descripcion}}
         </div>
-    </div>
-</section>
+        <div class="relative z-0 w-full mb-5 group">
+            {{form.duracion_meses.label_tag}}
+            {{form.duracion_meses}}
+        </div>
+        <div class="relative z-0 w-full mb-5 group">
+            {{form.fecha_baja.label_tag}}
+            {{form.fecha_baja}}
+        </div>
+        <div class="relative z-0 w-full mb-5 group">
+            {{form.fecha_alta.label_tag}}
+            {{form.fecha_alta}}
+        </div>
+        <div class="relative z-0 w-full mb-5 group">
+            {{form.cursos.label_tag}}
+            {{form.cursos}}
+        </div>
+        <button type="submit" class="text-white bg-accent-500 hover:bg-accent-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+    </form>  
+</div>
+<div class='bg-gray-900 border border-gray-700 rounded p-4'>
+    <h6>
+        Datos
+    </h6>
+</div>
 
 {% endblock %}

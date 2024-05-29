@@ -6,7 +6,6 @@ from .views import (
                ProfesorUpdateView,
                ProfesorDeleteView,
                 )
-app_name = 'profesores'  # Define the namespace
 
 urlpatterns = [
     path('', ProfesorListView.as_view(), name='home-professor'),

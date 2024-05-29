@@ -15,12 +15,11 @@ WEEKDAYS=[('Lunes', 'Lunes'),
 
 
 class Curso(models.Model):
-    
     nombre = models.CharField(max_length=50)
     descripcion = models.TextField()
     duracion_meses = models.IntegerField()
     fecha_inicio = models.DateField()
-    fecha_fin = models.DateField()
+    fecha_fin = models.DateField(null=True, blank=True)
     fecha_baja = models.DateField(null=True, blank=True)
     fecha_alta = models.DateField(auto_now_add=True)
     costo = models.DecimalField(max_digits=10, decimal_places=2)
@@ -43,7 +42,6 @@ class Carrera(models.Model):
     duracion_meses = models.IntegerField()
     fecha_baja = models.DateField()
     fecha_alta = models.DateField()
-    costo = models.DecimalField(max_digits=10, decimal_places=2)
     imagen = models.ImageField(upload_to='carreras', null=True, blank=True)
     cursos = models.ManyToManyField(Curso)
     activo=models.BooleanField(default=True)
@@ -85,7 +83,6 @@ class BloqueDeClase(models.Model):
     cupo=models.IntegerField() # Este cupo no debe ser mayor a la cantidad de personas que acepte el salon
     profesores=models.ManyToManyField(Profesor) #validar que el profesor este asignado al curso
     dia=models.CharField(max_length=500, choices=WEEKDAYS)
-    duracion=models.IntegerField()
     hora_inicio=models.TimeField()
     hora_fin=models.TimeField()
     salon=models.ForeignKey(Salon, on_delete=models.CASCADE)
