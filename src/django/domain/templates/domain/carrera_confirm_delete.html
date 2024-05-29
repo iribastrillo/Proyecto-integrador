@@ -1,0 +1,7 @@
+<h1>Estas seguro de eliminar esta carrera? </h1>
+<h2>{{carrera}}</h2>
+
+<form method="Post">
+    {% csrf_token %}
+    <input type="submit" value="Eliminar">
+</form>
