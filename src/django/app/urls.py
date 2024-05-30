@@ -41,4 +41,6 @@ urlpatterns = [
         auth_views.LogoutView.as_view(next_page="login"),
         name="logout"
     ),
+    path(
+        "estudiantes/", include('estudiantes.urls')),
 ]

@@ -25,60 +25,61 @@
         Home
       </a>
     </li>
+    <li class="inline-flex items-center">
+        <a href="{% url 'estudiantes:students' %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-accent-500 dark:text-gray-400 dark:hover:text-white">
+            <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+              </svg>
+              Estudiantes
+        </a>
+      </li>
     <li aria-current="page">
       <div class="flex items-center">
         <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
         </svg>
-        <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Carreras</span>
+        <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">{{student.apellido}}, {{student.nombre}}.</span>
       </div>
     </li>
   </ol>
 </nav>
 
-<section class='col-span-3 md:col-span-2 lg:col-span-2'>
-
-    <div class="w-full max-w-md p-4 bg-gray-900 border border-gray-700 rounded shadow sm:p-8">
-        <div class="flex items-center justify-between mb-4">
-            <h5 class="text-xl font-bold leading-none text-white">Carreras</h5>
-            <a href="{% url 'create-career' %}">
-              <svg class="text-sm font-medium text-accent-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z" clip-rule="evenodd"/>
-              </svg>          
-            </a>
-    </div>
-    <div class="flow-root">
-            <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-                {% for carrera in object_list %}
-                <li class="py-3 sm:py-4 group">
-                    <a href="{{carrera.get_absolute_url}}">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <img class="w-8 h-8 rounded-full" src="{% static 'app/conservatorio-rodo-icon-beige-128px.png' %}" alt="">
-                            </div>
-                            <div class="flex-1 min-w-0 ms-4">
-                                <p class="text-sm font-medium truncate text-white group-hover:text-accent-100">
-                                    {{carrera.nombre}}
-                                </p>
-                                <p class="text-sm truncate text-gray-400 group-hover:text-accent-100">
-                                    {{carrera.descripcion}}
-                                </p>
-                            </div>
-                            <div class="inline-flex items-center text-base font-semibold text-white group-hover:text-accent-100">
-                                {{carrera.duracion_meses}} meses
-                            </div>
-                        </div>
-                    </a>
+<section class='col-span-3 md:col-span-2 lg:col-span-2'>  
+    <div class="w-full max-w-sm border border-gray-700 rounded-lg shadow bg-gray-900 9">
+        <div class="flex justify-end px-4 pt-4">
+            <button id="dropdownButton" data-dropdown-toggle="dropdown" class="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5" type="button">
+                <span class="sr-only">Open dropdown</span>
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                    <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
+                </svg>
+            </button>
+            <!-- Dropdown menu -->
+            <div id="dropdown" class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                <ul class="py-2" aria-labelledby="dropdownButton">
+                <li>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Editar</a>
                 </li>
-                {% endfor %}
-            </ul>
-    </div>
+                <li>
+                    <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Eliminar</a>
+                </li>
+                </ul>
+            </div>
+        </div>
+        <div class="flex flex-col items-center pb-10">
+            <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Dummy image"/>
+            <h5 class="mb-1 text-xl font-medium text-white">{{student.nombre}}</h5>
+            <span class="text-sm text-gray-500 dark:text-gray-400">{{student.email}}</span>
+            <div class="flex mt-4 md:mt-6">
+                <a href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add friend</a>
+                <a href="#" class="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Message</a>
+            </div>
+        </div>
     </div>
 </section>
 
 <section class='col-span-3 md:col-span-1 lg:col-span-1 hidden lg:block'>
-  <ol>                  
-    <li class="mb-4 bg-gray-900 border border-gray-700 rounded shadow p-4">            
+  <ol class="relative border-s border-gray-700">                  
+    <li class="mb-10 ms-6 bg-gray-900 border border-gray-700 rounded shadow p-4">            
         <span class="absolute flex items-center justify-center w-6 h-6 bg-gray-700 rounded-full -start-3">
             <svg class="w-2.5 h-2.5 text-gray-100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
@@ -88,7 +89,7 @@
         <time class="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">Released on may 29th, 2024</time>
         <p class="mb-4 text-sm font-normal text-gray-500 dark:text-gray-400">Get access to over 20+ pages including a dashboard layout, charts, kanban board, calendar, and pre-order E-commerce & Marketing pages.</p>
     </li>
-    <li class="mb-4 bg-gray-900 border border-gray-700 rounded shadow p-4">            
+    <li class="mb-10 ms-6 bg-gray-900 border border-gray-700 rounded shadow p-4">            
       <span class="absolute flex items-center justify-center w-6 h-6 bg-gray-700 rounded-full -start-3">
           <svg class="w-2.5 h-2.5 text-gray-100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
               <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
