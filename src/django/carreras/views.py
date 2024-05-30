@@ -6,6 +6,7 @@ from django.views.generic import (CreateView,
 from django.contrib.auth.mixins import LoginRequiredMixin
 from domain.models import Curso, Carrera
 
+from .forms import CreateCareerForm
 
 class CreateCourse (LoginRequiredMixin, CreateView):
     model = Curso
@@ -26,7 +27,7 @@ class UpdateCourse(LoginRequiredMixin, UpdateView):
     
 class CreateCareer (LoginRequiredMixin, CreateView):
     model = Carrera
-    fields = ['nombre', 'descripcion', 'duracion_meses', 'fecha_baja', 'fecha_alta', 'cursos']
+    form_class = CreateCareerForm
     
 class ListCareer (LoginRequiredMixin, ListView):
     model = Carrera
