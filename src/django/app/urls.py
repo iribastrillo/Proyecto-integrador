@@ -33,7 +33,8 @@ urlpatterns = [
         "carreras/",include('carreras.urls')),
     path(
         "profesores/",include('profesores.urls')),
-
+    path(
+        "perfil/",include('profiles.urls')),
     path(
         "accounts/logout/",
         auth_views.LogoutView.as_view(next_page="login"),

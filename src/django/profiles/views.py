@@ -4,5 +4,5 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def profile (request):
-    template = 'profile_detail.html'
+    template = 'profiles/profile_detail.html'
     return render (request, template_name=template)
