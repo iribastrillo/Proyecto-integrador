@@ -41,7 +41,7 @@ class Carrera(models.Model):
     descripcion = models.TextField()
     duracion_meses = models.IntegerField()
     fecha_baja = models.DateField(null=True, blank=True)
-    fecha_alta = models.DateField()
+    fecha_alta = models.DateField(auto_now_add=True)
     imagen = models.ImageField(upload_to='carreras', null=True, blank=True)
     cursos = models.ManyToManyField(Curso)
     activo=models.BooleanField(default=True)
