@@ -6,9 +6,12 @@ from .views import (
                SalonesUpdateView,
                SalonesDeleteView,
                 )
+
+
 app_name = 'salones'
+
 urlpatterns = [
-    path('', SalonesListView.as_view(), name='home-classroom'),
+    path('', SalonesListView.as_view(), name='classrooms'),
     path('crear-salon/', SalonesCreateView.as_view(), name='create-classroom'),
     path('listar-salon/', SalonesListView.as_view(), name='list-classrooms'),
     path('detalle-salon/<int:pk>', SalonesDetailView.as_view(), name='detail-classroom'),

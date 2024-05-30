@@ -10,7 +10,7 @@ from .forms import CreateCareerForm
 
 class CreateCourse (LoginRequiredMixin, CreateView):
     model = Curso
-    fields = ['nombre', 'descripcion', 'duracion_meses', 'costo', 'fecha_inicio', 'fecha_fin']
+    fields = ['nombre', 'descripcion', 'duracion_meses', 'costo', 'fecha_inicio']
     
 class ListCourses (LoginRequiredMixin, ListView):
     model = Curso

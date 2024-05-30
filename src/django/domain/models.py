@@ -19,7 +19,6 @@ class Curso(models.Model):
     descripcion = models.TextField()
     duracion_meses = models.IntegerField()
     fecha_inicio = models.DateField()
-    fecha_fin = models.DateField(null=True, blank=True)
     fecha_baja = models.DateField(null=True, blank=True)
     fecha_alta = models.DateField(auto_now_add=True)
     costo = models.DecimalField(max_digits=10, decimal_places=2)
