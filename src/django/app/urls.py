@@ -34,6 +34,7 @@ urlpatterns = [
     path(
         "profesores/",include('profesores.urls')),
 
+    path("salones/",include('salones.urls')),
     path(
         "accounts/logout/",
         auth_views.LogoutView.as_view(next_page="login"),
