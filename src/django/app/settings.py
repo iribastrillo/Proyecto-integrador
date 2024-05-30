@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     "domain",
     "carreras",
     "profesores",
+    "salones",
+    "estudiantes"
 ]
 
 MIDDLEWARE = [
@@ -99,7 +101,6 @@ else:
         "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-
 
 INTERNAL_IPS = [
     "127.0.0.1",

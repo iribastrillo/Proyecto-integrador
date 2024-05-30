@@ -5,11 +5,11 @@ from profiles.models import Alumno, Profesor
 
 
 WEEKDAYS=[('Lunes', 'Lunes'),
-      ('Martes', 'Martes'), 
-      ('Miercoles', 'Miercoles'), 
-      ('Jueves', 'Jueves'), 
-      ('Viernes', 'Viernes'), 
-      ('Sabado', 'Sabado'), 
+      ('Martes', 'Martes'),
+      ('Miercoles', 'Miercoles'),
+      ('Jueves', 'Jueves'),
+      ('Viernes', 'Viernes'),
+      ('Sabado', 'Sabado'),
       ('Domingo', 'Domingos')
       ]
 
@@ -19,7 +19,6 @@ class Curso(models.Model):
     descripcion = models.TextField()
     duracion_meses = models.IntegerField()
     fecha_inicio = models.DateField()
-    fecha_fin = models.DateField(null=True, blank=True)
     fecha_baja = models.DateField(null=True, blank=True)
     fecha_alta = models.DateField(auto_now_add=True)
     costo = models.DecimalField(max_digits=10, decimal_places=2)
@@ -29,7 +28,7 @@ class Curso(models.Model):
         return self.nombre
     def get_absolute_url(self):
         return reverse("courses")
-    
+
 
 class Previa(models.Model):
     curso=models.ForeignKey(Curso, on_delete=models.CASCADE, related_name='curso')
@@ -40,8 +39,8 @@ class Carrera(models.Model):
     nombre = models.CharField(max_length=50)
     descripcion = models.TextField()
     duracion_meses = models.IntegerField()
-    fecha_baja = models.DateField()
-    fecha_alta = models.DateField()
+    fecha_baja = models.DateField(null=True, blank=True)
+    fecha_alta = models.DateField(auto_now_add=True)
     imagen = models.ImageField(upload_to='carreras', null=True, blank=True)
     cursos = models.ManyToManyField(Curso)
     activo=models.BooleanField(default=True)
@@ -71,9 +70,9 @@ class AlumnoCarrera(models.Model):
 
 class Salon(models.Model):
     nombre=models.CharField(max_length=50)
-    capacidad=models.IntegerField()
+    capacidad=models.IntegerField(null=True, blank=True)
     activo=models.BooleanField(default=True)
-    capacidad=models.IntegerField()
+    descripcion=models.TextField(null=True, blank=True,default=None)
     def __str__(self):
         return self.nombre
 
