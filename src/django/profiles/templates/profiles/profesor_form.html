@@ -43,7 +43,9 @@
     </ol>
   </nav>
 
-<form method="post" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-md bg-gray-900 border border-gray-700 rounded p-4">{% csrf_token %}
+<form method="post" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-md bg-gray-900 border border-gray-700 rounded p-8">{% csrf_token %}
+    <h5 class="text-xl font-bold leading-nonetext-white">Ficha del profesor</h5>
+    <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
     <div class="flex flex-col mb-4">
         {{ form.nombre.label_tag }}
         {{ form.nombre }}
@@ -76,7 +78,7 @@
         {{ form.cursos.label_tag }}
         {{ form.cursos }}
     </div>
-    <input class='main-action-button' type="submit" value="Ingresar">
+    <input class='main-action-button w-full' type="submit" value="Agregar">
 </form>
 
 {% endblock %}

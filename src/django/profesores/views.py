@@ -13,7 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 class ProfesorCreateView(LoginRequiredMixin,CreateView):
     model=Profesor
     fields = ['nombre', 'apellido', 'dni', 'fecha_nacimiento', 'direccion', 'telefono','email','cursos']
-    success_url=reverse_lazy('profesores:home-professor')
+    success_url=reverse_lazy('professors')
 
 class ProfesorListView(LoginRequiredMixin,ListView):
     model=Profesor
