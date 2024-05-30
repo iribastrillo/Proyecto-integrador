@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "domain",
     "carreras",
     "profesores",
+    "salones"
 ]
 
 MIDDLEWARE = [
