@@ -5,7 +5,6 @@ from django.views.generic import (CreateView,
                                   UpdateView,
                                   DeleteView)
 from django.urls import reverse_lazy
-from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -13,7 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 class ProfesorCreateView(LoginRequiredMixin,CreateView):
     model=Profesor
     fields = ['nombre', 'apellido', 'dni', 'fecha_nacimiento', 'direccion', 'telefono','email','cursos']
-    success_url=reverse_lazy('profesores:home-professor')
+    success_url=reverse_lazy('professors')
 
 class ProfesorListView(LoginRequiredMixin,ListView):
     model=Profesor

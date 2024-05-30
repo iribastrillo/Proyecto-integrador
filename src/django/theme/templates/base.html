@@ -16,11 +16,12 @@
 			<div class="wrapper">
 				{% block sidebar %} {% endblock %}
 			</div>
-			<div class="flex flex-col w-full">
+			<div class="flex flex-col w-full items-stretch">
 				{% block navbar %} {% endblock %}
 				<div class="p-4 sm:ml-64">
-					<div class="grid grid-cols-3 p-4 mt-14 gap-4">
+					<div class="grid grid-cols-3 mt-14 gap-4 py-4 px-0">
 						{% block content %} {% endblock %}
+						{% include 'base/components/bottomnav.html' %}
 				    </div>
 					{% include 'base/components/footer.html' %}
 				</div>

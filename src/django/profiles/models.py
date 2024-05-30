@@ -26,6 +26,11 @@ class Persona(models.Model):
 class Alumno(Persona):
     def __str__(self):
         return 'Alumno: '+self.nombre + ' ' + self.apellido
+    def save(self, *args, **kwargs):
+        user = User.objects.create_user(username=self.apellido, password=self.dni)
+        user.save()
+        self.user = user
+        super().save(*args, **kwargs)
     
 class Profesor(Persona):
     cursos = models.ManyToManyField('domain.Curso')
