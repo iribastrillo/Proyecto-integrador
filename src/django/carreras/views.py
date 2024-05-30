@@ -40,7 +40,7 @@ class DeleteCareer(LoginRequiredMixin, DeleteView):
     
 class UpdateCareer(LoginRequiredMixin, UpdateView):
     model = Carrera
-    fields = ['nombre', 'descripcion', 'duracion_meses', 'costo', 'fecha_baja', 'fecha_alta', 'cursos']
+    fields = ['nombre', 'descripcion', 'duracion_meses', 'fecha_baja', 'cursos']
 
 class AddCourseToCareer (LoginRequiredMixin, UpdateView):
     model = Carrera
