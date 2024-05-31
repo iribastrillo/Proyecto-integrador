@@ -13,9 +13,8 @@
 	<body class="bg-gray-950 text-gray-100">
 
 		<main class="flex flex-col p-4 lg:p-8">
-                <section class="p-4 lg:p-8 mx-auto mb-16 mt-8 py-8 shadow-md lg:pt-8 w-full lg:w-auto border border-gray-700 rounded bg-gray-900">
+                <section class="p-4 lg:p-8 mx-auto w-full mb-16 mt-8 py-8 shadow-md lg:pt-8 max-w-sm lg:w-auto border border-gray-700 rounded bg-gray-900 ">
                     <img class="h-24 mb-8" src="{% static 'app/conservatorio-rodo-logo-beige-512px.png' %}" alt="">
-                
                     <div class="card-title mb-4">
                         <h1 class="text-3xl">Iniciá sesión</h1>
                     </div>
@@ -29,6 +28,9 @@
                         <div class="flex flex-col mb-8">
                             {{ form.password.label_tag }}
                             {{ form.password }}
+                            {% if form.errors %}
+                                <span class="mt-4 text-xs text-red-500">Usuario y/o contraseña inválido...</span>
+                            {% endif %}
                         </div>
                         <div class="flex flex-col card-actions">
                             <input class="main-action-button" type="submit" value="Ingresar">
