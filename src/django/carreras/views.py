@@ -4,8 +4,9 @@ from django.views.generic import (CreateView,
                                   UpdateView,
                                   DeleteView)
 from django.contrib.auth.mixins import LoginRequiredMixin
-from domain.models import Curso, Carrera
+from django.urls import reverse_lazy
 
+from domain.models import Curso, Carrera
 from .forms import CreateCareerForm
 
 class CreateCourse (LoginRequiredMixin, CreateView):
@@ -20,10 +21,11 @@ class DetailCourse(LoginRequiredMixin, DetailView):
     
 class DeleteCourse(LoginRequiredMixin, DeleteView):
     model = Curso
+    success_url = reverse_lazy ("courses")
     
 class UpdateCourse(LoginRequiredMixin, UpdateView):
     model=Curso
-    fields = ['nombre', 'descripcion', 'duracion_meses', 'costo', 'fecha_inicio', 'fecha_fin']
+    fields = ['nombre', 'descripcion', 'duracion_meses', 'costo', 'fecha_inicio']
     
 class CreateCareer (LoginRequiredMixin, CreateView):
     model = Carrera
