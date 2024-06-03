@@ -77,10 +77,10 @@ class Salon(models.Model):
         return self.nombre
 
 class BloqueDeClase(models.Model):
-    curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
-    alumnos_cursos=models.ManyToManyField(AlumnoCurso) #validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
+    # curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
+    # alumnos_cursos=models.ManyToManyField(AlumnoCurso) #validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
     cupo=models.IntegerField() # Este cupo no debe ser mayor a la cantidad de personas que acepte el salon
-    profesores=models.ManyToManyField(Profesor) #validar que el profesor este asignado al curso
+    # profesores=models.ManyToManyField(Profesor) #validar que el profesor este asignado al curso
     dia=models.CharField(max_length=500, choices=WEEKDAYS)
     hora_inicio=models.TimeField()
     hora_fin=models.TimeField()
@@ -90,6 +90,7 @@ class BloqueDeClase(models.Model):
 
 
 class Leccion(models.Model):
+    curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
     alumnos=models.ManyToManyField(Alumno)
     profesores=models.ManyToManyField(Profesor)
     bloque=models.ForeignKey(BloqueDeClase, on_delete=models.CASCADE)

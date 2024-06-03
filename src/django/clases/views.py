@@ -8,7 +8,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from domain.models import BloqueDeClase
 from django.urls import reverse_lazy
 from django import forms
-from domain.models import Curso,Salon
+from domain.models import Curso,Salon,Profesor
+from .forms import CreateLeccionForm
 
 # Form view original
 # class CreateBloqueDeClase (LoginRequiredMixin, CreateView):
@@ -20,16 +21,16 @@ from domain.models import Curso,Salon
 class BloqueDeClaseForm(forms.ModelForm):
     class Meta:
         model = BloqueDeClase
-        fields = ['curso', 'alumnos_cursos', 'cupo', 'profesores', 'dia', 'hora_inicio', 'hora_fin', 'salon']
+        fields = [ 'cupo', 'dia', 'hora_inicio', 'hora_fin', 'salon']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        CURSOS = list(Curso.objects.values_list('id', 'nombre'))
-        CURSOS.insert(0, ('', 'Seleccione opción'))
-        self.fields['curso'] = forms.ChoiceField(choices=CURSOS)
-        self.fields["curso"].widget.attrs.update({"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700","option": "Seleccione Curso"})
+        # CURSOS = list(Curso.objects.values_list('id', 'nombre'))
+        # CURSOS.insert(0, ('', 'Seleccione opción'))
+        # self.fields['curso'] = forms.ChoiceField(choices=CURSOS)
+        # self.fields["curso"].widget.attrs.update({"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700","option": "Seleccione Curso"})
 
-        self.fields["profesores"].widget.attrs.update({"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"})
+        # self.fields["profesores"].widget.attrs.update({"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"})
         WEEKDAYS=[('Lunes', 'Lunes'),
       ('Martes', 'Martes'),
       ('Miercoles', 'Miercoles'),
@@ -85,3 +86,19 @@ class UpdateBloqueDeClase(LoginRequiredMixin, UpdateView):
 #     fields = ['cursos']
 #     template_name_suffix = '_add_course'
 
+def create_lesson(request):
+    if request.method == 'POST':
+        form = CreateLeccionForm(request.POST)
+        if form.is_valid():
+            # process the data in form.cleaned_data
+            print(form.cleaned_data["curso"])
+            print(form.cleaned_data["profesor"])
+    else:
+        form = CreateLeccionForm()
+    return render(request, 'clases/clases_leccion_form.html', {'form': form})
+        ## Falta Validar Form
+
+def load_professors(request):
+    curso_id = request.GET.get('curso')
+    profesores = Profesor.objects.filter(cursos__id=curso_id)
+    return render(request, 'clases/profesores_options.html', {'profesores': profesores})
