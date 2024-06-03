@@ -20,7 +20,7 @@
 {%if lista_salones %}
 <section class='col-span-3 md:col-span-3 lg:col-span-2'>
 
-    <nav class="flex mb-4" aria-label="Breadcrumb">
+    <nav class="flex mb-4 pl-4" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
           <li class="inline-flex items-center">
             <a href="{% url 'home' %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-accent-500 dark:text-gray-400 dark:hover:text-white">
@@ -43,40 +43,17 @@
 
     <div class="w-full max-w-md p-4 bg-gray-900 border border-gray-700 rounded shadow sm:p-8">
         <div class="flex items-center justify-between mb-4">
-            <h5 class="text-xl font-bold leading-none text-white">Carreras</h5>
-            <a href="{% url 'salones:create-classroom' %}" class="text-sm font-medium text-accent-500 hover:underline ">
-                Agregar
+            <h5 class="text-xl font-bold leading-none text-white">Salones</h5>
+            <a href="{% url 'salones:create-classroom' %}">
+              <svg class="text-sm font-medium text-white hover:text-accent-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z" clip-rule="evenodd"/>
+              </svg>          
             </a>
     </div>
     <div class="flow-root">
             <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
                 {% for salon in lista_salones %}
-                <li class="py-3 sm:py-4 group">
-                    <a href="{{salon.get_absolute_url}}">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <img class="w-8 h-8 rounded-full" src="{% static 'app/conservatorio-rodo-icon-beige-128px.png' %}" alt="">
-                            </div>
-                            <div class="flex-1 min-w-0 ms-4">
-                                <p class="text-sm font-medium truncate text-white group-hover:text-accent-100">
-                                    {{salon.nombre}}
-                                </p>
-                                <p class="text-sm font-medium truncate text-white group-hover:text-accent-100">
-                                    {{salon.capacidad}}
-                                </p>
-                                <p class="text-sm truncate text-gray-400 group-hover:text-accent-100">
-                                    {{salon.descripcion}}
-                                </p>
-                            </div>
-                            <div class="ml-auto p-2">
-                              <a href="/salones/eliminar-salon/{{ salon.id }}">Eliminar</a>
-                            </div>
-                            <div class="ml-auto p-2">
-                              <a href="/salones/editar-salon/{{ salon.id }}">Editar</a>
-                            </div>
-                        </div>
-                    </a>
-                </li>
+                  {% include "salones/components/salon_list_component.html" %}
                 {% endfor %}
             </ul>
     </div>
