@@ -4,18 +4,21 @@ from django.urls import reverse
 from profiles.models import Alumno, Profesor
 
 
+
 class Dia(models.Model):
     WEEKDAYS=[
       ('LUN', 'Lunes'),
       ('MAR', 'Martes'),
-      ('MIE', 'Miercoles'),
+      ('MIE', 'Miércoles'),
       ('JUE', 'Jueves'),
       ('VIE', 'Viernes'),
       ('SAB', 'Sábado'),
       ('DOM', 'Domingos')
       ]
     name = models.CharField(max_length=3, choices=WEEKDAYS)
-
+    
+    def __str__(self) -> str:
+        return self.name
 
 class Curso(models.Model):
     nombre = models.CharField(max_length=50)
@@ -81,13 +84,19 @@ class Salon(models.Model):
     def __str__(self):
         return self.nombre
 
-
 class Grupo (models.Model):
     curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
-    alumnos=models.ManyToManyField(Alumno, blank=True, null=True) #validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
+    alumnos=models.ManyToManyField(Alumno, blank=True) #validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
     cupo=models.IntegerField() # Este cupo no debe ser mayor a la cantidad de personas que acepte el salon
     profesores=models.ManyToManyField(Profesor) #validar que el profesor este asignado al curso
-    dia=models.CharField(max_length=500, choices=WEEKDAYS)
+    
+    def __str__(self) -> str:
+        return "Grupo " + str(self.pk) + " " + self.curso.nombre
+
+
+
+class BloqueDeClase(models.Model):
+    dia=models.ManyToManyField(Dia)
     hora_inicio=models.TimeField()
     hora_fin=models.TimeField()
     salon=models.ForeignKey(Salon, on_delete=models.CASCADE)
@@ -96,7 +105,7 @@ class Grupo (models.Model):
     def __str__(self):
         return "BLOQUE: " + self.dia.name + self.hora_inicio + " | " + self.salon.nombre
 
-
+    
 class Leccion(models.Model):
     curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
     alumnos=models.ManyToManyField(Alumno)
