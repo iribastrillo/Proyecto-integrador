@@ -21,7 +21,7 @@ from .forms import CreateLeccionForm
 class BloqueDeClaseForm(forms.ModelForm):
     class Meta:
         model = BloqueDeClase
-        fields = [ 'cupo', 'dia', 'hora_inicio', 'hora_fin', 'salon']
+        fields = [ 'dia', 'hora_inicio', 'hora_fin', 'salon','grupo']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -86,7 +86,7 @@ class UpdateBloqueDeClase(LoginRequiredMixin, UpdateView):
 #     fields = ['cursos']
 #     template_name_suffix = '_add_course'
 
-def create_lesson(request):
+def create_group(request):
     if request.method == 'POST':
         form = CreateLeccionForm(request.POST)
         if form.is_valid():
