@@ -34,6 +34,7 @@ urlpatterns = [
     path(
         "profesores/",include('profesores.urls')),
     path("salones/",include('salones.urls')),
+    path("clases/",include('clases.urls')),
     path(
         "perfil/",include('profiles.urls')),
     path(

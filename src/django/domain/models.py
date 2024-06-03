@@ -4,16 +4,7 @@ from django.urls import reverse
 from profiles.models import Alumno, Profesor
 
 
-<<<<<<< Updated upstream
-WEEKDAYS=[('Lunes', 'Lunes'),
-      ('Martes', 'Martes'),
-      ('Miercoles', 'Miercoles'),
-      ('Jueves', 'Jueves'),
-      ('Viernes', 'Viernes'),
-      ('Sabado', 'Sabado'),
-      ('Domingo', 'Domingos')
-      ]
-=======
+
 class Dia(models.Model):
     WEEKDAYS=[
       ('LUN', 'Lunes'),
@@ -28,8 +19,6 @@ class Dia(models.Model):
     
     def __str__(self) -> str:
         return self.name
->>>>>>> Stashed changes
-
 
 class Curso(models.Model):
     nombre = models.CharField(max_length=50)
@@ -66,6 +55,7 @@ class Carrera(models.Model):
     def get_absolute_url(self):
         return reverse("careers")
 
+
 class AlumnoCurso(models.Model):
     alumno=models.ForeignKey(Alumno, on_delete=models.CASCADE)
     curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
@@ -85,6 +75,7 @@ class AlumnoCarrera(models.Model):
     def __str__(self):
         return 'Inscripcion: '+self.alumno.nombre + ' ' + self.curso.nombre
 
+
 class Salon(models.Model):
     nombre=models.CharField(max_length=50)
     capacidad=models.IntegerField(null=True, blank=True)
@@ -92,9 +83,6 @@ class Salon(models.Model):
     descripcion=models.TextField(null=True, blank=True,default=None)
     def __str__(self):
         return self.nombre
-<<<<<<< Updated upstream
-=======
-    
 
 class Grupo (models.Model):
     curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
@@ -104,32 +92,22 @@ class Grupo (models.Model):
     
     def __str__(self) -> str:
         return "Grupo " + str(self.pk) + " " + self.curso.nombre
-    
->>>>>>> Stashed changes
+
+
 
 class BloqueDeClase(models.Model):
-    curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
-    alumnos_cursos=models.ManyToManyField(AlumnoCurso) #validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
-    cupo=models.IntegerField() # Este cupo no debe ser mayor a la cantidad de personas que acepte el salon
-    profesores=models.ManyToManyField(Profesor) #validar que el profesor este asignado al curso
-    dia=models.CharField(max_length=500, choices=WEEKDAYS)
+    dia=models.ManyToManyField(Dia)
     hora_inicio=models.TimeField()
     hora_fin=models.TimeField()
     salon=models.ForeignKey(Salon, on_delete=models.CASCADE)
-<<<<<<< Updated upstream
-    def __str__(self):
-        return "Bloque de clase de " + self.curso.nombre + " el " + self.dia + " de " + str(self.hora_inicio) + " a " + str(self.hora_fin) + " en el salon " + self.salon.nombre
+    grupo=models.ForeignKey(Grupo, on_delete=models.CASCADE)
 
-
-=======
-    grupo=models.ForeignKey(Grupo, on_delete=models.CASCADE, blank=True, null=True)
-    
     def __str__(self):
-        return "BLOQUE: " + self.salon.nombre
+        return "BLOQUE: " + self.dia.name + self.hora_inicio + " | " + self.salon.nombre
+
     
-    
->>>>>>> Stashed changes
 class Leccion(models.Model):
+    curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
     alumnos=models.ManyToManyField(Alumno)
     profesores=models.ManyToManyField(Profesor)
     bloque=models.ForeignKey(BloqueDeClase, on_delete=models.CASCADE)
