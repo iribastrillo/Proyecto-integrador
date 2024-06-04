@@ -5,11 +5,12 @@ from django.views.generic import (CreateView,
                                   UpdateView,
                                   DeleteView)
 from django.contrib.auth.mixins import LoginRequiredMixin
-from domain.models import BloqueDeClase
+from domain.models import BloqueDeClase,Grupo
 from django.urls import reverse_lazy
 from django import forms
 from domain.models import Curso,Salon,Profesor
-from .forms import CreateLeccionForm
+from .forms import CreateGroupForm
+from django.http import HttpResponseRedirect
 
 # Form view original
 # class CreateBloqueDeClase (LoginRequiredMixin, CreateView):
@@ -88,15 +89,33 @@ class UpdateBloqueDeClase(LoginRequiredMixin, UpdateView):
 
 def create_group(request):
     if request.method == 'POST':
-        form = CreateLeccionForm(request.POST)
+        form = CreateGroupForm(request.POST)
+        print(request.POST)
         if form.is_valid():
             # process the data in form.cleaned_data
-            print(form.cleaned_data["curso"])
-            print(form.cleaned_data["profesor"])
+            curso = form.cleaned_data["curso"]
+            alumnos = form.cleaned_data["alumnos"]
+            profesores = form.cleaned_data["profesores"]
+            cupo = form.cleaned_data["cupo"]
+
+            # Create a new group instance
+            groupo = Grupo(curso=curso, cupo=cupo)
+            groupo.save()
+
+            # Use .set() for many-to-many fields
+            groupo.alumnos.set(alumnos)
+            groupo.profesores.set(profesores)
+
+            return HttpResponseRedirect(reverse_lazy('clases:list-class-groups'))
+        else:
+            print(form.errors)
     else:
-        form = CreateLeccionForm()
+        form = CreateGroupForm()
     return render(request, 'clases/clases_leccion_form.html', {'form': form})
-        ## Falta Validar Form
+
+def list_groups(request):
+    grupos = Grupo.objects.all()
+    return render(request, 'clases/listar_grupos.html', {'lista_grupos': grupos})
 
 def load_professors(request):
     curso_id = request.GET.get('curso')
