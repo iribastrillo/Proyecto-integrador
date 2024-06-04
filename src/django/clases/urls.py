@@ -6,7 +6,8 @@ from .views import (
                 UpdateBloqueDeClase,
                 DeleteBloqueDeClase,
                 create_group,
-                load_professors
+                load_professors,
+                list_groups
                 )
 
 
@@ -20,6 +21,9 @@ urlpatterns = [
     path('editar-clase/<int:pk>', UpdateBloqueDeClase.as_view(), name='update-class-block'),
     path('eliminar-clase/<int:pk>', DeleteBloqueDeClase.as_view(), name='delete-class-block'),
     path('eliminar-clase/<int:pk>', DeleteBloqueDeClase.as_view(), name='delete-class-block'),
-    path('create-group/', create_group, name='create-group'),
-    path('create-group/cargar-profesores/', load_professors, name='load-profesors')
+    path('crear-groupo/', create_group, name='create-group'),
+    path('crear-groupo/cargar-profesores/', load_professors, name='load-profesors'),
+    # path('create-group/', create_group, name='create-group'),
+    # path('create-group/cargar-profesores/', load_professors, name='load-profesors'),
+    path('listar-grupos/',list_groups, name='list-class-groups')
 ]
