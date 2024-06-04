@@ -22,26 +22,18 @@ from . import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", views.home, name="home"),
     path(
         "accounts/login/",
         auth_views.LoginView.as_view(redirect_authenticated_user=True, next_page="home"),
         name="login"),
-    path(
-        "domain/",include('domain.urls')),
-    path(
-        "carreras/",include('carreras.urls')),
-    path(
-        "profesores/",include('profesores.urls')),
-    path("salones/",include('salones.urls')),
-    path("clases/",include('clases.urls')),
-    path(
-        "perfil/",include('profiles.urls')),
-    path(
-        "accounts/logout/",
-        auth_views.LogoutView.as_view(next_page="login"),
-        name="logout"
-    ),
-    path(
-        "estudiantes/", include('estudiantes.urls')),
+    path("accounts/logout/", auth_views.LogoutView.as_view(next_page="login"), name="logout"),
+    path("app/", include([
+        path("", views.home, name="home"),
+        path("carreras/",include('carreras.urls')),
+        path("profesores/",include('profesores.urls')),
+        path("salones/",include('salones.urls')),
+        path("clases/",include('clases.urls')),
+        path("perfil/",include('profiles.urls')),
+        path("estudiantes/", include('estudiantes.urls')),
+        ]))
 ]
