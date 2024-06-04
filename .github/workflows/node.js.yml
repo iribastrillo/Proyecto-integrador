@@ -25,6 +25,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: './src/django/theme/static_src/package-lock.json'
     - name: Install dependencies
       run: npm ci
       working-directory: ./src/django/theme/static_src
