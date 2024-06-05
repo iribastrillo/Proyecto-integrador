@@ -9,7 +9,8 @@ from .views import (
                 load_professors,
                 list_groups,
                 update_group,
-                delete_group
+                delete_group,
+                detail_group
                 )
 
 
@@ -22,10 +23,10 @@ urlpatterns = [
     path('bloques/<int:pk>/detalle', DetailBloqueDeClase.as_view(), name='detail-class-block'),
     path('bloques/<int:pk>/editar', UpdateBloqueDeClase.as_view(), name='update-class-block'),
     path('bloques/<int:pk>/eliminar', DeleteBloqueDeClase.as_view(), name='delete-class-block'),
-    path('grupos/',list_groups, name='list-class-groups'),
+    path('grupos/',list_groups, name='list-groups'),
     path('grupos/crear', create_group, name='create-group'),
     path('grupos/<int:pk>/editar', update_group, name='update-group'),
     path('grupos/<int:pk>/eliminar', delete_group, name='delete-group'),
-    ###
-    path('crear-groupo/cargar-profesores/', load_professors, name='load-profesors')
+    path('grupos/<int:pk>/detalle', detail_group, name='detail-group'),
+    path('grupos/cargar-profesores/', load_professors, name='load-profesors')
 ]

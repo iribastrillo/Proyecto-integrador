@@ -9,6 +9,7 @@ from domain.models import BloqueDeClase,Grupo
 from django.urls import reverse_lazy
 from domain.models import Profesor
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
 from .forms import CreateGroupForm, BloqueDeClaseForm
 
@@ -51,19 +52,19 @@ def create_group(request):
         print(request.POST)
         if form.is_valid():
             curso = form.cleaned_data["curso"]
-            alumnos = form.cleaned_data["alumnos"]
             profesores = form.cleaned_data["profesores"]
             cupo = form.cleaned_data["cupo"]
             groupo = Grupo(curso=curso, cupo=cupo)
             groupo.save()
-            groupo.alumnos.set(alumnos)
+
+            # Use .set() for many-to-many fields
             groupo.profesores.set(profesores)
-            return HttpResponseRedirect(reverse_lazy('clases:list-class-groups'))
+            return HttpResponseRedirect(reverse_lazy('clases:list-groups'))
         else:
             print(form.errors)
     else:
         form = CreateGroupForm()
-    return render(request, 'clases/clases_leccion_form.html', {'form': form})
+    return render(request, 'clases/create_grupo_form.html', {'form': form})
 
 
 @login_required
@@ -77,7 +78,7 @@ def update_group(request, pk):
             group.save()
             group.alumnos.set(form.cleaned_data["alumnos"])
             group.profesores.set(form.cleaned_data["profesores"])
-            return HttpResponseRedirect(reverse_lazy('clases:list-class-groups'))
+            return HttpResponseRedirect(reverse_lazy('clases:list-groups'))
     else:
         form_data = {
             'curso': group.curso,
@@ -86,7 +87,7 @@ def update_group(request, pk):
             'cupo': group.cupo,
         }
         form = CreateGroupForm(initial=form_data)
-    return render(request, 'clases/clases_leccion_form.html', {'form': form})
+    return render(request, 'clases/create_grupo_form.html', {'form': form})
 
 @login_required
 def delete_group(request, pk):
@@ -95,8 +96,14 @@ def delete_group(request, pk):
 
     if request.method == 'POST':
         grupo.delete()
-        return redirect(reverse_lazy('clases:list-class-groups'))
+        return redirect(reverse_lazy('clases:list-groups'))
     return render(request, 'clases/grupo_confirm_delete.html', {'grupo': grupo})
+
+@login_required
+def detail_group(request, pk):
+    grupo = get_object_or_404(Grupo, id=pk)
+    print(grupo.__dict__)
+    return render(request, 'clases/grupo_detail.html', {'grupo': grupo})
 
 def list_groups(request):
     grupos = Grupo.objects.all()
