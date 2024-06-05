@@ -17,9 +17,10 @@ class CreateGroupForm(forms.Form):
         if "curso" in self.data:
             curso_id = int(self.data.get("curso"))
             self.fields["profesores"].queryset = Profesor.objects.filter(cursos__id=curso_id).order_by("nombre")
-        if self.initial:
-            if 'profesores' in self.initial:
-                self.fields['profesores'].queryset = Profesor.objects.all()
+        elif self.initial and 'curso' in self.initial:
+            curso_id = self.initial['curso'].id
+            self.fields["profesores"].queryset = Profesor.objects.filter(cursos__id=curso_id).order_by("nombre")
+
 
 class BloqueDeClaseForm(forms.ModelForm):
     class Meta:
