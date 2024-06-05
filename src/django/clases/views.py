@@ -91,7 +91,6 @@ def create_group(request):
         if form.is_valid():
             # process the data in form.cleaned_data
             curso = form.cleaned_data["curso"]
-            alumnos = form.cleaned_data["alumnos"]
             profesores = form.cleaned_data["profesores"]
             cupo = form.cleaned_data["cupo"]
 
@@ -100,7 +99,6 @@ def create_group(request):
             groupo.save()
 
             # Use .set() for many-to-many fields
-            groupo.alumnos.set(alumnos)
             groupo.profesores.set(profesores)
 
             return HttpResponseRedirect(reverse_lazy('clases:list-class-groups'))
@@ -108,7 +106,7 @@ def create_group(request):
             print(form.errors)
     else:
         form = CreateGroupForm()
-    return render(request, 'clases/clases_leccion_form.html', {'form': form})
+    return render(request, 'clases/create_grupo_form.html', {'form': form})
 
 
 @login_required
