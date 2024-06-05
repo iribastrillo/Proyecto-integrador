@@ -16,7 +16,7 @@ class Dia(models.Model):
       ('DOM', 'Domingos')
       ]
     name = models.CharField(max_length=3, choices=WEEKDAYS)
-    
+
     def __str__(self) -> str:
         return self.name
 
@@ -89,9 +89,9 @@ class Grupo (models.Model):
     alumnos=models.ManyToManyField(Alumno, blank=True) #validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
     cupo=models.IntegerField() # Este cupo no debe ser mayor a la cantidad de personas que acepte el salon
     profesores=models.ManyToManyField(Profesor) #validar que el profesor este asignado al curso
-    
+
     def __str__(self) -> str:
-        return "Grupo " + str(self.pk) + " " + self.curso.nombre
+        return f"Grupo {self.pk} - Curso: {self.curso.nombre} - Cupo: {self.cupo} - Profesores: {', '.join([str(profesor) for profesor in self.profesores.all()])} - Alumnos: {', '.join([str(alumno) for alumno in self.alumnos.all()])}"
 
 
 
@@ -105,7 +105,7 @@ class BloqueDeClase(models.Model):
     def __str__(self):
         return "BLOQUE: " + self.dia.name + self.hora_inicio + " | " + self.salon.nombre
 
-    
+
 class Leccion(models.Model):
     curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
     alumnos=models.ManyToManyField(Alumno)

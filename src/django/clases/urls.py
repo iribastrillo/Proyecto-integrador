@@ -7,7 +7,9 @@ from .views import (
                 DeleteBloqueDeClase,
                 create_group,
                 load_professors,
-                list_groups
+                list_groups,
+                update_group,
+                delete_group
                 )
 
 
@@ -21,9 +23,10 @@ urlpatterns = [
     path('editar-clase/<int:pk>', UpdateBloqueDeClase.as_view(), name='update-class-block'),
     path('eliminar-clase/<int:pk>', DeleteBloqueDeClase.as_view(), name='delete-class-block'),
     path('eliminar-clase/<int:pk>', DeleteBloqueDeClase.as_view(), name='delete-class-block'),
-    path('crear-groupo/', create_group, name='create-group'),
-    path('crear-groupo/cargar-profesores/', load_professors, name='load-profesors'),
-    # path('create-group/', create_group, name='create-group'),
-    # path('create-group/cargar-profesores/', load_professors, name='load-profesors'),
-    path('listar-grupos/',list_groups, name='list-class-groups')
+    path('crear-grupo/', create_group, name='create-group'), ## esto funciona pero voy a probar model view
+    path('eliminar-grupo/<int:pk>/', delete_group, name='delete-group'),
+    # path('crear-groupo/', CreateGroupForm, name='create-group'),
+    path('crear-grupo/cargar-profesores/', load_professors, name='load-profesors'),
+      path('listar-grupos/',list_groups, name='list-class-groups'),
+    path('editar-grupo/<int:pk>/', update_group, name='update-group'),
 ]

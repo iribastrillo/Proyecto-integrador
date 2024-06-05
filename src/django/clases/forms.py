@@ -2,7 +2,6 @@ from django import forms
 from domain.models import Leccion,Curso,Salon,Alumno,BloqueDeClase,Profesor
 
 class CreateGroupForm(forms.Form):
-    # curso = forms.ModelChoiceField(queryset=Curso.objects.all())
     curso = forms.ModelChoiceField(queryset=Curso.objects.all(),
                                   widget=forms.Select(attrs={"hx-get":"cargar-profesores/","hx-target":"#id_profesores"}) )
 
@@ -18,4 +17,7 @@ class CreateGroupForm(forms.Form):
         if "curso" in self.data:
             curso_id = int(self.data.get("curso"))
             self.fields["profesores"].queryset = Profesor.objects.filter(cursos__id=curso_id).order_by("nombre")
+        if self.initial:
+            if 'profesores' in self.initial:
+                self.fields['profesores'].queryset = Profesor.objects.all()
 
