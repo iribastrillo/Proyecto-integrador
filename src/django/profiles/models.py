@@ -38,7 +38,7 @@ class Profesor(Persona):
         return 'Profesor: '+self.nombre + ' ' + self.apellido 
 
     def save(self, *args, **kwargs):
-        user = User.objects.create_user(username=self.apellido, password=self.dni)
+        user = User.objects.get_or_create(username=self.apellido, password=self.dni)
         user.save()
         self.user = user
         super().save(*args, **kwargs)

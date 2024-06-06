@@ -1,7 +1,7 @@
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.views import View
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import InscripcionForm
@@ -41,19 +41,22 @@ class InscripcionNueva(View):
     template_name = 'estudiantes/inscripcion.html'
     
     def get (self, request, *args, **kwargs):
-        student = get_object_or_404(Alumno, pk=kwargs['pk'])
-        form = self.form_class(initial={'alumno': student})
-        form.fields['alumno']
+        form = self.form_class()
         context = {
             'form': form,
-            'student': student
         }
         return render (request, self.template_name, context)
     
     def post (self, request, *args, **kwargs):
-        form = InscripcionForm (request.POST)
+        form = InscripcionForm (request.POST)        
         if form.is_valid():
-            form.save()
-            return redirect ("estudiantes:students")
+            grupo = form.cleaned_data["grupo"]
+            alumno = Alumno.objects.get(pk=kwargs["pk"])
+            if grupo.alumnos.filter(pk=alumno.pk).exists():
+                return redirect("home")
+            else:
+                grupo.alumnos.add (alumno)
+                grupo.save()
+                return redirect ("estudiantes:students")
         else:
             return redirect("estudiantes:enrolment-student", kwargs['pk'])

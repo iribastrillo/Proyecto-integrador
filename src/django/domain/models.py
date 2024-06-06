@@ -35,7 +35,7 @@ class Curso(models.Model):
     payout_ratio = models.DecimalField (max_digits=3, decimal_places=2, validators=[
         MaxValueValidator(1, "El valor debe estar entre 1 y 0."),
         MinValueValidator(0, "El valor debe estar entre 1 y 0.")
-        ])
+        ], default=0.5)
     slug = models.SlugField(max_length=50)
     
     def __str__(self):
@@ -102,13 +102,14 @@ class Salon(models.Model):
 
 
 class Grupo (models.Model):
+    identificador = models.CharField(max_length=1)
     curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
     alumnos=models.ManyToManyField(Alumno, blank=True) #validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
     cupo=models.IntegerField() # Este cupo no debe ser mayor a la cantidad de personas que acepte el salon
     profesores=models.ManyToManyField(Profesor) #validar que el profesor este asignado al curso
 
     def __str__(self) -> str:
-        return f"Grupo {self.pk} - Curso: {self.curso.nombre} - Cupo: {self.cupo} - Profesores: {', '.join([str(profesor) for profesor in self.profesores.all()])} - Alumnos: {', '.join([str(alumno) for alumno in self.alumnos.all()])}"
+        return f"Grupo {self.pk} - Curso: {self.curso.nombre} - Cupo: {self.cupo}"
 
 
 class BloqueDeClase(models.Model):
