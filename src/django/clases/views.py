@@ -20,7 +20,6 @@ class CreateBloqueDeClase(LoginRequiredMixin, CreateView):
     template_name = 'clases/clases_form.html'
     success_url = reverse_lazy('clases:home-class-blocks')
 
-
 class ListBloqueDeClases (LoginRequiredMixin, ListView):
     model = BloqueDeClase
     template_name = 'clases/clases_list.html'
@@ -76,7 +75,7 @@ def update_group(request, pk):
             group.curso = form.cleaned_data["curso"]
             group.cupo = form.cleaned_data["cupo"]
             group.save()
-            group.alumnos.set(form.cleaned_data["alumnos"])
+            # group.alumnos.set(form.cleaned_data["alumnos"])
             group.profesores.set(form.cleaned_data["profesores"])
             return HttpResponseRedirect(reverse_lazy('clases:list-groups'))
     else:
