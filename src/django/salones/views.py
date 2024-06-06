@@ -17,7 +17,7 @@ class SalonesCreateView(LoginRequiredMixin,CreateView):
     fields = ['nombre', 'capacidad','descripcion']
     template_name = 'salones/salones_form.html'
 
-    success_url=reverse_lazy('salones:home-classroom')
+    success_url=reverse_lazy('salones:classrooms')
 
 class SalonesListView(LoginRequiredMixin,ListView):
     model=Salon

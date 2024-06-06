@@ -15,32 +15,28 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf import settings
 from django.contrib.auth import views as auth_views
+from django.conf.urls.static import static
 from django.urls import path,include
+
 
 from . import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", views.home, name="home"),
     path(
         "accounts/login/",
         auth_views.LoginView.as_view(redirect_authenticated_user=True, next_page="home"),
         name="login"),
-    path(
-        "domain/",include('domain.urls')),
-    path(
-        "carreras/",include('carreras.urls')),
-    path(
-        "profesores/",include('profesores.urls')),
-    path("salones/",include('salones.urls')),
-    path(
-        "perfil/",include('profiles.urls')),
-    path(
-        "accounts/logout/",
-        auth_views.LogoutView.as_view(next_page="login"),
-        name="logout"
-    ),
-    path(
-        "estudiantes/", include('estudiantes.urls')),
-]
+    path("accounts/logout/", auth_views.LogoutView.as_view(next_page="login"), name="logout"),
+    path("app/", include([
+        path("", views.home, name="home"),
+        path("carreras/",include('carreras.urls')),
+        path("profesores/",include('profesores.urls')),
+        path("salones/",include('salones.urls')),
+        path("clases/",include('clases.urls')),
+        path("perfil/",include('profiles.urls')),
+        path("estudiantes/", include('estudiantes.urls')),
+        ]))
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

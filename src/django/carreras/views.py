@@ -3,8 +3,10 @@ from django.views.generic import (CreateView,
                                   DetailView,
                                   UpdateView,
                                   DeleteView)
+from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from django.shortcuts import render
 
 from domain.models import Curso, Carrera
 from .forms import CreateCareerForm
@@ -48,3 +50,15 @@ class AddCourseToCareer (LoginRequiredMixin, UpdateView):
     model = Carrera
     fields = ['cursos']
     template_name_suffix = '_add_course'
+
+class CoursesAndCareers (LoginRequiredMixin, View):
+    template_name = 'carreras/cursos_y_carreras.html'
+    
+    def get (self, request, *args, **kwargs):
+        courses = Curso.objects.all()
+        careers = Carrera.objects.all()
+        context = {
+            'courses': courses,
+            'careers': careers,
+        }
+        return render (request, self.template_name, context)

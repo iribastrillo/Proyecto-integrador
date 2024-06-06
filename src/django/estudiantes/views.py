@@ -1,9 +1,11 @@
-from profiles.models import Alumno
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.views import View
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+from .forms import InscripcionForm
+from profiles.models import Alumno
 
 
 class AlumnoCreateView(LoginRequiredMixin,CreateView):
@@ -35,11 +37,26 @@ class AlumnoDeleteView(LoginRequiredMixin,DeleteView):
     template_name = 'estudiantes/estudiante_confirm_delete.html'
     
 class InscripcionNueva(View):
-    form_class = None
+    form_class = InscripcionForm
     template_name = 'estudiantes/inscripcion.html'
     
     def get (self, request, *args, **kwargs):
-        return render (request, self.template_name)
+        form = self.form_class()
+        context = {
+            'form': form,
+        }
+        return render (request, self.template_name, context)
     
     def post (self, request, *args, **kwargs):
-        pass
+        form = InscripcionForm (request.POST)        
+        if form.is_valid():
+            grupo = form.cleaned_data["grupo"]
+            alumno = Alumno.objects.get(pk=kwargs["pk"])
+            if grupo.alumnos.filter(pk=alumno.pk).exists():
+                return redirect("home")
+            else:
+                grupo.alumnos.add (alumno)
+                grupo.save()
+                return redirect ("estudiantes:students")
+        else:
+            return redirect("estudiantes:enrolment-student", kwargs['pk'])
