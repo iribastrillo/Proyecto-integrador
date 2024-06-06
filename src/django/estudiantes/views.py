@@ -59,4 +59,4 @@ class InscripcionNueva(View):
                 grupo.save()
                 return redirect ("estudiantes:students")
         else:
-            return redirect("estudiantes:enrolment-student", kwargs['pk'])
+            return render (request, self.template_name, {'form' : form})
