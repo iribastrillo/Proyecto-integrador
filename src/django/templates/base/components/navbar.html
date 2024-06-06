@@ -19,7 +19,9 @@
 			  <div>
 				<button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300" aria-expanded="false" data-dropdown-toggle="dropdown-user">
 				  <span class="sr-only">Open user menu</span>
-				  <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
+				  <div class="relative inline-flex items-center justify-center w-9 h-9 overflow-hidden rounded-full bg-gray-600">
+					<span class="font-medium text-gray-300">{{request.user.first_name|make_list|first}}{{request.user.last_name|make_list|first}}</span>
+				</div>
 				</button>
 			  </div>
 			  <div class="z-50 hidden my-4 text-base list-none bg-gray-900 divide-y divide-gray-100 rounded shadow" id="dropdown-user">
