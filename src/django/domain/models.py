@@ -37,12 +37,12 @@ class Curso(models.Model):
         MinValueValidator(0, "El valor debe estar entre 1 y 0.")
         ], default=0.5)
     slug = models.SlugField(max_length=50)
-    
+
     def __str__(self):
         return self.nombre
     def get_absolute_url(self):
         return reverse("courses")
-    
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nombre)
         super().save(*args, **kwargs)
@@ -120,7 +120,7 @@ class BloqueDeClase(models.Model):
     grupo=models.ForeignKey(Grupo, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.hora_inicio} - {self.hora_fin}: {self.grupo}"
+        return f"{self.dia} - {self.hora_inicio} - {self.hora_fin}: {self.grupo} - {self.salon}"
 
 
 class Leccion(models.Model):
@@ -130,6 +130,6 @@ class Leccion(models.Model):
     bloque=models.ForeignKey(BloqueDeClase, on_delete=models.CASCADE)
     fecha=models.DateTimeField()
     descripcion=models.TextField(max_length=250, blank=True, null=True)
-    
+
     def __str__(self):
         return f"Lección: {self.grupo} {self.bloque.hora_inicio} - {self.bloque.hora_fin}"

@@ -46,10 +46,33 @@
   <form method="Post" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-md bg-gray-900 border border-gray-700 rounded p-8 ">
     <div class="flex items-center justify-between mb-4">
       <h5 class="text-xl font-bold leading-none text-white">Grupo</h5>
-
-</div>
+    </div>
     {% csrf_token %}
     {{form.as_div}}
+
+    <h2>Bloques de Clase</h2>
+    {{ formset.management_form }}
+    {% for bloque_form in formset %}
+        {{ bloque_form.as_div }}
+    {% endfor %}
+{% comment %}
+    {% for bloque_form in formset %}
+    {{ bloque_form.dia.errors }}
+    {{ bloque_form.dia.label_tag }}
+    {{ bloque_form.dia }}
+
+    {{ bloque_form.hora_inicio.errors }}
+    {{ bloque_form.hora_inicio.label_tag }}
+    {{ bloque_form.hora_inicio }}
+
+    {{ bloque_form.hora_fin.errors }}
+    {{ bloque_form.hora_fin.label_tag }}
+    {{ bloque_form.hora_fin }}
+
+    {{ bloque_form.salon.errors }}
+    {{ bloque_form.salon.label_tag }}
+    {{ bloque_form.salon }}
+{% endfor %} {% endcomment %}
 
     <input class='main-action-button w-full' type="submit" value="Agregar">
     <button type="button"  class='main-action-button' onclick="window.location.href = '{% url 'clases:list-groups' %}'">Cancelar</button>
