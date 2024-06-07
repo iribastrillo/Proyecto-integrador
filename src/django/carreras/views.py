@@ -14,6 +14,7 @@ from .forms import CreateCareerForm
 class CreateCourse (LoginRequiredMixin, CreateView):
     model = Curso
     fields = ['nombre', 'descripcion', 'duracion_meses', 'costo', 'fecha_inicio']
+    success_url = reverse_lazy ("careers")
     
 class ListCourses (LoginRequiredMixin, ListView):
     model = Curso

@@ -28,8 +28,9 @@ class AlumnoDetailView(LoginRequiredMixin,DetailView):
 class AlumnoUpdateView(LoginRequiredMixin,UpdateView):
     model = Alumno
     fields = '__all__'
-    success_url = reverse_lazy('students')
     template_name = 'estudiantes/estudiante_form.html'
+    def get_success_url(self) -> str:
+        return reverse_lazy ("estudiantes:detail-student", kwargs={'pk': self.get_object().pk})
 
 class AlumnoDeleteView(LoginRequiredMixin,DeleteView):
     model = Alumno
