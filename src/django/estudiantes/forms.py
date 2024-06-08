@@ -11,4 +11,8 @@ class InscripcionForm(forms.Form):
         validators=[group_is_not_full]
     )
 
-    
+class BajaForm(forms.Form):
+    grupo = forms.ModelChoiceField(
+        queryset=Grupo.objects.all(),
+        required=True,  
+        widget=forms.Select(attrs={'class': 'form-control'}))  
