@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-@$qz#@%8n2njd)3dpu36!k8pitwydd^u@v4+rgpsblgd!e^jn2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ec2-54-237-216-133.compute-1.amazonaws.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['ec2-54-237-216-133.compute-1.amazonaws.com', 'localhost', '127.0.0.1', 'https://hidden-fortress-37452-206e312e47f7.herokuapp.com/']
 
 DEV = True
 # Application definition
