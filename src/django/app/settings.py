@@ -25,12 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-@$qz#@%8n2njd)3dpu36!k8pitwydd^u@v4+rgpsblgd!e^jn2"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['ec2-54-237-216-133.compute-1.amazonaws.com', 'localhost', '127.0.0.1', 'hidden-fortress-37452-206e312e47f7.herokuapp.com']
-
-DEV = True
-# Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -86,23 +83,12 @@ TAILWIND_APP_NAME = "theme"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-if not DEV:
-    DATABASES = {
-     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ.get('DB_HOST'),
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASS'),
-        }
+DATABASES = {
+"default": {
+    "ENGINE": "django.db.backends.sqlite3",
+    "NAME": BASE_DIR / "db.sqlite3",
     }
-else:
-    DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
+}
 
 INTERNAL_IPS = [
     "127.0.0.1",
