@@ -10,9 +10,9 @@ from django.urls import reverse_lazy
 from domain.models import Profesor
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.forms import modelformset_factory
-
+from django.forms import modelformset_factory,formset_factory
 from .forms import CreateGroupForm, BloqueDeClaseForm
+from datetime import datetime
 
 
 class CreateBloqueDeClase(LoginRequiredMixin, CreateView):
@@ -45,14 +45,79 @@ class UpdateBloqueDeClase(LoginRequiredMixin, UpdateView):
     success_url=reverse_lazy('clases:list-class-blocks')
 
 
+# @login_required
+# def create_group(request):
+#     BloqueDeClaseFormSet = modelformset_factory(BloqueDeClase, form=BloqueDeClaseForm, extra=1)
+#     if request.method == 'POST':
+#         form = CreateGroupForm(request.POST)
+#         formset = BloqueDeClaseFormSet(request.POST)
+
+#         print(request.POST)
+#         if form.is_valid() and formset.is_valid():
+#             curso = form.cleaned_data["curso"]
+#             profesores = form.cleaned_data["profesores"]
+#             cupo = form.cleaned_data["cupo"]
+#             groupo = Grupo(curso=curso, cupo=cupo)
+#             groupo.save()
+
+#             for bloque_form in formset:
+#                 bloque = bloque_form.save(commit=False)
+#                 bloque.grupo = groupo
+#                 bloque.save()
+#                 bloque_form.save_m2m()  # Save the ManyToManyField data
+#             # Use .set() for many-to-many fields
+#             groupo.profesores.set(profesores)
+#             return HttpResponseRedirect(reverse_lazy('clases:list-groups'))
+#         else:
+#             print(form.errors)
+#     else:
+#         form = CreateGroupForm()
+#         formset = BloqueDeClaseFormSet(queryset=BloqueDeClase.objects.none())
+
+#     return render(request, 'clases/create_grupo_form.html', {'form': form, 'formset': formset})
+
+
+# @login_required
+# def update_group(request, pk):
+#     group = get_object_or_404(Grupo, id=pk)
+#     BloqueDeClaseFormSet = modelformset_factory(BloqueDeClase, form=BloqueDeClaseForm, extra=0)
+#     print(BloqueDeClase.objects.filter(grupo=group))
+#     if request.method == 'POST':
+#         form = CreateGroupForm(request.POST)
+#         formset = BloqueDeClaseFormSet(request.POST, queryset=BloqueDeClase.objects.filter(grupo=group))
+
+#         if form.is_valid() and formset.is_valid():
+#             group.curso = form.cleaned_data["curso"]
+#             group.cupo = form.cleaned_data["cupo"]
+#             group.save()
+#             for bloque_form in formset:
+#                 bloque = bloque_form.save(commit=False)
+#                 bloque.grupo = group
+#                 bloque.save()
+#                 bloque_form.save_m2m()  # Save the ManyToManyField data
+#             group.profesores.set(form.cleaned_data["profesores"])
+
+#             return HttpResponseRedirect(reverse_lazy('clases:list-groups'))
+#         else:
+#             print(form.errors)
+#     else:
+#         form_data = {
+#             'curso': group.curso,
+#             'profesores': group.profesores.all(),
+#             'cupo': group.cupo,
+#         }
+#         form = CreateGroupForm(initial=form_data)
+#         formset = BloqueDeClaseFormSet(queryset=BloqueDeClase.objects.filter(grupo=group))
+
+#     return render(request, 'clases/create_grupo_form.html', {'form': form, 'formset': formset})
+
 @login_required
 def create_group(request):
-    BloqueDeClaseFormSet = modelformset_factory(BloqueDeClase, form=BloqueDeClaseForm, extra=1)
+    BloqueDeClaseFormSet = formset_factory(BloqueDeClaseForm, extra=1)
     if request.method == 'POST':
         form = CreateGroupForm(request.POST)
         formset = BloqueDeClaseFormSet(request.POST)
 
-        print(request.POST)
         if form.is_valid() and formset.is_valid():
             curso = form.cleaned_data["curso"]
             profesores = form.cleaned_data["profesores"]
@@ -61,41 +126,54 @@ def create_group(request):
             groupo.save()
 
             for bloque_form in formset:
-                print(bloque_form)
-                bloque = bloque_form.save(commit=False)
-                bloque.grupo = groupo
+                # dia = bloque_form.cleaned_data['dia']
+                hora_inicio = datetime.strptime(bloque_form.cleaned_data['hora_inicio'], '%H:%M').time()
+                hora_fin = datetime.strptime(bloque_form.cleaned_data['hora_fin'], '%H:%M').time()
+                salon = bloque_form.cleaned_data['salon']
+
+                bloque = BloqueDeClase(hora_inicio=hora_inicio, hora_fin=hora_fin, salon=salon, grupo=groupo)
                 bloque.save()
-                bloque_form.save_m2m()  # Save the ManyToManyField data
-            # Use .set() for many-to-many fields
+                bloque.dia.set(bloque_form.cleaned_data['dia'])  # Use .set() for ManyToManyField
+
             groupo.profesores.set(profesores)
             return HttpResponseRedirect(reverse_lazy('clases:list-groups'))
         else:
             print(form.errors)
     else:
         form = CreateGroupForm()
-        formset = BloqueDeClaseFormSet(queryset=BloqueDeClase.objects.none())
+        formset = BloqueDeClaseFormSet()
 
     return render(request, 'clases/create_grupo_form.html', {'form': form, 'formset': formset})
-
 
 @login_required
 def update_group(request, pk):
     group = get_object_or_404(Grupo, id=pk)
-    BloqueDeClaseFormSet = modelformset_factory(BloqueDeClase, form=BloqueDeClaseForm, extra=0)
+    bloque_de_clase_instances = BloqueDeClase.objects.filter(grupo=group)
+    print(f"Bloques de clase  {bloque_de_clase_instances}")
 
     if request.method == 'POST':
+        print("REQUEST IS POST")
         form = CreateGroupForm(request.POST)
-        formset = BloqueDeClaseFormSet(request.POST, queryset=BloqueDeClase.objects.filter(grupo=group))
+        formset = [BloqueDeClaseForm(request.POST, prefix=str(i), instance=bloque) for i, bloque in enumerate(bloque_de_clase_instances)]
 
-        if form.is_valid() and formset.is_valid():
+        if form.is_valid() and all([f.is_valid() for f in formset]):
             group.curso = form.cleaned_data["curso"]
             group.cupo = form.cleaned_data["cupo"]
             group.save()
-            for bloque_form in formset:
-                bloque = bloque_form.save(commit=False)
+
+            for f in formset:
+
+                print(f"FORMSET IS VALID: {f.cleaned_data}")
+                bloque = f.instance if f.instance else BloqueDeClase()
+
+                # bloque = BloqueDeClase.objects.get(id=f.instance.id) if f.instance else BloqueDeClase()
+                bloque.hora_inicio = datetime.strptime(f.cleaned_data['hora_inicio'], '%H:%M').time()
+                bloque.hora_fin = datetime.strptime(f.cleaned_data['hora_fin'], '%H:%M').time()
+                bloque.salon = f.cleaned_data['salon']
                 bloque.grupo = group
                 bloque.save()
-                bloque_form.save_m2m()  # Save the ManyToManyField data
+                bloque.dia.set(f.cleaned_data['dia']) # Use .set() for ManyToManyField
+
             group.profesores.set(form.cleaned_data["profesores"])
 
             return HttpResponseRedirect(reverse_lazy('clases:list-groups'))
@@ -108,8 +186,9 @@ def update_group(request, pk):
             'cupo': group.cupo,
         }
         form = CreateGroupForm(initial=form_data)
-        formset = BloqueDeClaseFormSet(queryset=BloqueDeClase.objects.filter(grupo=group))
-        print(BloqueDeClase.objects.filter(grupo=group))
+        # formset = [BloqueDeClaseForm(prefix=str(i), instance=bloque) for i, bloque in enumerate(bloque_de_clase_instances)]
+        formset = [BloqueDeClaseForm(request.POST or None, prefix=str(i), instance=bloque) for i, bloque in enumerate(bloque_de_clase_instances)]
+
 
     return render(request, 'clases/create_grupo_form.html', {'form': form, 'formset': formset})
 

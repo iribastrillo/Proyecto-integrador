@@ -1,4 +1,4 @@
-from datetime import time
+from datetime import datetime
 from django import forms
 from domain.models import Curso,Salon,Alumno,BloqueDeClase,Profesor,Dia
 
@@ -48,19 +48,40 @@ class BloqueDeClaseForm(forms.ModelForm):
         SALONES.insert(0, ('', 'Seleccione opción'))
         self.fields["salon"]=forms.ModelChoiceField(queryset=Salon.objects.all())
         self.fields["salon"].widget.attrs.update({"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"})
-        HOURS = [(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)]
+        # HOURS = [(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)]
+        HOURS = [(f'{i//2:02d}:{i%2*30:02d}:00', f'{i//2:02d}:{i%2*30:02d}:00') for i in range(48)]
         self.fields['hora_inicio'] = forms.ChoiceField(choices=HOURS)
         self.fields['hora_inicio'].widget.attrs.update({"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"})
         self.fields['hora_fin'] = forms.ChoiceField(choices=HOURS)
         self.fields['hora_fin'].widget.attrs.update({"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"})
 
         # Set the initial value for each ChoiceField
-        if self.instance.pk:  # Check if this is an existing instance
-            print("THERE IS AN INSTANCE OF THE BLOQUE")
-            print(self.instance.dia)
-            print( self.instance.hora_inicio.strftime('%H:%M'))
-            print( self.instance.hora_fin.strftime('%H:%M'))
-            self.fields['dia'].initial = self.instance.dia
+        # if self.instance.pk:  # Check if this is an existing instance
+
+        #     print("THERE IS AN INSTANCE OF THE BLOQUE")
+        #     print(self.instance.dia)
+        #     # self.fields['dia'].initial = self.instance.dia
+        #     self.fields['hora_inicio'].initial = self.instance.hora_inicio.strftime('%H:%M')
+        #     self.fields['hora_fin'].initial = self.instance.hora_inicio.strftime('%H:%M')
+        #      # self.fields['salon'].initial = self.instance.salon
+        #     print("Choices:", self.fields['hora_inicio'].choices)
+        #     print("Initial value:", self.fields['hora_inicio'].initial)
+        #     print(f"Converted Initial value: {self.instance.hora_inicio.strftime('%H:%M')}")
+
+
+class BloqueDeClaseForm(forms.Form):
+    dia = forms.ModelMultipleChoiceField(queryset=Dia.objects.all(), widget=forms.SelectMultiple(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
+    hora_inicio = forms.ChoiceField(choices=[(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)],widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
+    hora_fin = forms.ChoiceField(choices=[(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)],widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
+    salon = forms.ModelChoiceField(queryset=Salon.objects.all(),widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
+
+    def __init__(self, *args, **kwargs):
+        self.instance = kwargs.pop('instance', None)
+        print(f"INSTANCE: {self.instance}")
+        super().__init__(*args, **kwargs)
+
+        if self.instance:
+            self.fields['dia'].initial = self.instance.dia.all()
             self.fields['hora_inicio'].initial = self.instance.hora_inicio.strftime('%H:%M')
             self.fields['hora_fin'].initial = self.instance.hora_fin.strftime('%H:%M')
             self.fields['salon'].initial = self.instance.salon
