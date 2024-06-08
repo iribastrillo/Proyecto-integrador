@@ -140,6 +140,8 @@ def detail_group(request, pk):
 
 def list_groups(request):
     grupos = Grupo.objects.all()
+    for grupo in grupos:
+        print(grupo.__dict__)
     return render(request, 'clases/grupo_list.html', {'lista_grupos': grupos})
 
 def load_professors(request):
