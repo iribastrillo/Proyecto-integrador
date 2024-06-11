@@ -32,4 +32,10 @@
     small {
         font-size: x-small;
     }
+
+    .wooden-cover {
+        background-image: url(../../../static/app/wood-texture.png);
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 }

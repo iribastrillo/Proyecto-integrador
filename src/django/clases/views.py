@@ -112,3 +112,8 @@ def load_professors(request):
     curso_id = request.GET.get('curso')
     profesores = Profesor.objects.filter(cursos__id=curso_id)
     return render(request, 'clases/profesores_options.html', {'profesores': profesores})
+
+def load_group(request):
+    id_grupo = request.GET.get('grupo')
+    grupo = Grupo.objects.get (pk=id_grupo)
+    return render(request, 'clases/partials/info_grupo_enrolment_modal.html', {'grupo': grupo})

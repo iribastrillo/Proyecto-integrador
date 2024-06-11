@@ -1,0 +1,1 @@
+web: gunicorn app.wsgi:application --chdir 'src/django'

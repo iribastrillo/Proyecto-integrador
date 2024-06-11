@@ -11,8 +11,7 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script> 
 		<script src="https://unpkg.com/htmx.org@1.9.12"></script> 
 		<link rel="icon" type="image/x-icon" href="{% static 'app/conservatorio-rodo-icon-beige-128px.png' %}">
- 
-		{% tailwind_css %}
+		<link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
 	</head>
 	<body class="bg-gray-950 text-gray-50">
 
@@ -24,6 +23,8 @@
 				{% block navbar %} {% endblock %}
 				<div class="p-4 sm:ml-64">
 					<div class="grid grid-cols-3 mt-14 gap-4 py-4 px-0">
+						{% block breadcrumb %} {% endblock %}
+						{% include 'base/components/alerts/full_w_alert.html' %}
 						{% block content %} {% endblock %}
 				    </div>
 					{% include 'base/components/footer.html' %}
