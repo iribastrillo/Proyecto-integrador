@@ -1,5 +1,7 @@
+from datetime import datetime
 from django import forms
-from domain.models import Curso, Salon, BloqueDeClase, Profesor
+from domain.models import Curso,Salon,Profesor,Dia
+
 
 class CreateGroupForm(forms.Form):
     curso = forms.ModelChoiceField(queryset=Curso.objects.all(),
@@ -15,31 +17,24 @@ class CreateGroupForm(forms.Form):
             curso_id = int(self.data.get("curso"))
             self.fields["profesores"].queryset = Profesor.objects.filter(cursos__id=curso_id).order_by("nombre")
         elif self.initial and 'curso' in self.initial:
+            print(f"THERE IS AN INITIAL VALUE:  {self.initial} " )
             curso_id = self.initial['curso'].id
             self.fields["profesores"].queryset = Profesor.objects.filter(cursos__id=curso_id).order_by("nombre")
 
 
-class BloqueDeClaseForm(forms.ModelForm):
-    class Meta:
-        model = BloqueDeClase
-        fields = [ 'dia', 'hora_inicio', 'hora_fin', 'salon','grupo']
+class BloqueDeClaseForm(forms.Form):
+    dia = forms.ModelMultipleChoiceField(queryset=Dia.objects.all(), widget=forms.SelectMultiple(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
+    hora_inicio = forms.ChoiceField(choices=[(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)],widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
+    hora_fin = forms.ChoiceField(choices=[(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)],widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
+    salon = forms.ModelChoiceField(queryset=Salon.objects.all(),widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
 
     def __init__(self, *args, **kwargs):
+        self.instance = kwargs.pop('instance', None)
+        print(f"INSTANCE: {self.instance}")
         super().__init__(*args, **kwargs)
-        WEEKDAYS=[
-            ('Lunes', 'Lunes'),
-            ('Martes', 'Martes'),
-            ('Miercoles', 'Miercoles'),
-            ('Jueves', 'Jueves'),
-            ('Viernes', 'Viernes'),
-            ('Sabado', 'Sabado'),
-            ('Domingo', 'Domingos')
-            ]
-        DIAS = list(WEEKDAYS)
-        DIAS.insert(0, ('', 'Seleccione opción'))
-        self.fields["dia"]=forms.ChoiceField(choices=DIAS)
-        self.fields["dia"].widget.attrs.update({"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"})
-        SALONES = list(Salon.objects.values_list('id', 'nombre'))
-        SALONES.insert(0, ('', 'Seleccione opción'))
-        self.fields["salon"]=forms.ChoiceField(choices=SALONES)
-        self.fields["salon"].widget.attrs.update({"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"})
+
+        if self.instance:
+            self.fields['dia'].initial = self.instance.dia.all()
+            self.fields['hora_inicio'].initial = self.instance.hora_inicio.strftime('%H:%M')
+            self.fields['hora_fin'].initial = self.instance.hora_fin.strftime('%H:%M')
+            self.fields['salon'].initial = self.instance.salon

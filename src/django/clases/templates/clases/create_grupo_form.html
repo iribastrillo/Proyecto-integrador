@@ -42,19 +42,36 @@
       </li>
     </ol>
   </nav>
-  <section class="col-span-1 bg-gray-950 p-8 lg:rounded mx-auto pt-32 shadow-md lg:pt-8 w-full lg:w-auto">
-  <form method="Post" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-md bg-gray-900 border border-gray-700 rounded p-8 ">
-    <div class="flex items-center justify-between mb-4">
-      <h5 class="text-xl font-bold leading-none text-white">Grupo</h5>
+  <section class='col-span-3 md:col-span-2 lg:col-span-2'>
 
-</div>
-    {% csrf_token %}
-    {{form.as_div}}
 
+    <form method="post" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-md bg-gray-900 border border-gray-700 rounded p-8">
+  {% csrf_token %}
+    <h5 class="text-xl font-bold leading-nonetext-white">Grupo</h5>
+    <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
+
+    {% include "clases/components/grupo_component.html" with form=form %}
+
+    <h5 class="text-xl font-bold leading-nonetext-white">Bloques de Clase</h5>
+    <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
+
+    <div id="bloque-forms">
+    {{ formset.management_form }}
+    {% for bloque_form in formset %}
+    {% include "clases/components/bloque_component.html" with form=bloque_form %}
+    {% endfor %}
+    </div>
+
+
+
+
+    <button type="button"  class='main-action-button w-full' hx-get= "{%url 'clases:add-bloque-form'%}" hx-target="#bloque-forms" hx-swap="beforeend">Agregar Clase</button>
     <input class='main-action-button w-full' type="submit" value="Agregar">
-    <button type="button"  class='main-action-button' onclick="window.location.href = '{% url 'clases:list-groups' %}'">Cancelar</button>
-
+    <button type="button"  class='main-action-button w-full' onclick="window.location.href = '{% url 'clases:list-groups' %}'">Cancelar</button>
   </form>
+
+
+
   </section>
 
 {% endblock %}
