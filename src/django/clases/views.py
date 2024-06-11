@@ -47,7 +47,7 @@ class UpdateBloqueDeClase(LoginRequiredMixin, UpdateView):
 
 @login_required
 def create_group(request):
-    BloqueDeClaseFormSet = formset_factory(BloqueDeClaseForm, extra=0)
+    BloqueDeClaseFormSet = formset_factory(BloqueDeClaseForm, extra=1)
     if request.method == 'POST':
         form = CreateGroupForm(request.POST)
         formset = BloqueDeClaseFormSet(request.POST)
