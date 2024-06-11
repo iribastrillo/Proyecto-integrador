@@ -10,7 +10,8 @@ from .views import (
                 list_groups,
                 update_group,
                 delete_group,
-                detail_group
+                detail_group,
+                add_block_class_form
                 )
 
 
@@ -19,6 +20,7 @@ app_name = 'clases'
 urlpatterns = [
     path('', ListBloqueDeClases.as_view(), name='home-class-blocks'),
     path('bloques/crear', CreateBloqueDeClase.as_view(), name='create-class-block'),
+    path('bloques/agregar-bloque-clase', add_block_class_form, name='add-bloque-form'),
     path('bloques/', ListBloqueDeClases.as_view(), name='list-class-blocks'),
     path('bloques/<int:pk>/detalle', DetailBloqueDeClase.as_view(), name='detail-class-block'),
     path('bloques/<int:pk>/editar', UpdateBloqueDeClase.as_view(), name='update-class-block'),

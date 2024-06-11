@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory,formset_factory
 from .forms import CreateGroupForm, BloqueDeClaseForm
 from datetime import datetime
+from django.utils.safestring import mark_safe
 
 
 class CreateBloqueDeClase(LoginRequiredMixin, CreateView):
@@ -46,11 +47,11 @@ class UpdateBloqueDeClase(LoginRequiredMixin, UpdateView):
 
 @login_required
 def create_group(request):
-    BloqueDeClaseFormSet = formset_factory(BloqueDeClaseForm, extra=1)
+    BloqueDeClaseFormSet = formset_factory(BloqueDeClaseForm, extra=0)
     if request.method == 'POST':
         form = CreateGroupForm(request.POST)
         formset = BloqueDeClaseFormSet(request.POST)
-
+        print(f"FORMSETT EN CREATE GROUP : {formset}")
         if form.is_valid() and formset.is_valid():
             curso = form.cleaned_data["curso"]
             profesores = form.cleaned_data["profesores"]
@@ -86,9 +87,10 @@ def update_group(request, pk):
 
     if request.method == 'POST':
         print("REQUEST IS POST")
+        print(request.POST)
         form = CreateGroupForm(request.POST)
         formset = [BloqueDeClaseForm(request.POST, prefix=str(i), instance=bloque) for i, bloque in enumerate(bloque_de_clase_instances)]
-
+        print(f"FORMSETT EN UPDATE GROUP : {formset}")
         if form.is_valid() and all([f.is_valid() for f in formset]):
             group.curso = form.cleaned_data["curso"]
             group.cupo = form.cleaned_data["cupo"]
@@ -148,3 +150,19 @@ def load_professors(request):
     curso_id = request.GET.get('curso')
     profesores = Profesor.objects.filter(cursos__id=curso_id)
     return render(request, 'clases/profesores_options.html', {'profesores': profesores})
+
+def add_block_class_form(request):
+    if request=='POST':
+        pass
+    form=BloqueDeClaseForm(prefix='formset', auto_id=False)
+    return render(request, 'clases/components/bloque_component.html', {'form': form})
+
+# Helper to build the needed formset
+def build_new_formset(formset, new_total_formsets):
+    html = ""
+
+    for form in formset.empty_form:
+        html += form.label_tag().replace('__prefix__', str(new_total_formsets))
+        html += str(form).replace('__prefix__', str(new_total_formsets))
+
+    return mark_safe(html)

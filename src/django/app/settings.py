@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+from os import getenv
 from pathlib import Path
 from shutil import which
 
@@ -25,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-@$qz#@%8n2njd)3dpu36!k8pitwydd^u@v4+rgpsblgd!e^jn2"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = getenv("IS_DEVELOPMENT",True)
 
-ALLOWED_HOSTS = ['ec2-54-237-216-133.compute-1.amazonaws.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [getenv("APP_HOST"), 'localhost', '127.0.0.1']
 
 DEV = True
 # Application definition
