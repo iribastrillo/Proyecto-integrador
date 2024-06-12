@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from utils.validators import EmailValidator
+from django.urls import reverse
 
 from core.domain.services import generate_unique_code
 
@@ -31,7 +32,7 @@ class Persona(models.Model):
                     break
                 except IntegrityError as e:
                     pass
-            self.code = new_code
+            self.slug = new_code
             self.user = user
         user.first_name = self.nombre
         user.last_name = self.apellido

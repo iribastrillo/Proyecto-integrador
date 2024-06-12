@@ -2,21 +2,22 @@ from django.views.generic import CreateView, ListView, DetailView, UpdateView, D
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 
 from .forms import InscripcionForm, BajaForm
 from profiles.models import Alumno
 
 
-class AlumnoCreateView(LoginRequiredMixin,CreateView):
+class AlumnoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model=Alumno
     fields = ['nombre', 'apellido', 'dni', 'fecha_nacimiento', 'direccion', 'telefono','email']
     template_name = 'estudiantes/estudiante_form.html'
-    
+    success_message = "Se agregó al estudiante con éxito"
     def get_success_url(self):
-           return reverse_lazy("estudiantes:detail-student", kwargs={"pk": self.get_object().pk})
+        return reverse_lazy("estudiantes:detail-student", kwargs={"slug": self.object.user.username})
 
 class AlumnoListView(LoginRequiredMixin,ListView):
     model = Alumno
@@ -24,7 +25,7 @@ class AlumnoListView(LoginRequiredMixin,ListView):
 
 class AlumnoDetailView(LoginRequiredMixin,DetailView):
     model = Alumno
-    context_object_name = 'student'
+    context_object_name = 'estudiante'
     template_name = 'estudiantes/estudiante_detail.html'
 
 class AlumnoUpdateView(LoginRequiredMixin,UpdateView):
@@ -32,11 +33,13 @@ class AlumnoUpdateView(LoginRequiredMixin,UpdateView):
     fields = ['nombre', 'apellido', 'dni', 'fecha_nacimiento', 'direccion', 'telefono','email']
     template_name = 'estudiantes/estudiante_form.html'
     def get_success_url(self):
-           return reverse_lazy("estudiantes:detail-student", kwargs={"slug": self.get_object().slug})
+        return reverse_lazy("estudiantes:detail-student", kwargs={"slug": self.get_object().slug})
 
-class AlumnoDeleteView(LoginRequiredMixin,DeleteView):
+class AlumnoDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Alumno
-    success_url = reverse_lazy ('students')
+    context_object_name = 'estudiante'
+    success_url = reverse_lazy ('estudiantes:students')
+    success_message = "El estudiante se eliminó con éxito"
     template_name = 'estudiantes/estudiante_confirm_delete.html'
     
 class InscripcionNueva(LoginRequiredMixin, View):
