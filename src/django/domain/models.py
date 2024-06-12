@@ -4,6 +4,7 @@ from django.utils.text import slugify
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 from profiles.models import Alumno, Profesor
+from autoslug import AutoSlugField
 
 
 class Dia(models.Model):
@@ -36,16 +37,16 @@ class Curso(models.Model):
         MaxValueValidator(1, "El valor debe estar entre 1 y 0."),
         MinValueValidator(0, "El valor debe estar entre 1 y 0.")
         ], default=0.5)
-    slug = models.SlugField(max_length=50)
+    slug = AutoSlugField(populate_from='nombre', unique=True)
 
     def __str__(self):
         return self.nombre
     def get_absolute_url(self):
         return reverse("courses")
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.nombre)
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.slug = slugify(self.nombre)
+    #     super().save(*args, **kwargs)
 
 
 class Previa(models.Model):
