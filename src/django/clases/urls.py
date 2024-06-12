@@ -1,12 +1,12 @@
 from django.urls import path
 from . import views
 
-
 app_name = 'clases'
 
 urlpatterns = [
     path('', views.ListBloqueDeClases.as_view(), name='home-class-blocks'),
     path('bloques/crear', views.CreateBloqueDeClase.as_view(), name='create-class-block'),
+    path('bloques/agregar-bloque-clase', views.add_block_class_form, name='add-bloque-form'),
     path('bloques/', views.ListBloqueDeClases.as_view(), name='list-class-blocks'),
     path('bloques/<int:pk>/detalle', views.DetailBloqueDeClase.as_view(), name='detail-class-block'),
     path('bloques/<int:pk>/editar', views.UpdateBloqueDeClase.as_view(), name='update-class-block'),
