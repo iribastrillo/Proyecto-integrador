@@ -1,11 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.db import IntegrityError
 from utils.validators import EmailValidator
+
+from core.domain.services import generate_unique_code
 
 
 class Persona(models.Model):
-    user = models.ForeignKey (User, on_delete=models.CASCADE)
+    slug = models.SlugField(max_length=8, unique=True, null=True, blank=True)
+    user = models.ForeignKey (User, on_delete=models.CASCADE, null=True, blank=True)
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     dni = models.CharField(max_length=8)
@@ -16,29 +19,35 @@ class Persona(models.Model):
     fecha_baja = models.DateField(null=True, blank=True)
     fecha_alta = models.DateField(auto_now_add=True)
     activo=models.BooleanField(default=True)
-
+    
+    def save(self, *args, **kwargs):
+        try:
+            user = User.objects.get(username=self.slug)
+        except User.DoesNotExist as e:
+            while True:
+                new_code = generate_unique_code()
+                try:
+                    user = User.objects.create (username=new_code, password=self.dni)
+                    break
+                except IntegrityError as e:
+                    pass
+            self.code = new_code
+            self.user = user
+        user.first_name = self.nombre
+        user.last_name = self.apellido
+        user.email = self.email
+        user.save()
+        super().save(*args, **kwargs)
+                
     class Meta:
         abstract = True
-
-    def __str__(self):
-        return self.nombre + ' ' + self.apellido
     
 class Alumno(Persona):
     def __str__(self):
-        return 'Alumno: '+self.nombre + ' ' + self.apellido
-    def save(self, *args, **kwargs):
-        user = User.objects.create_user(username=self.apellido, password=self.dni)
-        user.save()
-        self.user = user
-        super().save(*args, **kwargs)
+        return f'Alumno: {self.apellido}, {self.nombre}'
+
     
 class Profesor(Persona):
     cursos = models.ManyToManyField('domain.Curso')
     def __str__(self):
-        return 'Profesor: '+self.nombre + ' ' + self.apellido 
-
-    def save(self, *args, **kwargs):
-        user = User.objects.get_or_create(username=self.apellido, password=self.dni)
-        user.save()
-        self.user = user
-        super().save(*args, **kwargs)
+        return f'Profesor: {self.apellido}, {self.nombre}'

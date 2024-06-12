@@ -109,7 +109,7 @@ class Grupo (models.Model):
     profesores=models.ManyToManyField(Profesor) #validar que el profesor este asignado al curso
 
     def __str__(self) -> str:
-        return f"Grupo {self.pk} - Curso: {self.curso.nombre} - Cupo: {self.cupo}"
+        return f"Grupo {self.pk} | {self.curso.nombre}"
 
 
 class BloqueDeClase(models.Model):
