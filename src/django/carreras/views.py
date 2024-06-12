@@ -5,6 +5,7 @@ from django.views.generic import (CreateView,
                                   DeleteView)
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.shortcuts import render
 
@@ -22,9 +23,10 @@ class ListCourses (LoginRequiredMixin, ListView):
 class DetailCourse(LoginRequiredMixin, DetailView):
     model = Curso
     
-class DeleteCourse(LoginRequiredMixin, DeleteView):
+class DeleteCourse(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Curso
-    success_url = reverse_lazy ("courses")
+    success_url = reverse_lazy ("careers")
+    success_message = "El curso se eliminó con éxito"
     
 class UpdateCourse(LoginRequiredMixin, UpdateView):
     model=Curso
@@ -40,8 +42,10 @@ class ListCareer (LoginRequiredMixin, ListView):
 class DetailCareer(LoginRequiredMixin, DetailView):
     model = Carrera
     
-class DeleteCareer(LoginRequiredMixin, DeleteView):
+class DeleteCareer(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Carrera
+    success_url = reverse_lazy ("careers")
+    success_message = "La carrera se eliminó con éxito"
     
 class UpdateCareer(LoginRequiredMixin, UpdateView):
     model = Carrera
