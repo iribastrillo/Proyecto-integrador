@@ -25,7 +25,6 @@ class ProfesorListView(LoginRequiredMixin,ListView):
 
 class ProfesorDetailView(LoginRequiredMixin,DetailView):
     model=Profesor
-    # template_name = 'domain/profesor_detail.html'
 
 class ProfesorUpdateView(LoginRequiredMixin,UpdateView):
     model=Profesor
@@ -46,6 +45,6 @@ class Pagos (View):
         context = {
             'profesor': professor,
             'monthly_payment' : calculate_payment(groups),
-            'groups': groups
+            'groups': groups,
         }
         return render (request, self.template_name, context)

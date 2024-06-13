@@ -52,3 +52,6 @@ class Profesor(Persona):
     cursos = models.ManyToManyField('domain.Curso')
     def __str__(self):
         return f'Profesor: {self.apellido}, {self.nombre}'
+    def get_absolute_url(self):
+        return reverse("detail-professor", kwargs={"slug": self.slug})
+    
