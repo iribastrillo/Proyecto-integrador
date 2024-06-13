@@ -93,8 +93,13 @@ class AlumnoCarrera(models.Model):
 
 
 class Salon(models.Model):
-    nombre=models.CharField(max_length=50)
-    capacidad=models.IntegerField(null=True, blank=True)
+    nombre = models.CharField(max_length=50, unique=True, error_messages={
+        'nombre': "Ya existe un registro con este nombre."
+    })
+    capacidad = models.IntegerField(null=True, blank=True, validators=[
+        MinValueValidator(1, "La capacidad debe ser mayor o igual a 1."),
+        MaxValueValidator(500, "La capacidad debe ser menor o igual a 500.")
+    ])
     activo=models.BooleanField(default=True)
     descripcion=models.TextField(null=True, blank=True,default=None)
     def __str__(self):

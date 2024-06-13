@@ -20,13 +20,14 @@ class Persona(models.Model):
     fecha_baja = models.DateField(null=True, blank=True)
     fecha_alta = models.DateField(auto_now_add=True)
     activo=models.BooleanField(default=True)
-    
+
     def save(self, *args, **kwargs):
         try:
             user = User.objects.get(username=self.slug)
         except User.DoesNotExist as e:
             while True:
                 new_code = generate_unique_code()
+                print(new_code)
                 try:
                     user = User.objects.create (username=new_code, password=self.dni)
                     break
@@ -39,15 +40,15 @@ class Persona(models.Model):
         user.email = self.email
         user.save()
         super().save(*args, **kwargs)
-                
+
     class Meta:
         abstract = True
-    
+
 class Alumno(Persona):
     def __str__(self):
         return f'Alumno: {self.apellido}, {self.nombre}'
 
-    
+
 class Profesor(Persona):
     cursos = models.ManyToManyField('domain.Curso')
     def __str__(self):
