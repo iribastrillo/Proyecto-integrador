@@ -12,5 +12,5 @@ def calculate_payment (groups):
     total = 0
     for group in groups:
         course = group.curso
-        total += Decimal(course.payout_ratio) * Decimal(course.costo)/Decimal('1.22')
-    return total
+        total += Decimal(course.payout_ratio) * Decimal(course.costo)
+    return total/Decimal('1.22'), total

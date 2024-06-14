@@ -14,7 +14,7 @@ from .forms import CreateCareerForm
 
 class CreateCourse (LoginRequiredMixin, CreateView):
     model = Curso
-    fields = ['nombre', 'descripcion', 'duracion_meses', 'costo', 'fecha_inicio']
+    fields = ['nombre', 'descripcion', 'duracion_meses', 'costo', 'payout_ratio', 'fecha_inicio']
     success_url = reverse_lazy ("careers")
     
 class ListCourses (LoginRequiredMixin, ListView):
@@ -30,7 +30,7 @@ class DeleteCourse(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     
 class UpdateCourse(LoginRequiredMixin, UpdateView):
     model=Curso
-    fields = ['nombre', 'descripcion', 'duracion_meses', 'costo', 'fecha_inicio']
+    fields = ['nombre', 'descripcion', 'duracion_meses', 'costo', 'payout_ratio', 'fecha_inicio']
     
 class CreateCareer (LoginRequiredMixin, CreateView):
     model = Carrera

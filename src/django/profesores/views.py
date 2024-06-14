@@ -42,9 +42,11 @@ class Pagos (View):
     def get (self, request, *args, **kwargs):
         professor = Profesor.objects.get (slug = kwargs['slug'])
         groups = professor.grupo_set.all()
+        iva_included, nominal = calculate_payment(groups)
         context = {
-            'profesor': professor,
-            'monthly_payment' : calculate_payment(groups),
+            'professor': professor,
+            'monthly_payment' : iva_included,
+            'nominal': nominal,
             'groups': groups,
         }
         return render (request, self.template_name, context)
