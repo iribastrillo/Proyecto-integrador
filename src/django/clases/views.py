@@ -6,12 +6,12 @@ from django.views.generic import (CreateView,
                                   DeleteView)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from domain.models import BloqueDeClase,Grupo
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from domain.models import Profesor
-from django.http import HttpResponseRedirect
+from django.http import HttpRequest, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory,formset_factory
-from .forms import CreateGroupForm, BloqueDeClaseForm
+from .forms import CreateGroupForm, BloqueDeClaseForm, BloqueFormSet
 from datetime import datetime
 from django.utils.safestring import mark_safe
 
@@ -47,11 +47,15 @@ class UpdateBloqueDeClase(LoginRequiredMixin, UpdateView):
 
 @login_required
 def create_group(request):
-    BloqueDeClaseFormSet = formset_factory(BloqueDeClaseForm, extra=1)
+    print(f"request post cleaned:{request.POST}")
+
+    BloqueDeClaseFormSet = formset_factory(BloqueDeClaseForm )
     if request.method == 'POST':
         form = CreateGroupForm(request.POST)
         formset = BloqueDeClaseFormSet(request.POST)
-        print(f"FORMSETT EN CREATE GROUP : {formset}")
+        print(f"Formset management form {formset.management_form}")
+
+        # print(f"FORMSETT EN CREATE GROUP : {formset}")
         if form.is_valid() and formset.is_valid():
             curso = form.cleaned_data["curso"]
             profesores = form.cleaned_data["profesores"]
@@ -60,7 +64,7 @@ def create_group(request):
             groupo.save()
 
             for bloque_form in formset:
-                # dia = bloque_form.cleaned_data['dia']
+                print(f"bloque form : {bloque_form.cleaned_data}")
                 hora_inicio = datetime.strptime(bloque_form.cleaned_data['hora_inicio'], '%H:%M').time()
                 hora_fin = datetime.strptime(bloque_form.cleaned_data['hora_fin'], '%H:%M').time()
                 salon = bloque_form.cleaned_data['salon']
@@ -76,8 +80,16 @@ def create_group(request):
     else:
         form = CreateGroupForm()
         formset = BloqueDeClaseFormSet()
-
+    print(f"View management form  formset:{ formset.management_form}")
     return render(request, 'clases/create_grupo_form.html', {'form': form, 'formset': formset})
+
+def new_form(request: HttpRequest):
+    print("SE CLICKEA AGREGAR BLOQUE DE CLASE")
+    form = BloqueDeClase()
+    context = {
+        "form": form
+    }
+    return render(request, "partials/clase_form.html", context)
 
 @login_required
 def update_group(request, pk):
@@ -162,6 +174,31 @@ def add_block_class_form(request):
     form=BloqueDeClaseForm(prefix='formset', auto_id=False)
     return render(request, 'clases/components/bloque_component.html', {'form': form})
 
+
+
+
+# https://stackoverflow.com/questions/74757197/the-right-way-to-dynamically-add-django-formset-instances-and-post-usign-htmx/74924295#74924295
+def formset_view(request):
+    template = 'bloque_component.html'
+
+    if request.POST:
+        formset = BloqueFormSet(request.POST)
+        if formset.is_valid():
+            print(f">>>> form is valid. Request.post is {request.POST}")
+            return HttpResponseRedirect(reverse('clases:formset-view'))
+    else:
+        formset = BloqueFormSet()
+
+    return render(request, template, {'formset': formset})
+
+
+def add_formset(request, current_total_formsets):
+    new_formset = build_new_formset(BloqueFormSet(), current_total_formsets)
+    context = {
+        'new_formset': new_formset,
+        'new_total_formsets': current_total_formsets + 1,
+    }
+    return render(request, 'clases/partials/formset_partial.html', context)
 # Helper to build the needed formset
 def build_new_formset(formset, new_total_formsets):
     html = ""
