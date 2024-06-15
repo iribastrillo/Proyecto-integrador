@@ -1,18 +1,13 @@
 from django.urls import path
-from .views import (
-               ProfesorCreateView,
-               ProfesorListView,
-               ProfesorDetailView,
-               ProfesorUpdateView,
-               ProfesorDeleteView,
-                )
+from . import views
 
 urlpatterns = [
-    path('', ProfesorListView.as_view(), name='professors'),
-    path('crear-profesor/', ProfesorCreateView.as_view(), name='create-professor'),
-    path('detalle-profesor/<int:pk>', ProfesorDetailView.as_view(), name='detail-professor'),
-    path('editar-profesor/<int:pk>', ProfesorUpdateView.as_view(), name='update-professor'),
-    path('eliminar-profesor/<int:pk>', ProfesorDeleteView.as_view(), name='delete-professor'),
+    path('', views.ProfesorListView.as_view(), name='professors'),
+    path('ficha-del-profesor/nuevo', views.ProfesorCreateView.as_view(), name='create-professor'),
+    path('<slug>/detalle', views.ProfesorDetailView.as_view(), name='detail-professor'),
+    path('<slug>/editar', views.ProfesorUpdateView.as_view(), name='update-professor'),
+    path('<int:pk>/eliminar', views.ProfesorDeleteView.as_view(), name='delete-professor'),
+    path('<slug>/pagos', views.Pagos.as_view(), name='payments-professor'),
 ]
 
 

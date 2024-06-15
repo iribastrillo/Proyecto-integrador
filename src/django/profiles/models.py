@@ -18,8 +18,6 @@ class Persona(models.Model):
     telefono = models.CharField(max_length=20)
     email = models.EmailField(validators=[EmailValidator()])
     fecha_baja = models.DateField(null=True, blank=True)
-    fecha_alta = models.DateField(auto_now_add=True)
-    activo=models.BooleanField(default=True)
     
     def save(self, *args, **kwargs):
         try:
@@ -52,3 +50,6 @@ class Profesor(Persona):
     cursos = models.ManyToManyField('domain.Curso')
     def __str__(self):
         return f'Profesor: {self.apellido}, {self.nombre}'
+    def get_absolute_url(self):
+        return reverse("detail-professor", kwargs={"slug": self.slug})
+    
