@@ -97,3 +97,10 @@ class BajaEstudiante(LoginRequiredMixin, View):
         else:
             messages.add_message (request, messages.ERROR, "Parece que hubo un problema.")
             return HttpResponseRedirect(reverse('estudiantes:detail-student', kwargs={'slug':student.slug}))
+        
+class InhabilitarAlumno(LoginRequiredMixin, View):
+    def post (self, request, *args, **kwargs):
+        student = Alumno.objects.get (slug = kwargs['slug'])
+        student.user.is_active = False
+        messages.add_message (request, messages.SUCCESS, f"Inhabilitaste el usuario de {student.apellido}, {student.nombre}.")
+        return HttpResponseRedirect(reverse('estudiantes:detail-student', kwargs={'slug':student.slug}))
