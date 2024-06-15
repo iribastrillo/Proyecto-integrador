@@ -3,12 +3,15 @@
     {{ formset.management_form }}
 
     {% for form in formset %}
-    <p>{{ form }}</p>
+    {% include "clases/components/bloque_component.html" with form=form %}
+
+
     {% endfor %}
 
     <button type="button"
+
             hx-trigger="click"
-            hx-get="{% url 'clases:add-formset' formset.total_form_count %}"
+            hx-get="{% url 'clases:add-formset' formset.total_form_count|default:0 %}"
             hx-swap="outerHTML">
       Add formset
     </button>

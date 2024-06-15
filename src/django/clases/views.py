@@ -1,3 +1,4 @@
+from django import forms
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import (CreateView,
                                   ListView,
@@ -55,13 +56,13 @@ def create_group(request):
         formset = BloqueDeClaseFormSet(request.POST)
         print(f"Formset management form {formset.management_form}")
 
-        # print(f"FORMSETT EN CREATE GROUP : {formset}")
+        print(f"FORMSETT EN CREATE GROUP : {formset}")
         if form.is_valid() and formset.is_valid():
             curso = form.cleaned_data["curso"]
             profesores = form.cleaned_data["profesores"]
             cupo = form.cleaned_data["cupo"]
-            groupo = Grupo(curso=curso, cupo=cupo)
-            groupo.save()
+            grupo = Grupo(curso=curso, cupo=cupo)
+            grupo.save()
 
             for bloque_form in formset:
                 print(f"bloque form : {bloque_form.cleaned_data}")
@@ -69,11 +70,11 @@ def create_group(request):
                 hora_fin = datetime.strptime(bloque_form.cleaned_data['hora_fin'], '%H:%M').time()
                 salon = bloque_form.cleaned_data['salon']
 
-                bloque = BloqueDeClase(hora_inicio=hora_inicio, hora_fin=hora_fin, salon=salon, grupo=groupo)
+                bloque = BloqueDeClase(hora_inicio=hora_inicio, hora_fin=hora_fin, salon=salon, grupo=grupo)
                 bloque.save()
                 bloque.dia.set(bloque_form.cleaned_data['dia'])  # Use .set() for ManyToManyField
 
-            groupo.profesores.set(profesores)
+            grupo.profesores.set(profesores)
             return HttpResponseRedirect(reverse_lazy('clases:list-groups'))
         else:
             print(form.errors)
@@ -95,14 +96,14 @@ def new_form(request: HttpRequest):
 def update_group(request, pk):
     group = get_object_or_404(Grupo, id=pk)
     bloque_de_clase_instances = BloqueDeClase.objects.filter(grupo=group)
-    print(f"Bloques de clase  {bloque_de_clase_instances}")
+    print(f"Bloques de clase en update group {bloque_de_clase_instances}")
 
     if request.method == 'POST':
-        print("REQUEST IS POST")
+        print("REQUEST IS POST in update group")
         print(request.POST)
         form = CreateGroupForm(request.POST)
-        formset = [BloqueDeClaseForm(request.POST, prefix=str(i), instance=bloque) for i, bloque in enumerate(bloque_de_clase_instances)]
-        print(f"FORMSETT EN UPDATE GROUP : {formset}")
+        # formset = [BloqueDeClaseForm(request.POST, prefix=str(i), instance=bloque) for i, bloque in enumerate(bloque_de_clase_instances)]
+        formset = [BloqueDeClaseForm(request.POST, prefix=str(form), instance=bloque) for i, bloque in enumerate(bloque_de_clase_instances)]
         if form.is_valid() and all([f.is_valid() for f in formset]):
             group.curso = form.cleaned_data["curso"]
             group.cupo = form.cleaned_data["cupo"]
@@ -123,7 +124,7 @@ def update_group(request, pk):
 
             return HttpResponseRedirect(reverse_lazy('clases:list-groups'))
         else:
-            print(form.errors)
+            print(f"form errors: {form.errors}")
     else:
         form_data = {
             'curso': group.curso,
@@ -199,12 +200,14 @@ def add_formset(request, current_total_formsets):
         'new_total_formsets': current_total_formsets + 1,
     }
     return render(request, 'clases/partials/formset_partial.html', context)
+
 # Helper to build the needed formset
 def build_new_formset(formset, new_total_formsets):
     html = ""
 
     for form in formset.empty_form:
+        html += f'<div class="flex flex-col mb-4">'
         html += form.label_tag().replace('__prefix__', str(new_total_formsets))
         html += str(form).replace('__prefix__', str(new_total_formsets))
-
+        html += '</div>'
     return mark_safe(html)
