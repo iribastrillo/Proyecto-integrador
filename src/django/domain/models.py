@@ -37,12 +37,12 @@ class Curso(models.Model):
         MinValueValidator(0, "El valor debe estar entre 1 y 0.")
         ], default=0.5)
     slug = models.SlugField(max_length=50)
-    
+
     def __str__(self):
         return self.nombre
     def get_absolute_url(self):
         return reverse("courses")
-    
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nombre)
         super().save(*args, **kwargs)
@@ -93,8 +93,13 @@ class AlumnoCarrera(models.Model):
 
 
 class Salon(models.Model):
-    nombre=models.CharField(max_length=50)
-    capacidad=models.IntegerField(null=True, blank=True)
+    nombre = models.CharField(max_length=50, unique=True, error_messages={
+        'nombre': "Ya existe un registro con este nombre."
+    })
+    capacidad = models.IntegerField(null=True, blank=True, validators=[
+        MinValueValidator(1, "La capacidad debe ser mayor o igual a 1."),
+        MaxValueValidator(500, "La capacidad debe ser menor o igual a 500.")
+    ])
     activo=models.BooleanField(default=True)
     descripcion=models.TextField(null=True, blank=True,default=None)
     def __str__(self):
@@ -105,11 +110,11 @@ class Grupo (models.Model):
     identificador = models.CharField(max_length=1)
     curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
     alumnos=models.ManyToManyField(Alumno, blank=True) #validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
-    cupo=models.IntegerField() # Este cupo no debe ser mayor a la cantidad de personas que acepte el salon
+    cupo=models.IntegerField()
     profesores=models.ManyToManyField(Profesor) #validar que el profesor este asignado al curso
 
     def __str__(self) -> str:
-        return f"Grupo {self.pk} - Curso: {self.curso.nombre} - Cupo: {self.cupo}"
+        return f"Grupo {self.pk} | {self.curso.nombre}"
 
 
 class BloqueDeClase(models.Model):
@@ -120,7 +125,7 @@ class BloqueDeClase(models.Model):
     grupo=models.ForeignKey(Grupo, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.hora_inicio} - {self.hora_fin}: {self.grupo}"
+        return f"{self.dia} - {self.hora_inicio} - {self.hora_fin}: {self.grupo} - {self.salon}"
 
 
 class Leccion(models.Model):
@@ -130,6 +135,6 @@ class Leccion(models.Model):
     bloque=models.ForeignKey(BloqueDeClase, on_delete=models.CASCADE)
     fecha=models.DateTimeField()
     descripcion=models.TextField(max_length=250, blank=True, null=True)
-    
+
     def __str__(self):
         return f"Lección: {self.grupo} {self.bloque.hora_inicio} - {self.bloque.hora_fin}"
