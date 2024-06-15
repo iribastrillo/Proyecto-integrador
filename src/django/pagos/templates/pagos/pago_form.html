@@ -1,0 +1,26 @@
+<form method="POST" action="{% url 'pagos:add-payment' student.slug %}" enctype="multipart/form-data">
+  {% csrf_token %}
+    <div>
+        <label for="id_alumno">Alumno:</label>
+        <span>{{ student.nombre }}</span>
+        {{ form.alumno }}
+    </div>
+    <div>
+        <label for="id_monto">Monto:</label>
+        <input type="number" id="id_monto" name="monto">
+    </div>
+    <div>
+        <label for="id_fecha">Fecha:</label>
+        <input type="date" id="id_fecha" name="fecha">
+    </div>
+    <div>
+        <label for="id_descripcion">Descripción:</label>
+        <textarea id="id_descripcion" name="descripcion"></textarea>
+    </div>
+    <div>
+        <label for="id_comprobante">Comprobante:</label>
+        <input type="file" id="id_comprobante" name="comprobante">
+    </div>
+    <button type="submit">Guardar</button>
+</form>
+
