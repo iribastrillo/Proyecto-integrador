@@ -1,6 +1,6 @@
 from datetime import datetime
 from django import forms
-from domain.models import Curso,Salon,Profesor,Dia
+from domain.models import BloqueDeClase, Curso,Salon,Profesor,Dia
 
 
 class CreateGroupForm(forms.Form):
@@ -39,4 +39,11 @@ class BloqueDeClaseForm(forms.Form):
             self.fields['hora_fin'].initial = self.instance.hora_fin.strftime('%H:%M')
             self.fields['salon'].initial = self.instance.salon
 
+
 BloqueFormSet = forms.formset_factory(BloqueDeClaseForm)
+# BloqueFormSet = forms.modelformset_factory(
+#     BloqueDeClase,
+#     form=BloqueDeClaseForm,  # Replace with your custom form class
+#     fields=('dia', 'hora_inicio', 'hora_fin', 'salon'),
+#     extra=0  # Set the number of extra forms to display
+# )
