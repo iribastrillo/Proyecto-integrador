@@ -115,6 +115,11 @@ class Grupo (models.Model):
 
     def __str__(self) -> str:
         return f"Grupo {self.pk} | {self.curso.nombre}"
+    def get_absolute_url(self):
+        return reverse("clases:detail-group", kwargs={"pk": self.pk})
+    @property
+    def amount_payable(self):
+        return self.curso.costo * self.curso.payout_ratio
 
 
 class BloqueDeClase(models.Model):

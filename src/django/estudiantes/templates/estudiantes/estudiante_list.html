@@ -34,7 +34,7 @@
 {% block content %}
 {%if object_list %}
 <section class='col-span-3 md:col-span-2 lg:col-span-2'>
-  <div class="w-full max-w-md p-4 bg-gray-900 border border-gray-700 rounded shadow sm:p-8">
+  <div class="w-full max-w-full p-4 bg-gray-900 border border-gray-700 rounded shadow sm:p-8">
     <div class="flex items-center justify-between mb-4">
         <h5 class="text-xl font-bold leading-nonetext-white">Estudiantes</h5>
         <a href="{% url 'estudiantes:create-student' %}">

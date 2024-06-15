@@ -43,7 +43,7 @@
     </ol>
   </nav>
 
-<form method='post' class="col-span-3 md:col-span-2 lg:col-span-2 max-w-md bg-gray-900 border border-gray-700 rounded p-8">{% csrf_token %}
+<form method='post' class="col-span-3 md:col-span-2 lg:col-span-2 max-w-full bg-gray-900 border border-gray-700 rounded p-8">{% csrf_token %}
         {{form.errors}}
     <div class="flex flex-col mb-4">
         {{form.nombre.label_tag}}
@@ -56,6 +56,10 @@
     <div class="flex flex-col mb-4">
         {{form.duracion_meses.label_tag}}
         {{form.duracion_meses}}
+    </div>
+    <div class="flex flex-col mb-4">
+      {{form.payout_ratio.label_tag}}
+      {{form.payout_ratio}}
     </div>
     <div class="flex flex-col mb-4">
         {{ form.fecha_inicio.label_tag }}
