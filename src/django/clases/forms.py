@@ -38,3 +38,5 @@ class BloqueDeClaseForm(forms.Form):
             self.fields['hora_inicio'].initial = self.instance.hora_inicio.strftime('%H:%M')
             self.fields['hora_fin'].initial = self.instance.hora_fin.strftime('%H:%M')
             self.fields['salon'].initial = self.instance.salon
+
+BloqueFormSet = forms.formset_factory(BloqueDeClaseForm)

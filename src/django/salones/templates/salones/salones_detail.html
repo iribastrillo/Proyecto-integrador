@@ -12,9 +12,9 @@
 
 {% endblock %}
 
-{% block content %}`
+{% block content %}
 
-<section class="bg-gray-950 p-8 lg:rounded mx-auto pt-32 shadow-md lg:pt-8 w-full lg:w-auto">
+{% comment %} <section class="bg-gray-950 p-8 lg:rounded mx-auto pt-32 shadow-md lg:pt-8 w-full lg:w-auto">
     <h1>Detalles del salon</h1>
     <div class="p-8">
         {{salon}}
@@ -22,6 +22,7 @@
     <div class="p-8">
         <button type="button"  class='main-action-button' onclick="window.location.href = {% url 'salones:classrooms' %}">Listar Salones</button>
     </div>
-</section>
+</section> {% endcomment %}
+{% include 'salones/components/salon_card_component.html' %}
 
 {% endblock %}

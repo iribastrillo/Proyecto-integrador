@@ -9,6 +9,7 @@ from django.views.generic import (CreateView,
 from django.urls import reverse_lazy
 from domain.models import (Salon)
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 
 # Create your views here.
@@ -16,8 +17,19 @@ class SalonesCreateView(LoginRequiredMixin,CreateView):
     model=Salon
     fields = ['nombre', 'capacidad','descripcion']
     template_name = 'salones/salones_form.html'
-
     success_url=reverse_lazy('salones:classrooms')
+
+    # def form_valid(self, form):
+    #     return super().form_valid(form)
+
+
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        for field in form.errors:
+            for error in form.errors[field]:
+                messages.add_message(self.request, messages.ERROR, error)
+        return response
+
 
 class SalonesListView(LoginRequiredMixin,ListView):
     model=Salon
@@ -32,9 +44,23 @@ class SalonesUpdateView(LoginRequiredMixin,UpdateView):
     model=Salon
     fields = '__all__'
     template_name = 'salones/salones_form.html'
-    success_url=reverse_lazy('salones:list-classrooms')
+    success_url=reverse_lazy('salones:classrooms')
+
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        if 'nombre' in form.errors:
+            print(f"Nombre form errors: {form.errors['nombre']}")
+            for error in form.errors['nombre']:
+                messages.add_message(self.request, messages.ERROR, error)
+        if 'capacidad' in form.errors:
+            print(f"Capacidad form errors: {form.errors['capacidad']}")
+            for error in form.errors['capacidad']:
+                messages.add_message(self.request, messages.ERROR, error)
+        return response
+
 
 class SalonesDeleteView(LoginRequiredMixin,DeleteView):
     model=Salon
     template_name = 'salones/salones_confirm_delete.html'
-    success_url=reverse_lazy('salones:list-classrooms')
+    success_url=reverse_lazy('salones:classrooms')
+    success_message = "El salon se eliminó con éxito"
