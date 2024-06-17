@@ -39,6 +39,10 @@ class Persona(models.Model):
         user.email = self.email
         user.save()
         super().save(*args, **kwargs)
+        
+    def delete (self, *args, **kwargs):
+        self.user.delete()
+        super().delete (*args, **kwargs)
 
     class Meta:
         abstract = True

@@ -16,7 +16,7 @@ from core.domain.services import calculate_payment
 class ProfesorCreateView(LoginRequiredMixin,CreateView):
     model=Profesor
     fields = ['nombre', 'apellido', 'dni', 'fecha_nacimiento', 'direccion', 'telefono','email','cursos']
-    success_url=reverse_lazy('professors')
+    success_url=reverse_lazy('profiles:users')
 
 class ProfesorListView(LoginRequiredMixin,ListView):
     model=Profesor
@@ -34,7 +34,7 @@ class ProfesorUpdateView(LoginRequiredMixin,UpdateView):
 
 class ProfesorDeleteView(LoginRequiredMixin,DeleteView):
     model=Profesor
-    success_url=reverse_lazy('profesores:list-professors')
+    success_url=reverse_lazy('profiles:users')
 
 class Pagos (View):
     template_name = 'profesores/payments.html'
