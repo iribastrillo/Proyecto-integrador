@@ -30,6 +30,10 @@ urlpatterns = [
         auth_views.LoginView.as_view(redirect_authenticated_user=True, next_page="home"),
         name="login"),
     path("accounts/logout/", auth_views.LogoutView.as_view(next_page="login"), name="logout"),
+    path(
+        "accounts/password-change",
+        views.CustomPasswordChangeView.as_view(),
+        name='password-change'),
     path("app/", include([
         path("", views.home, name="home"),
         path("carreras/",include('carreras.urls')),

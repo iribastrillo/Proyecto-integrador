@@ -38,7 +38,7 @@ class AlumnoUpdateView(LoginRequiredMixin,UpdateView):
 class AlumnoDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Alumno
     context_object_name = 'estudiante'
-    success_url = reverse_lazy ('estudiantes:students')
+    success_url = reverse_lazy ('profiles:users')
     success_message = "El estudiante se eliminó con éxito"
     template_name = 'estudiantes/estudiante_confirm_delete.html'
     

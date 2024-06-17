@@ -4,9 +4,8 @@ from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-
-from profesores.views import UpdateView as ProfesorUpdateView
-from estudiantes.views import UpdateView as AlumnoUpdateView
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from .models import Profesor, Alumno
 
@@ -22,9 +21,9 @@ class UpdateProfile (LoginRequiredMixin, View):
         professor = request.user.profesor_set.all()
         student = request.user.alumno_set.all()
         if professor.exists():
-            pass
+            return HttpResponseRedirect(reverse ('profiles:update-professor', kwargs={'slug': professor.first().slug}))
         if student.exists():
-            pass
+            return HttpResponseRedirect(reverse ('profiles:update-student', kwargs={'slug': student.first().slug}))
         
 class ProfessorsAndStudents (LoginRequiredMixin, View):
     template_name = 'profiles/profesores_y_estudiantes.html'
