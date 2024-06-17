@@ -18,7 +18,7 @@ class Persona(models.Model):
     telefono = models.CharField(max_length=20)
     email = models.EmailField(validators=[EmailValidator()])
     fecha_baja = models.DateField(null=True, blank=True)
-
+    
     def save(self, *args, **kwargs):
         try:
             user = User.objects.get(username=self.slug)
