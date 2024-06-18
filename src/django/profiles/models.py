@@ -10,7 +10,7 @@ from core.domain.services import generate_unique_code
 
 class Persona(models.Model):
     slug = models.SlugField(max_length=8, unique=True, null=True, blank=True)
-    user = models.ForeignKey (User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     dni = models.CharField(max_length=8)
@@ -19,7 +19,7 @@ class Persona(models.Model):
     telefono = models.CharField(max_length=20)
     email = models.EmailField(validators=[EmailValidator()])
     fecha_baja = models.DateField(null=True, blank=True)
-    
+
     def save(self, *args, **kwargs):
         try:
             user = User.objects.get(username=self.slug)
@@ -28,7 +28,9 @@ class Persona(models.Model):
                 new_code = generate_unique_code()
                 print(new_code)
                 try:
-                    user = User.objects.create (username=new_code, password=make_password(self.dni))
+                    user = User.objects.create(
+                        username=new_code, password=make_password(self.dni)
+                    )
                     break
                 except IntegrityError as e:
                     pass
@@ -39,23 +41,25 @@ class Persona(models.Model):
         user.email = self.email
         user.save()
         super().save(*args, **kwargs)
-        
-    def delete (self, *args, **kwargs):
+
+    def delete(self, *args, **kwargs):
         self.user.delete()
-        super().delete (*args, **kwargs)
+        super().delete(*args, **kwargs)
 
     class Meta:
         abstract = True
 
+
 class Alumno(Persona):
     def __str__(self):
-        return f'Alumno: {self.apellido}, {self.nombre}'
+        return f"Alumno: {self.apellido}, {self.nombre}"
 
 
 class Profesor(Persona):
-    cursos = models.ManyToManyField('domain.Curso')
+    cursos = models.ManyToManyField("domain.Curso")
+
     def __str__(self):
-        return f'Profesor: {self.apellido}, {self.nombre}'
+        return f"Profesor: {self.apellido}, {self.nombre}"
+
     def get_absolute_url(self):
         return reverse("detail-professor", kwargs={"slug": self.slug})
-    

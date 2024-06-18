@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('domain', '0014_alter_curso_payout_ratio'),
+        ("domain", "0014_alter_curso_payout_ratio"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='grupo',
-            name='identificador',
-            field=models.CharField(default='A', max_length=1),
+            model_name="grupo",
+            name="identificador",
+            field=models.CharField(default="A", max_length=1),
             preserve_default=False,
         ),
     ]

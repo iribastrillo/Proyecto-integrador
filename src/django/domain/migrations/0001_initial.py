@@ -8,92 +8,189 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='AlumnoCarrera',
+            name="AlumnoCarrera",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('fecha_inscripcion', models.DateTimeField(auto_now_add=True)),
-                ('fecha_finalizado', models.DateTimeField(blank=True, null=True)),
-                ('aprobado', models.BooleanField(default=False)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("fecha_inscripcion", models.DateTimeField(auto_now_add=True)),
+                ("fecha_finalizado", models.DateTimeField(blank=True, null=True)),
+                ("aprobado", models.BooleanField(default=False)),
             ],
         ),
         migrations.CreateModel(
-            name='AlumnoCurso',
+            name="AlumnoCurso",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('fecha_inscripcion', models.DateTimeField(auto_now_add=True)),
-                ('fecha_finalizado', models.DateTimeField(blank=True, null=True)),
-                ('aprobado', models.BooleanField(default=False)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("fecha_inscripcion", models.DateTimeField(auto_now_add=True)),
+                ("fecha_finalizado", models.DateTimeField(blank=True, null=True)),
+                ("aprobado", models.BooleanField(default=False)),
             ],
         ),
         migrations.CreateModel(
-            name='BloqueDeClase',
+            name="BloqueDeClase",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('cupo', models.IntegerField()),
-                ('dia', models.CharField(choices=[('Lunes', 'Lunes'), ('Martes', 'Martes'), ('Miercoles', 'Miercoles'), ('Jueves', 'Jueves'), ('Viernes', 'Viernes'), ('Sabado', 'Sabado'), ('Domingo', 'Domingos')], max_length=500)),
-                ('duracion', models.IntegerField()),
-                ('hora_inicio', models.TimeField()),
-                ('hora_fin', models.TimeField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("cupo", models.IntegerField()),
+                (
+                    "dia",
+                    models.CharField(
+                        choices=[
+                            ("Lunes", "Lunes"),
+                            ("Martes", "Martes"),
+                            ("Miercoles", "Miercoles"),
+                            ("Jueves", "Jueves"),
+                            ("Viernes", "Viernes"),
+                            ("Sabado", "Sabado"),
+                            ("Domingo", "Domingos"),
+                        ],
+                        max_length=500,
+                    ),
+                ),
+                ("duracion", models.IntegerField()),
+                ("hora_inicio", models.TimeField()),
+                ("hora_fin", models.TimeField()),
             ],
         ),
         migrations.CreateModel(
-            name='Carrera',
+            name="Carrera",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nombre', models.CharField(max_length=50)),
-                ('descripcion', models.TextField()),
-                ('duracion_meses', models.IntegerField()),
-                ('fecha_baja', models.DateField()),
-                ('fecha_alta', models.DateField()),
-                ('costo', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('imagen', models.ImageField(blank=True, null=True, upload_to='carreras')),
-                ('activo', models.BooleanField(default=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("nombre", models.CharField(max_length=50)),
+                ("descripcion", models.TextField()),
+                ("duracion_meses", models.IntegerField()),
+                ("fecha_baja", models.DateField()),
+                ("fecha_alta", models.DateField()),
+                ("costo", models.DecimalField(decimal_places=2, max_digits=10)),
+                (
+                    "imagen",
+                    models.ImageField(blank=True, null=True, upload_to="carreras"),
+                ),
+                ("activo", models.BooleanField(default=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Curso',
+            name="Curso",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nombre', models.CharField(max_length=50)),
-                ('descripcion', models.TextField()),
-                ('duracion_meses', models.IntegerField()),
-                ('fecha_inicio', models.DateField()),
-                ('fecha_fin', models.DateField()),
-                ('fecha_baja', models.DateField(blank=True, null=True)),
-                ('fecha_alta', models.DateField(auto_now_add=True)),
-                ('costo', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('imagen', models.ImageField(blank=True, null=True, upload_to='cursos')),
-                ('activo', models.BooleanField(default=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("nombre", models.CharField(max_length=50)),
+                ("descripcion", models.TextField()),
+                ("duracion_meses", models.IntegerField()),
+                ("fecha_inicio", models.DateField()),
+                ("fecha_fin", models.DateField()),
+                ("fecha_baja", models.DateField(blank=True, null=True)),
+                ("fecha_alta", models.DateField(auto_now_add=True)),
+                ("costo", models.DecimalField(decimal_places=2, max_digits=10)),
+                (
+                    "imagen",
+                    models.ImageField(blank=True, null=True, upload_to="cursos"),
+                ),
+                ("activo", models.BooleanField(default=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Leccion',
+            name="Leccion",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('fecha', models.DateTimeField()),
-                ('descripcion', models.TextField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("fecha", models.DateTimeField()),
+                ("descripcion", models.TextField()),
             ],
         ),
         migrations.CreateModel(
-            name='Salon',
+            name="Salon",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nombre', models.CharField(max_length=50)),
-                ('activo', models.BooleanField(default=True)),
-                ('capacidad', models.IntegerField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("nombre", models.CharField(max_length=50)),
+                ("activo", models.BooleanField(default=True)),
+                ("capacidad", models.IntegerField()),
             ],
         ),
         migrations.CreateModel(
-            name='Previa',
+            name="Previa",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('curso', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='curso', to='domain.curso')),
-                ('previa', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='previa', to='domain.curso')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "curso",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="curso",
+                        to="domain.curso",
+                    ),
+                ),
+                (
+                    "previa",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="previa",
+                        to="domain.curso",
+                    ),
+                ),
             ],
         ),
     ]

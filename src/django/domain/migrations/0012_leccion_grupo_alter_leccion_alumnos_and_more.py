@@ -7,30 +7,34 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('profiles', '0002_alumno_user_profesor_user'),
-        ('domain', '0011_remove_leccion_curso'),
+        ("profiles", "0002_alumno_user_profesor_user"),
+        ("domain", "0011_remove_leccion_curso"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='leccion',
-            name='grupo',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='domain.grupo'),
+            model_name="leccion",
+            name="grupo",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="domain.grupo",
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='leccion',
-            name='alumnos',
-            field=models.ManyToManyField(blank=True, to='profiles.alumno'),
+            model_name="leccion",
+            name="alumnos",
+            field=models.ManyToManyField(blank=True, to="profiles.alumno"),
         ),
         migrations.AlterField(
-            model_name='leccion',
-            name='descripcion',
+            model_name="leccion",
+            name="descripcion",
             field=models.TextField(blank=True, max_length=250, null=True),
         ),
         migrations.AlterField(
-            model_name='leccion',
-            name='profesores',
-            field=models.ManyToManyField(blank=True, to='profiles.profesor'),
+            model_name="leccion",
+            name="profesores",
+            field=models.ManyToManyField(blank=True, to="profiles.profesor"),
         ),
     ]
