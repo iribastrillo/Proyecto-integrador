@@ -7,56 +7,99 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('profiles', '0002_alumno_user_profesor_user'),
-        ('domain', '0007_remove_curso_fecha_fin'),
+        ("profiles", "0002_alumno_user_profesor_user"),
+        ("domain", "0007_remove_curso_fecha_fin"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Dia',
+            name="Dia",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(choices=[('LUN', 'Lunes'), ('MAR', 'Martes'), ('MIE', 'Miercoles'), ('JUE', 'Jueves'), ('VIE', 'Viernes'), ('SAB', 'Sábado'), ('DOM', 'Domingos')], max_length=3)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        choices=[
+                            ("LUN", "Lunes"),
+                            ("MAR", "Martes"),
+                            ("MIE", "Miercoles"),
+                            ("JUE", "Jueves"),
+                            ("VIE", "Viernes"),
+                            ("SAB", "Sábado"),
+                            ("DOM", "Domingos"),
+                        ],
+                        max_length=3,
+                    ),
+                ),
             ],
         ),
         migrations.RemoveField(
-            model_name='bloquedeclase',
-            name='alumnos_cursos',
+            model_name="bloquedeclase",
+            name="alumnos_cursos",
         ),
         migrations.RemoveField(
-            model_name='bloquedeclase',
-            name='cupo',
+            model_name="bloquedeclase",
+            name="cupo",
         ),
         migrations.RemoveField(
-            model_name='bloquedeclase',
-            name='curso',
+            model_name="bloquedeclase",
+            name="curso",
         ),
         migrations.RemoveField(
-            model_name='bloquedeclase',
-            name='profesores',
+            model_name="bloquedeclase",
+            name="profesores",
         ),
         migrations.RemoveField(
-            model_name='bloquedeclase',
-            name='dia',
+            model_name="bloquedeclase",
+            name="dia",
         ),
         migrations.CreateModel(
-            name='Grupo',
+            name="Grupo",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('cupo', models.IntegerField()),
-                ('alumnos', models.ManyToManyField(blank=True, null=True, to='profiles.alumno')),
-                ('curso', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='domain.curso')),
-                ('profesores', models.ManyToManyField(to='profiles.profesor')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("cupo", models.IntegerField()),
+                (
+                    "alumnos",
+                    models.ManyToManyField(blank=True, null=True, to="profiles.alumno"),
+                ),
+                (
+                    "curso",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="domain.curso"
+                    ),
+                ),
+                ("profesores", models.ManyToManyField(to="profiles.profesor")),
             ],
         ),
         migrations.AddField(
-            model_name='bloquedeclase',
-            name='grupo',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='domain.grupo'),
+            model_name="bloquedeclase",
+            name="grupo",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="domain.grupo",
+            ),
         ),
         migrations.AddField(
-            model_name='bloquedeclase',
-            name='dia',
-            field=models.ManyToManyField(to='domain.dia'),
+            model_name="bloquedeclase",
+            name="dia",
+            field=models.ManyToManyField(to="domain.dia"),
         ),
     ]

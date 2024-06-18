@@ -1,5 +1,16 @@
 from django.contrib import admin
-from .models import AlumnoCurso, Carrera, Curso, Previa, AlumnoCarrera, BloqueDeClase,Salon, Leccion, Grupo, Dia
+from .models import (
+    AlumnoCurso,
+    Carrera,
+    Curso,
+    Previa,
+    AlumnoCarrera,
+    BloqueDeClase,
+    Salon,
+    Leccion,
+    Grupo,
+    Dia,
+)
 
 
 admin.site.register(AlumnoCurso)
