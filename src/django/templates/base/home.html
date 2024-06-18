@@ -12,6 +12,169 @@
 
 {% endblock %}
 
+{% block breadcrumb %}
+<nav class="col-span-3 flex pl-4" aria-label="Breadcrumb">
+    <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+      <li class="inline-flex items-center">
+        <a href="#" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-accent-500 dark:text-gray-400 dark:hover:text-white">
+          <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+          </svg>
+          Home
+        </a>
+      </li>
+
+    </ol>
+  </nav>
+{% endblock %}
+
 {% block content %}
 
+<section class="lg:flex gap-4 mb-4">
+    <div class="max-w-full w-full p-6 border border-gray-700 rounded bg-gray-900 mb-4 md:lg:m-0">
+        <div class="flex gap-2 justify-between">
+            <h5 class="text-2xl font-bold tracking-tight text-white">${{total_earnings}}</h5>
+            <span class="text-xs font-medium px-2.5 py-1.5 rounded bg-gray-900 text-green-400 border border-green-400">+ 10%</span>
+        </div>
+        <h6 class="text-base font-bold tracking-tight text-gray-400">En ingresos totales</h6>
+    </div>
+    <div class="max-w-full w-full p-6 border border-gray-700 rounded bg-gray-900 mb-4 md:lg:m-0">
+        <div class="flex gap-2 justify-between">
+            <h5 class="text-2xl font-bold tracking-tight text-white">${{total_spending|floatformat:"-2"}}</h5>
+            <span class="text-xs font-medium px-2.5 py-1.5 rounded bg-gray-900 text-green-400 border border-green-400"> + 10%</span>
+        </div>
+        <h6 class="text-base font-bold tracking-tight text-gray-400">En salarios</h6>
+    </div>
+    <div class="max-w-full w-full p-6 border border-gray-700 rounded bg-gray-900 mb-4 md:lg:m-0">
+        <div class="flex gap-2 justify-between">
+            <h5 class="text-2xl font-bold tracking-tight text-white">${{total_gains|floatformat:"-2"}}</h5>
+            <span class="text-xs font-medium px-2.5 py-1.5 rounded bg-gray-900 text-green-400 border border-green-400"> + 10%</span>
+        </div>
+        <h6 class="text-base font-bold tracking-tight text-gray-400">En ganancias</h6>
+    </div>
+    <div class="max-w-full w-full p-6 border border-gray-700 rounded bg-gray-900 mb-4 md:lg:m-0">
+        <div class="flex gap-2 justify-between">
+            <h5 class="text-2xl font-bold tracking-tight text-white">{{students_count}}</h5>
+            <span class="text-xs font-medium px-2.5 py-1.5 rounded bg-gray-900 text-green-400 border border-green-400">+ 5%</span>
+        </div>
+        <h6 class="text-base font-bold tracking-tight text-gray-400">Estudiantes inscriptos</h6>
+    </div>
+</section>
+
+<section class="mb-4">
+    {% include 'base/components/charts/test_chart.html' %}
+</section>
+
+
+<section class="relative overflow-x-auto sm:rounded">
+    <table class="max-w-full w-full text-sm text-left rtl:text-right text-gray-400 border-gray-700 border">
+        <thead class="text-xs uppercase bg-gray-900 text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Producto
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Costo
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    PR
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Imagen
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Activo
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Acciones
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+                <tr class="border-b bg-gray-900 border-gray-700 hover:bg-gray-600">
+                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap text-white">
+                        {{course.nombre}}
+                    </th>
+                    <td class="px-6 py-4">
+                        ${{course.costo}}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{course.payout_ratio}}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{course.imagen}}
+                    </td>
+                    <td class="px-6 py-4">
+                        {% if course.activo %}
+                            <div class="flex items-center">
+                                <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> Activo
+                            </div>
+                        {% else %}
+                            <div class="flex items-center">
+                                <div class="h-2.5 w-2.5 rounded-full bg-red-500 me-2"></div> Inactivo
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td class="flex items-center px-6 py-4">
+                        <div class="flex flex-row items-end text-base font-semibold text-white">
+                            <a href="{{course.get_absolute_url}}" class='mr-2'>
+                              <svg class="w-6 h-6 text-white  hover:text-accent-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                <path fill-rule="evenodd" d="M4.998 7.78C6.729 6.345 9.198 5 12 5c2.802 0 5.27 1.345 7.002 2.78a12.713 12.713 0 0 1 2.096 2.183c.253.344.465.682.618.997.14.286.284.658.284 1.04s-.145.754-.284 1.04a6.6 6.6 0 0 1-.618.997 12.712 12.712 0 0 1-2.096 2.183C17.271 17.655 14.802 19 12 19c-2.802 0-5.27-1.345-7.002-2.78a12.712 12.712 0 0 1-2.096-2.183 6.6 6.6 0 0 1-.618-.997C2.144 12.754 2 12.382 2 12s.145-.754.284-1.04c.153-.315.365-.653.618-.997A12.714 12.714 0 0 1 4.998 7.78ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd"/>
+                              </svg>                            
+                            </a>
+                            <a href="{% url 'update-course' course.slug %}" class='mr-2'>
+                              <svg class="w-6 h-6 text-white  hover:text-accent-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd"/>
+                                <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd"/>
+                              </svg>
+                            </a>
+                            <a href="#">
+                              <svg class="w-6 h-6 text-white  hover:text-accent-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
+                              </svg>                            
+                            </a>
+                          </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+{% endblock %}
+
+{% block aside %}
+<div class="w-full max-w-md p-4 border rounded-lg shadow sm:p-8 bg-gray-900 border-gray-700">
+    <div class="flex items-center justify-between mb-4">
+        <h5 class="text-xl font-bold leading-none text-white">Últimas inscripciones</h5>
+        <a href="#" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">
+            Ver todos
+        </a>
+   </div>
+   <div class="flow-root">
+        <ul role="list" class="divide-y divide-gray-700">
+            {% for student in students %}
+            <li class="py-3 sm:py-4">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="">
+                    </div>
+                    <div class="flex-1 min-w-0 ms-4">
+                        <p class="text-sm font-medium truncate text-white">
+                            {{student.alumno.nombre}}
+                        </p>
+                        <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                            {{student.curso.nombre}}
+                        </p>
+                    </div>
+                    <div class="inline-flex items-center text-base font-semibold text-white">
+                        ${{student.curso.costo}}
+                    </div>
+                </div>
+            </li>
+            {% endfor %%}
+        </ul>
+   </div>
+</div>
 {% endblock %}

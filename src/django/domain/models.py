@@ -47,7 +47,7 @@ class Curso(models.Model):
         return self.nombre
 
     def get_absolute_url(self):
-        return reverse("courses")
+        return reverse("detail-course", kwargs={"slug": self.slug})
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nombre)
@@ -143,7 +143,10 @@ class Grupo(models.Model):
 
     @property
     def amount_payable(self):
-        return self.curso.costo * self.curso.payout_ratio
+        if self.alumnos.count() > 0:
+            return self.curso.costo * self.curso.payout_ratio
+        else:
+            return 0
 
 
 class BloqueDeClase(models.Model):
