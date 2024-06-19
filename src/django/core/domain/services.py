@@ -20,7 +20,7 @@ def calculate_payment(groups):
         if group.alumnos.count() > 0:
             course = group.curso
             total += Decimal(course.payout_ratio) * Decimal(course.costo)
-    return total / Decimal(IVA), total
+    return total / IVA, total
 
 
 def calculate_total_teacher_spending(professors):
@@ -39,3 +39,7 @@ def calculate_total_product_earnings(enrolments):
 
 def calculate_gains(earnings, spending):
     return (earnings - spending) / IVA
+
+
+def get_students_by_product(products):
+    pass
