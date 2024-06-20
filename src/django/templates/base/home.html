@@ -40,24 +40,10 @@
     </div>
     <div class="max-w-full w-full p-6 border border-gray-700 rounded bg-gray-900 mb-4 md:lg:m-0">
         <div class="flex gap-2 justify-between">
-            <h5 class="text-2xl font-bold tracking-tight text-white">${{total_spending|floatformat:"-2"}}</h5>
-            <span class="text-xs font-medium px-2.5 py-1.5 rounded bg-gray-900 text-green-400 border border-green-400"> + 10%</span>
-        </div>
-        <h6 class="text-base font-bold tracking-tight text-gray-400">En salarios</h6>
-    </div>
-    <div class="max-w-full w-full p-6 border border-gray-700 rounded bg-gray-900 mb-4 md:lg:m-0">
-        <div class="flex gap-2 justify-between">
             <h5 class="text-2xl font-bold tracking-tight text-white">${{total_gains|floatformat:"-2"}}</h5>
             <span class="text-xs font-medium px-2.5 py-1.5 rounded bg-gray-900 text-green-400 border border-green-400"> + 10%</span>
         </div>
         <h6 class="text-base font-bold tracking-tight text-gray-400">En ganancias</h6>
-    </div>
-    <div class="max-w-full w-full p-6 border border-gray-700 rounded bg-gray-900 mb-4 md:lg:m-0">
-        <div class="flex gap-2 justify-between">
-            <h5 class="text-2xl font-bold tracking-tight text-white">{{students_count}}</h5>
-            <span class="text-xs font-medium px-2.5 py-1.5 rounded bg-gray-900 text-green-400 border border-green-400">+ 5%</span>
-        </div>
-        <h6 class="text-base font-bold tracking-tight text-gray-400">Estudiantes inscriptos</h6>
     </div>
 </section>
 
@@ -65,7 +51,7 @@
     {% include 'base/components/charts/test_chart.html' %}
 </section>
 
-<section class="relative overflow-x-auto sm:rounded mb-4">
+<section class="relative overflow-x-auto rounded mb-4">
     <table class="max-w-full w-full text-sm text-left rtl:text-right text-gray-400 border-gray-700 border">
         <thead class="text-xs uppercase bg-gray-900 text-gray-400">
             <tr>
@@ -138,7 +124,7 @@
     </table>
 </section>
 
-<section class="relative overflow-x-auto sm:rounded">
+<section class="relative overflow-x-auto rounded">
     <table class="max-w-full w-full text-sm text-left rtl:text-right text-gray-400 border-gray-700 border">
         <thead class="text-xs uppercase bg-gray-900 text-gray-400">
             <tr>
@@ -219,7 +205,7 @@
 {% block aside %}
 <div class="w-full max-w-md p-4 border rounded-lg shadow sm:p-8 bg-gray-900 border-gray-700">
     <div class="flex items-center justify-between mb-4">
-        <h5 class="text-xl font-bold leading-none text-white">Últimas inscripciones</h5>
+        <h5 class="text-xl font-bold leading-none text-white truncate">Últimas inscripciones</h5>
         <a href="#" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">
             Ver todos
         </a>

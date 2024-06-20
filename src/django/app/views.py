@@ -22,6 +22,15 @@ def dashboard(request):
     total_spending = calculate_total_teacher_spending(Profesor.objects.all())
     total_earnings = calculate_total_product_earnings(students)
     total_gains = calculate_gains(total_earnings, total_spending)
+    dummy_data = [
+          { "x": "TEO I", "y": 10 },
+          { "x": "PRO I", "y": 5 },
+          { "x": "INS I", "y": 11 },
+          { "x": "TEC I", "y": 2 },
+          { "x": "TEO II","y": 2 },
+          { "x": "TEC II","y": 5 },
+          { "x": "INS II","y": 15 },
+        ],
     context = {
         "students_count": students_count,
         "total_spending": total_spending,
@@ -30,6 +39,7 @@ def dashboard(request):
         "courses": Curso.objects.all(),
         "students": students[:5],
         "careers": Carrera.objects.all(),
+        "dummy_data": dummy_data
     }
     return render(request, template_name=template, context=context)
 

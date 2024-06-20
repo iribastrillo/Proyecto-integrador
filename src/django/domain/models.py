@@ -84,19 +84,24 @@ class Carrera(models.Model):
 class AlumnoCurso(models.Model):
     alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
-    fecha_inscripcion = models.DateTimeField(auto_now_add=True)
-    fecha_finalizado = models.DateTimeField(null=True, blank=True)
+    fecha_inscripcion = models.DateField(auto_now_add=True)
+    fecha_finalizado = models.DateField(null=True, blank=True)
+    fecha_baja = models.DateField (null=True, blank=True)
     aprobado = models.BooleanField(default=False)
 
     def __str__(self):
-        return "Inscripcion: " + self.alumno.nombre + " " + self.curso.nombre
+        return f"Inscripcion: {self.alumno.apellido} -> {self.curso.nombre}"
+    
+    class Meta:
+        ordering = ["-fecha_inscripcion"]
 
 
 class AlumnoCarrera(models.Model):
     alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
     carrera = models.ForeignKey(Carrera, on_delete=models.CASCADE)
-    fecha_inscripcion = models.DateTimeField(auto_now_add=True)
-    fecha_finalizado = models.DateTimeField(null=True, blank=True)
+    fecha_inscripcion = models.DateField(auto_now_add=True)
+    fecha_finalizado = models.DateField(null=True, blank=True)
+    fecha_baja = models.DateField (null=True, blank=True)
     aprobado = models.BooleanField(default=False)
 
     def __str__(self):
