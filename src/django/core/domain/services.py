@@ -41,5 +41,8 @@ def calculate_gains(earnings, spending):
     return (earnings - spending) / IVA
 
 
-def get_students_by_product(products):
-    pass
+def generate_data_enrolments(products):
+    data = []
+    for product in products:
+        data.append({"x": product.nombre, "y": product.alumnocurso_set.count()})
+    return data

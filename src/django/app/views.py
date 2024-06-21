@@ -3,43 +3,42 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.db.models.functions import ExtractMonth
+from django.db.models import Count
 
-from profiles.models import Alumno, Profesor
+from profiles.models import Profesor
 from domain.models import AlumnoCurso, Curso, Carrera
 from core.domain.services import (
     calculate_total_teacher_spending,
     calculate_total_product_earnings,
     calculate_gains,
-    get_students_by_product,
+    generate_data_enrolments,
 )
 
 
 @login_required
 def dashboard(request):
     template = "base/home.html"
-    students_count = Alumno.objects.count()
-    students = AlumnoCurso.objects.all()
+    enrolments = AlumnoCurso.objects.all()
     total_spending = calculate_total_teacher_spending(Profesor.objects.all())
-    total_earnings = calculate_total_product_earnings(students)
+    total_earnings = calculate_total_product_earnings(enrolments)
     total_gains = calculate_gains(total_earnings, total_spending)
-    dummy_data = [
-          { "x": "TEO I", "y": 10 },
-          { "x": "PRO I", "y": 5 },
-          { "x": "INS I", "y": 11 },
-          { "x": "TEC I", "y": 2 },
-          { "x": "TEO II","y": 2 },
-          { "x": "TEC II","y": 5 },
-          { "x": "INS II","y": 15 },
-        ],
+    data = generate_data_enrolments(Curso.objects.all())
+    monthly_additions = (
+        enrolments.annotate(month=ExtractMonth("fecha_inscripcion"))
+        .values("month")
+        .annotate(count=Count("id"))
+        .values("month", "count")
+    )
     context = {
-        "students_count": students_count,
         "total_spending": total_spending,
         "total_earnings": total_earnings,
         "total_gains": total_gains,
         "courses": Curso.objects.all(),
-        "students": students[:5],
+        "enrolments": enrolments,
         "careers": Carrera.objects.all(),
-        "dummy_data": dummy_data
+        "data": data,
+        "monthly_additions": monthly_additions[0],
     }
     return render(request, template_name=template, context=context)
 

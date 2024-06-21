@@ -48,7 +48,11 @@
 </section>
 
 <section class="mb-4">
-    {% include 'base/components/charts/test_chart.html' %}
+    {% include 'base/components/charts/enrolments_chart.html' %}
+</section>
+
+<section class="mb-4">
+    {% include 'base/components/charts/monthly_additions_chart.html' %}
 </section>
 
 <section class="relative overflow-x-auto rounded mb-4">
@@ -212,7 +216,7 @@
    </div>
    <div class="flow-root">
         <ul role="list" class="divide-y divide-gray-700">
-            {% for student in students %}
+            {% for enrolment in enrolments %}
             <li class="py-3 sm:py-4">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -220,14 +224,14 @@
                     </div>
                     <div class="flex-1 min-w-0 ms-4">
                         <p class="text-sm font-medium truncate text-white">
-                            {{student.alumno.nombre}}
+                            {{enrolment.alumno.nombre}}
                         </p>
                         <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                            {{student.curso.nombre}}
+                            {{enrolment.curso.nombre}}
                         </p>
                     </div>
                     <div class="inline-flex items-center text-base font-semibold text-white">
-                        ${{student.curso.costo}}
+                        ${{enrolment.curso.costo}}
                     </div>
                 </div>
             </li>

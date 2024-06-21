@@ -63,3 +63,7 @@ class Profesor(Persona):
 
     def get_absolute_url(self):
         return reverse("detail-professor", kwargs={"slug": self.slug})
+
+    class Meta:
+        verbose_name_plural = "Profesores"
+        permissions = [("is_professor", "Es profesor")]
