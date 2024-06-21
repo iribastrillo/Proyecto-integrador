@@ -1,6 +1,8 @@
 import uuid
 from decimal import Decimal
 from string import ascii_uppercase
+from itertools import repeat
+import calendar
 
 
 IVA = Decimal(1.22)
@@ -45,4 +47,14 @@ def generate_data_enrolments(products):
     data = []
     for product in products:
         data.append({"x": product.nombre, "y": product.alumnocurso_set.count()})
+    return data
+
+
+def prepare_monthly_addtions_data (query):
+    data = {
+        "month": list(calendar.month_name)[1:],
+        "value": [i for i in repeat(0, 12)]
+    }
+    for d in query:
+        data["value"][d["month"]] = d["count"]
     return data
