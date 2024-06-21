@@ -28,6 +28,7 @@ class AlumnoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         "direccion",
         "telefono",
         "email",
+        "sexo",
     ]
     template_name = "estudiantes/estudiante_form.html"
     success_message = "Se agregó al estudiante con éxito"
@@ -59,6 +60,7 @@ class AlumnoUpdateView(LoginRequiredMixin, UpdateView):
         "direccion",
         "telefono",
         "email",
+        "sexo",
     ]
     template_name = "estudiantes/estudiante_form.html"
 

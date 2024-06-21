@@ -177,3 +177,41 @@ class Leccion(models.Model):
         return (
             f"Lección: {self.grupo} {self.bloque.hora_inicio} - {self.bloque.hora_fin}"
         )
+
+    class Meta:
+        verbose_name_plural = "Lecciones"
+
+
+class Examen(models.Model):
+    fecha_examen = models.DateTimeField()
+    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f"Examen: {self.curso.nombre} - {self.fecha_examen}"
+
+    class Meta:
+        verbose_name_plural = "Exámenes"
+
+
+class AlumnoExamen(models.Model):
+    inscripcion = models.ForeignKey(AlumnoCurso, on_delete=models.CASCADE)
+    examen = models.ForeignKey(Examen, on_delete=models.CASCADE)
+    fallo = models.PositiveIntegerField(
+        validators=[
+            MaxValueValidator(10, "La nota máxima permitida es 10."),
+            MinValueValidator(1, "La nota mínima permitida es 1."),
+        ],
+        null=True,
+        blank=True,
+    )
+    comentario = models.TextField(max_length=250, blank=True, null=True)
+
+    @property
+    def aprobado(self):
+        return self.fallo > 4
+
+    def __str__(self) -> str:
+        return f"Fallo de examen {self.examen.curso.nombre} {self.examen.fecha_examen}: {self.inscripcion.alumno.apellido}, {self.inscripcion.alumno.nombre}. {self.fallo}."
+
+    class Meta:
+        verbose_name_plural = "Fallos"

@@ -25,6 +25,7 @@ class ProfesorCreateView(LoginRequiredMixin, CreateView):
         "direccion",
         "telefono",
         "email",
+        "sexo",
         "cursos",
     ]
     success_url = reverse_lazy("profiles:users")
@@ -50,6 +51,7 @@ class ProfesorUpdateView(LoginRequiredMixin, UpdateView):
         "direccion",
         "telefono",
         "email",
+        "sexo",
         "cursos",
     ]
 

@@ -9,7 +9,8 @@ from .models import (
     Salon,
     Leccion,
     Grupo,
-    Dia,
+    Examen,
+    AlumnoExamen,
 )
 
 
@@ -22,4 +23,5 @@ admin.site.register(BloqueDeClase)
 admin.site.register(Salon)
 admin.site.register(Leccion)
 admin.site.register(Grupo)
-admin.site.register(Dia)
+admin.site.register(Examen)
+admin.site.register(AlumnoExamen)

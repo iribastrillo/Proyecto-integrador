@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.db.models.functions import ExtractMonth
 from django.db.models import Count
+from django.template import RequestContext
 
 from profiles.models import Profesor
 from domain.models import AlumnoCurso, Curso, Carrera
