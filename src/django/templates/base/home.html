@@ -130,9 +130,7 @@
             {% for enrolment in enrolments %}
             <li class="py-3 sm:py-4">
                 <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="">
-                    </div>
+                    {% include "base/components/avatars/placeholder_initials.html" with first_name=enrolment.alumno.nombre last_name=enrolment.alumno.apellido %}
                     <div class="flex-1 min-w-0 ms-4">
                         <p class="text-sm font-medium truncate text-white">
                             {{enrolment.alumno.nombre}}

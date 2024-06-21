@@ -13,7 +13,7 @@ from core.domain.services import (
     calculate_total_product_earnings,
     calculate_gains,
     generate_data_enrolments,
-    prepare_monthly_addtions_data
+    prepare_monthly_addtions_data,
 )
 
 
@@ -41,7 +41,7 @@ def dashboard(request):
         "careers": Carrera.objects.all(),
         "data": data,
         "monthly_additions": monthly_additions,
-        "total_additions": total_additions
+        "total_additions": total_additions,
     }
     return render(request, template_name=template, context=context)
 

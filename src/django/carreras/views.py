@@ -11,7 +11,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.shortcuts import render
 
-from domain.models import Curso, Carrera
+from domain.models import Curso, Carrera, Examen
 from .forms import CreateCareerForm
 
 
@@ -95,3 +95,22 @@ class CoursesAndCareers(LoginRequiredMixin, View):
             "careers": careers,
         }
         return render(request, self.template_name, context)
+
+
+class CreateExam(LoginRequiredMixin, CreateView):
+    model = Examen
+    fields = ["fecha_examen", "curso"]
+    success_url = reverse_lazy("exams")
+    template_name = "carreras/examen_form.html"
+
+
+class UpdateExam(LoginRequiredMixin, UpdateView):
+    model = Examen
+    fields = ["fecha_examen", "curso"]
+    success_url = reverse_lazy("exams")
+    template_name = "carreras/examen_form.html"
+
+
+class ListExams(LoginRequiredMixin, ListView):
+    model = Examen
+    template_name = "carreras/examen_list.html"

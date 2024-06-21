@@ -10,7 +10,6 @@ urlpatterns = [
     path("cursos/crear", views.CreateCourse.as_view(), name="create-course"),
     path("crear/", views.CreateCareer.as_view(), name="create-career"),
     path("<pk>/agregar-curso", views.AddCourseToCareer.as_view(), name="add-course"),
-    path("cursos/", views.ListCourses.as_view(), name="courses"),
     path(
         "cursos/<slug:slug>/detalle", views.DetailCourse.as_view(), name="detail-course"
     ),
@@ -22,4 +21,7 @@ urlpatterns = [
         views.DeleteCourse.as_view(),
         name="delete-course",
     ),
+    path("cursos/examenes/", views.ListExams.as_view(), name="exams"),
+    path("cursos/examenes/nuevo", views.CreateExam.as_view(), name="create-exam"),
+    path("cursos/examenes/<pk>/editar", views.UpdateExam.as_view(), name="update-exam"),
 ]
