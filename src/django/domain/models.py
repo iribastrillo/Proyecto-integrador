@@ -47,7 +47,7 @@ class Curso(models.Model):
         return self.nombre
 
     def get_absolute_url(self):
-        return reverse("courses")
+        return reverse("detail-course", kwargs={"slug": self.slug})
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nombre)
@@ -84,19 +84,24 @@ class Carrera(models.Model):
 class AlumnoCurso(models.Model):
     alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
-    fecha_inscripcion = models.DateTimeField(auto_now_add=True)
-    fecha_finalizado = models.DateTimeField(null=True, blank=True)
+    fecha_inscripcion = models.DateField(auto_now_add=True)
+    fecha_finalizado = models.DateField(null=True, blank=True)
+    fecha_baja = models.DateField(null=True, blank=True)
     aprobado = models.BooleanField(default=False)
 
     def __str__(self):
-        return "Inscripcion: " + self.alumno.nombre + " " + self.curso.nombre
+        return f"Inscripcion: {self.alumno.apellido} -> {self.curso.nombre}"
+
+    class Meta:
+        ordering = ["-fecha_inscripcion"]
 
 
 class AlumnoCarrera(models.Model):
     alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
     carrera = models.ForeignKey(Carrera, on_delete=models.CASCADE)
-    fecha_inscripcion = models.DateTimeField(auto_now_add=True)
-    fecha_finalizado = models.DateTimeField(null=True, blank=True)
+    fecha_inscripcion = models.DateField(auto_now_add=True)
+    fecha_finalizado = models.DateField(null=True, blank=True)
+    fecha_baja = models.DateField(null=True, blank=True)
     aprobado = models.BooleanField(default=False)
 
     def __str__(self):
@@ -143,7 +148,10 @@ class Grupo(models.Model):
 
     @property
     def amount_payable(self):
-        return self.curso.costo * self.curso.payout_ratio
+        if self.alumnos.count() > 0:
+            return self.curso.costo * self.curso.payout_ratio
+        else:
+            return 0
 
 
 class BloqueDeClase(models.Model):
@@ -169,3 +177,41 @@ class Leccion(models.Model):
         return (
             f"Lección: {self.grupo} {self.bloque.hora_inicio} - {self.bloque.hora_fin}"
         )
+
+    class Meta:
+        verbose_name_plural = "Lecciones"
+
+
+class Examen(models.Model):
+    fecha_examen = models.DateTimeField()
+    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f"Examen: {self.curso.nombre} - {self.fecha_examen}"
+
+    class Meta:
+        verbose_name_plural = "Exámenes"
+
+
+class AlumnoExamen(models.Model):
+    inscripcion = models.ForeignKey(AlumnoCurso, on_delete=models.CASCADE)
+    examen = models.ForeignKey(Examen, on_delete=models.CASCADE)
+    fallo = models.PositiveIntegerField(
+        validators=[
+            MaxValueValidator(10, "La nota máxima permitida es 10."),
+            MinValueValidator(1, "La nota mínima permitida es 1."),
+        ],
+        null=True,
+        blank=True,
+    )
+    comentario = models.TextField(max_length=250, blank=True, null=True)
+
+    @property
+    def aprobado(self):
+        return self.fallo > 4
+
+    def __str__(self) -> str:
+        return f"Fallo de examen {self.examen.curso.nombre} {self.examen.fecha_examen}: {self.inscripcion.alumno.apellido}, {self.inscripcion.alumno.nombre}. {self.fallo}."
+
+    class Meta:
+        verbose_name_plural = "Fallos"

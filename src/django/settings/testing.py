@@ -26,13 +26,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-@$qz#@%8n2njd)3dpu36!k8pitwydd^u@v4+rgpsblgd!e^jn2"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = getenv("IS_DEVELOPMENT", True)
+DEBUG = True
 
 ALLOWED_HOSTS = [
-    getenv("APP_HOST"),
     "localhost",
     "127.0.0.1",
-    "hidden-fortress-37452-206e312e47f7.herokuapp.com",
 ]
 
 INSTALLED_APPS = [
@@ -79,7 +77,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "app.context_processors.get_role_processor",
             ],
         },
     },
@@ -94,12 +91,8 @@ TAILWIND_APP_NAME = "theme"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    },
-    "testing": {
-        "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "dbtesting.sqlite3",
-    },
+    }
 }
 
 INTERNAL_IPS = [

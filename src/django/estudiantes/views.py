@@ -15,6 +15,7 @@ from django.contrib import messages
 
 from .forms import InscripcionForm, BajaForm
 from profiles.models import Alumno
+from domain.models import AlumnoCurso
 
 
 class AlumnoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -27,6 +28,7 @@ class AlumnoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         "direccion",
         "telefono",
         "email",
+        "sexo",
     ]
     template_name = "estudiantes/estudiante_form.html"
     success_message = "Se agregó al estudiante con éxito"
@@ -58,6 +60,7 @@ class AlumnoUpdateView(LoginRequiredMixin, UpdateView):
         "direccion",
         "telefono",
         "email",
+        "sexo",
     ]
     template_name = "estudiantes/estudiante_form.html"
 
@@ -102,6 +105,7 @@ class InscripcionNueva(LoginRequiredMixin, View):
             else:
                 grupo.alumnos.add(student)
                 grupo.save()
+                AlumnoCurso.objects.create(alumno=student, curso=grupo.curso)
                 messages.add_message(
                     request,
                     messages.SUCCESS,
@@ -138,6 +142,8 @@ class BajaEstudiante(LoginRequiredMixin, View):
             grupo = form.cleaned_data["grupo"]
             grupo.alumnos.remove(student)
             grupo.save()
+            inscripcion = AlumnoCurso.objects.filter(alumno=student, curso=grupo.curso)
+            inscripcion.delete()
             messages.add_message(
                 request,
                 messages.SUCCESS,

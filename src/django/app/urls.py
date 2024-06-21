@@ -48,7 +48,7 @@ urlpatterns = (
             "app/",
             include(
                 [
-                    path("", views.home, name="home"),
+                    path("", views.dashboard, name="home"),
                     path("carreras/", include("carreras.urls")),
                     path("profesores/", include("profesores.urls")),
                     path("salones/", include("salones.urls")),

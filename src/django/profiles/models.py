@@ -19,6 +19,9 @@ class Persona(models.Model):
     telefono = models.CharField(max_length=20)
     email = models.EmailField(validators=[EmailValidator()])
     fecha_baja = models.DateField(null=True, blank=True)
+    sexo = models.CharField(
+        max_length=1, choices=[("M", "Masculino"), ("F", "Femenino")]
+    )
 
     def save(self, *args, **kwargs):
         try:
@@ -63,3 +66,7 @@ class Profesor(Persona):
 
     def get_absolute_url(self):
         return reverse("detail-professor", kwargs={"slug": self.slug})
+
+    class Meta:
+        verbose_name_plural = "Profesores"
+        permissions = [("is_professor", "Es profesor")]
