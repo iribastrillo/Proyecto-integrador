@@ -16,11 +16,11 @@ from datetime import datetime
 from django.utils.safestring import mark_safe
 
 
-class CreateBloqueDeClase(LoginRequiredMixin, CreateView):
-    model = BloqueDeClase
-    form_class = BloqueDeClaseForm
-    template_name = 'clases/clases_form.html'
-    success_url = reverse_lazy('clases:home-class-blocks')
+# class CreateBloqueDeClase(LoginRequiredMixin, CreateView):
+#     model = BloqueDeClase
+#     form_class = BloqueDeClaseForm
+#     template_name = 'clases/clases_form.html'
+#     success_url = reverse_lazy('clases:home-class-blocks')
 
 class ListBloqueDeClases (LoginRequiredMixin, ListView):
     model = BloqueDeClase
@@ -41,7 +41,7 @@ class DeleteBloqueDeClase(LoginRequiredMixin, DeleteView):
 
 class UpdateBloqueDeClase(LoginRequiredMixin, UpdateView):
     model=BloqueDeClase
-    fields = ['curso', 'alumnos_cursos', 'cupo', 'profesores', 'dia', 'duracion', 'hora_inicio', 'hora_fin', 'salon']
+    # fields = ['curso', 'alumnos_cursos', 'cupo', 'profesores', 'dia', 'duracion', 'hora_inicio', 'hora_fin', 'salon']
     template_name = 'clases/confirm_delete.html'
     success_url=reverse_lazy('clases:list-class-blocks')
 
@@ -208,3 +208,52 @@ def build_new_formset(formset, new_total_formsets):
         html += str(form).replace('__prefix__', str(new_total_formsets))
 
     return mark_safe(html)
+
+class CreateGrupo(LoginRequiredMixin, CreateView):
+    
+    model = Grupo  # Specify the model here
+    form_class=CreateGroupForm
+    template_name='clases/grupo_form.html'
+    success_message = "Se agregó grupo con éxito"
+    def get_success_url(self):
+        return reverse_lazy("clases:detail-group", kwargs={"pk": self.object.group.pk})
+    
+    
+    def form_valid(self, form):
+        print("form valid")
+        # Save the form and get the newly created instance
+        curso = form.cleaned_data["curso"]
+        profesores = form.cleaned_data["profesores"]
+        cupo = form.cleaned_data["cupo"]
+        grupo = Grupo(curso=curso, cupo=cupo)
+        grupo.save()
+        grupo.profesores.set(profesores)
+        print(grupo.pk)
+        print(f"Cantidad de alumnos en el grupo: {len(grupo.alumnos.all())}")
+     
+        return redirect('clases:list-groups')
+    def form_invalid(self, form):
+    # Here you can add your logic to handle validation errors
+        return render(self.request, self.template_name, {'form': form})
+
+class GrupoDetailView(LoginRequiredMixin,DetailView):
+    model = Grupo
+    context_object_name = 'grupo'
+    template_name = 'grupo/grupo_detail.html'              
+
+class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
+    print(f"Create bloque de clase ")
+    model_name=BloqueDeClase
+    template_name = 'clases/bloque/bloque_clase_form.html'
+    form_class = BloqueDeClaseForm
+    success_url = reverse_lazy('clases:list-groups')
+
+    def form_valid(self, form):
+        # Custom logic when the form is valid (e.g., save data)
+        # For example:
+        title = form.cleaned_data['title']
+        description = form.cleaned_data['description']
+        # Save data or perform other actions
+        # ...
+
+        return super().form_valid(form)

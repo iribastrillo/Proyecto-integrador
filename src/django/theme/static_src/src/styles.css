@@ -38,4 +38,8 @@
         background-repeat: no-repeat;
         background-size: cover;
     }
+    select option {
+            background-color: bg-gray-900; /* Replace with your desired gray color */
+            box-shadow: bg-gray-700;
+      }
 }
