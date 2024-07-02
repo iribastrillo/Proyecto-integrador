@@ -5,16 +5,16 @@ from django.views.generic import (CreateView,
                                   UpdateView,
                                   DeleteView)
 from django.contrib.auth.mixins import LoginRequiredMixin
-from domain.models import BloqueDeClase,Grupo
+from domain.models import BloqueDeClase,Grupo,Profesor,Salon
 from django.urls import reverse, reverse_lazy
-from domain.models import Profesor
 from django.http import HttpRequest, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory,formset_factory
-from .forms import CreateGroupForm, BloqueDeClaseForm, BloqueFormSet
+from .forms import CreateGroupForm, BloqueDeClaseForm
 from datetime import datetime
 from django.utils.safestring import mark_safe
-
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
 
 # class CreateBloqueDeClase(LoginRequiredMixin, CreateView):
 #     model = BloqueDeClase
@@ -35,15 +35,25 @@ class DetailBloqueDeClase(LoginRequiredMixin, DetailView):
 
 class DeleteBloqueDeClase(LoginRequiredMixin, DeleteView):
     model = BloqueDeClase
-    template_name = 'clases/confirm_delete.html'
-    success_url=reverse_lazy('clases:list-class-blocks')
+    # template_name = 'clases/clases_confirm_delete.html'
+    template_name = 'clases/partials/bloque_clase_delete_form_partial.html'
+    form_class = BloqueDeClaseForm
+    
+    def get_success_url(self):
+        return reverse_lazy("clases:detail-group", kwargs={"pk": self.object.grupo.pk})
+    
+    def get (self, request, *args, **kwargs):
+        form = self.form_class()
+        # print(f"pk de que  :{kwargs['pk']}")
+        grupo = Grupo.objects.get (pk =  self.object.grupo.pk)
+        context = {
+            'form': form,
+            'grupo': grupo
+        }
+        return render (request, self.template_name, context)
 
 
-class UpdateBloqueDeClase(LoginRequiredMixin, UpdateView):
-    model=BloqueDeClase
-    # fields = ['curso', 'alumnos_cursos', 'cupo', 'profesores', 'dia', 'duracion', 'hora_inicio', 'hora_fin', 'salon']
-    template_name = 'clases/confirm_delete.html'
-    success_url=reverse_lazy('clases:list-class-blocks')
+
 
 @login_required
 def create_group(request):
@@ -233,27 +243,154 @@ class CreateGrupo(LoginRequiredMixin, CreateView):
      
         return redirect('clases:list-groups')
     def form_invalid(self, form):
-    # Here you can add your logic to handle validation errors
         return render(self.request, self.template_name, {'form': form})
+    
+
+class UpdateGrupo(LoginRequiredMixin, UpdateView):
+    
+    model = Grupo  # Specify the model here
+    form_class=CreateGroupForm
+    template_name='clases/grupo_form.html'
+    success_message = "Se agregó grupo con éxito"
+    def get_success_url(self):
+        return reverse_lazy("clases:detail-group", kwargs={"pk": self.object.group.pk})
 
 class GrupoDetailView(LoginRequiredMixin,DetailView):
     model = Grupo
     context_object_name = 'grupo'
-    template_name = 'grupo/grupo_detail.html'              
+    template_name = 'clases/grupo_detail.html'     
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        grupo = self.object  # Get the current Grupo instance
+        context['bloques_de_clase'] = BloqueDeClase.objects.filter(grupo=grupo)
+        print(f"Bloques de clases encontrados: {context['bloques_de_clase']}")
+        return context      
 
 class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
     print(f"Create bloque de clase ")
     model_name=BloqueDeClase
-    template_name = 'clases/bloque/bloque_clase_form.html'
+    # template_name = 'clases/bloque_clase_form.html'
+    template_name = 'clases/partials/bloque_clase_form_partial.html'
     form_class = BloqueDeClaseForm
-    success_url = reverse_lazy('clases:list-groups')
 
+    def get (self, request, *args, **kwargs):
+        form = self.form_class()
+        grupo = Grupo.objects.get (pk = kwargs['pk'])
+        context = {
+            'form': form,
+            'grupo': grupo
+        }
+        return render (request, self.template_name, context)
+    # success_url = reverse_lazy('clases:list-groups')
+    
+    def post (self, request, *args, **kwargs):
+        form = BloqueDeClaseForm (request.POST)    
+        grupo = Grupo.objects.get(pk=kwargs["pk"])    
+        print(f"Creando bloque de clase para el grupo {grupo.pk}")
+        if form.is_valid():
+            print("Form is valid")
+            # grupo = form.cleaned_data["grupo"]
+            dias = form.cleaned_data["dia"]
+            hora_inicio = form.cleaned_data["hora_inicio"]
+            hora_fin = form.cleaned_data["hora_fin"]
+            salon = form.cleaned_data["salon"]
+            print(f"BLOQUE A SER CREADO los dias: {dias} hora_inicio: {hora_inicio} hora_fin: {hora_fin} salon: {salon}")
+
+            for dia_obj in dias.all():
+                try:
+                    bloque_ya_ocupado = BloqueDeClase.objects.get(
+                        dia=dia_obj,
+                        hora_inicio__lt=hora_fin,
+                        hora_fin__gt=hora_inicio,
+                        salon=salon
+                )
+                    print(f"Bloque ya ocupado {dia_obj}: {bloque_ya_ocupado}")
+                    messages.add_message(request, messages.ERROR, "Ya existe una clase creada para el salon y el horario seleccionado.")
+                    return HttpResponseRedirect(reverse('clases:detail-group', kwargs={'pk': grupo.pk}))
+                except BloqueDeClase.DoesNotExist:
+                # Continue to the next day
+                 pass
+
+            
+            bloque = BloqueDeClase.objects.create(
+                hora_inicio=hora_inicio,
+                hora_fin=hora_fin,
+                salon=salon,
+                grupo=grupo
+            )
+
+            bloque.dia.set(dias)
+            bloque.save()
+            
+            messages.add_message (request, messages.SUCCESS, f"Clase creada con exito.")
+            return HttpResponseRedirect(reverse('clases:detail-group', kwargs={'pk':grupo.pk}))
+        else:
+            messages.add_message (request, messages.ERROR, "Ha habido un error")
+            return HttpResponseRedirect(reverse('clases:detail-group', kwargs={'pk':grupo.pk}))
+
+
+class BloqueClaseUpdateView(LoginRequiredMixin, UpdateView):
+    model = BloqueDeClase
+    template_name = 'clases/partials/bloque_clase_update_form_partial.html'
+    # form_class = UpdateBloqueDeClaseForm
+    form_class = BloqueDeClaseForm
+
+    def get_context_data(self, **kwargs):
+        print(f"Update bloque de clase ")
+        print(f"self object pk {self.object.pk}")
+        context = super(BloqueClaseUpdateView,self).get_context_data(**kwargs)
+        grupo = self.object.grupo
+        print(f"Grupo Context: {grupo.pk}")
+        print(f" Context: {context}")
+        return context
+    
     def form_valid(self, form):
-        # Custom logic when the form is valid (e.g., save data)
-        # For example:
-        title = form.cleaned_data['title']
-        description = form.cleaned_data['description']
-        # Save data or perform other actions
-        # ...
+        
+        grupo = self.object.grupo
+        dias = form.cleaned_data["dia"]
+        hora_inicio = form.cleaned_data["hora_inicio"]
+        hora_fin = form.cleaned_data["hora_fin"]
+        salon = form.cleaned_data["salon"]
 
+        for dia_obj in dias.all():
+            try: 
+             
+                bloque_ya_ocupado = BloqueDeClase.objects.get(
+                        dia=dia_obj,
+                        hora_inicio__lt=hora_fin,
+                        hora_fin__gt=hora_inicio,
+                        salon=salon,
+                        grupo=grupo
+                    )
+                if bloque_ya_ocupado != self.object:
+                    messages.add_message(self.request, messages.ERROR, "Ya existe una clase creada para el salon y el horario seleccionado.")
+                    return self.form_invalid(form)
+            except BloqueDeClase.DoesNotExist:
+                    # Continue to the next day
+                    pass
+        # Save the updated form
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('clases:detail-group', kwargs={'pk': self.object.grupo.pk})
+
+def crear_bloque_de_clase(request,pk=None):
+    grupo = get_object_or_404(Grupo, pk=pk)
+
+    if request.method=='POST':
+        form = BloqueDeClaseForm(request.POST or None)
+        if form.is_valid():
+            bloque=form.save(commit=False)
+            bloque.grupo=grupo
+            bloque.save()
+            context={'bloque':bloque}
+            return render()
+
+def load_horas_disponibles(request):
+    salon_id = request.GET.get('salon')
+    dia=request.GET.get('dia')
+    bloques = BloqueDeClase.objects.filter(salon__id=salon_id, dia__name=dia)
+    horas_no_disponibles = [(bloque.hora_inicio, bloque.hora_fin) for bloque in bloques]
+    return render(request, 'clases/horas_options.html', {'horas': horas_no_disponibles})
+ 

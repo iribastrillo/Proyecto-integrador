@@ -46,36 +46,16 @@ class BloqueDeClaseForm(forms.ModelForm):
     class Meta:
         model=BloqueDeClase
         fields=["dia","hora_inicio","hora_fin","salon"]
-    dia = forms.ModelMultipleChoiceField(queryset=Dia.objects.all(), widget=forms.SelectMultiple(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
+    dia = forms.ModelMultipleChoiceField(queryset=Dia.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={"class": "bg-gray-900   shadow dark:bg-gray-700"}))
     hora_inicio = forms.ChoiceField(choices=[(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)],widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
     hora_fin = forms.ChoiceField(choices=[(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)],widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
     salon = forms.ModelChoiceField(queryset=Salon.objects.all(),widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
 
     def __init__(self, *args, **kwargs):
-        self.instance = kwargs.pop('instance', None)
-        print(f"INSTANCE: {self.instance}")
-        super().__init__(*args, **kwargs)
+        super(BloqueDeClaseForm,self).__init__(*args, **kwargs)       
+        if self.initial:
+            self.initial['hora_inicio'] =self.initial['hora_inicio'].strftime('%H:%M')
+            self.initial['hora_fin'] = self.initial['hora_fin'].strftime('%H:%M')
 
-        if self.instance:
-            self.fields['dia'].initial = self.instance.dia.all()
-            self.fields['hora_inicio'].initial = self.instance.hora_inicio.strftime('%H:%M')
-            self.fields['hora_fin'].initial = self.instance.hora_fin.strftime('%H:%M')
-            self.fields['salon'].initial = self.instance.salon
-# class BloqueDeClaseForm(forms.Form):
-#     dia = forms.ModelMultipleChoiceField(queryset=Dia.objects.all(), widget=forms.SelectMultiple(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
-#     hora_inicio = forms.ChoiceField(choices=[(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)],widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
-#     hora_fin = forms.ChoiceField(choices=[(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)],widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
-#     salon = forms.ModelChoiceField(queryset=Salon.objects.all(),widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
-
-#     def __init__(self, *args, **kwargs):
-#         self.instance = kwargs.pop('instance', None)
-#         print(f"INSTANCE: {self.instance}")
-#         super().__init__(*args, **kwargs)
-
-#         if self.instance:
-#             self.fields['dia'].initial = self.instance.dia.all()
-#             self.fields['hora_inicio'].initial = self.instance.hora_inicio.strftime('%H:%M')
-#             self.fields['hora_fin'].initial = self.instance.hora_fin.strftime('%H:%M')
-#             self.fields['salon'].initial = self.instance.salon
 
 BloqueFormSet = forms.formset_factory(BloqueDeClaseForm)
