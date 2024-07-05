@@ -12,8 +12,8 @@ app_name = 'salones'
 
 urlpatterns = [
     path('', SalonesListView.as_view(), name='classrooms'),
-    path('crear-salon/', SalonesCreateView.as_view(), name='create-classroom'),
-    path('detalle-salon/<int:pk>', SalonesDetailView.as_view(), name='detail-classroom'),
-    path('editar-salon/<int:pk>', SalonesUpdateView.as_view(), name='update-classroom'),
-    path('eliminar-salon/<int:pk>', SalonesDeleteView.as_view(), name='delete-classroom'),
+    path('nuevo', SalonesCreateView.as_view(), name='create-classroom'),
+    path('<int:pk>/detalle', SalonesDetailView.as_view(), name='detail-classroom'),
+    path('<int:pk>/editar', SalonesUpdateView.as_view(), name='update-classroom'),
+    path('<int:pk>/eliminar', SalonesDeleteView.as_view(), name='delete-classroom'),
 ]

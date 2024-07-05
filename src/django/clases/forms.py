@@ -52,10 +52,16 @@ class BloqueDeClaseForm(forms.ModelForm):
     salon = forms.ModelChoiceField(queryset=Salon.objects.all(),widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
 
     def __init__(self, *args, **kwargs):
-        super(BloqueDeClaseForm,self).__init__(*args, **kwargs)       
+        super(BloqueDeClaseForm,self).__init__(*args, **kwargs)
         if self.initial:
             self.initial['hora_inicio'] =self.initial['hora_inicio'].strftime('%H:%M')
             self.initial['hora_fin'] = self.initial['hora_fin'].strftime('%H:%M')
 
 
 BloqueFormSet = forms.formset_factory(BloqueDeClaseForm)
+# BloqueFormSet = forms.modelformset_factory(
+#     BloqueDeClase,
+#     form=BloqueDeClaseForm,  # Replace with your custom form class
+#     fields=('dia', 'hora_inicio', 'hora_fin', 'salon'),
+#     extra=0  # Set the number of extra forms to display
+# )

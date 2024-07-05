@@ -9,19 +9,16 @@ from django.views.generic import (CreateView,
 from django.urls import reverse_lazy
 from domain.models import (Salon)
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 
 
-# Create your views here.
-class SalonesCreateView(LoginRequiredMixin,CreateView):
+class SalonesCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model=Salon
     fields = ['nombre', 'capacidad','descripcion']
     template_name = 'salones/salones_form.html'
     success_url=reverse_lazy('salones:classrooms')
-
-    # def form_valid(self, form):
-    #     return super().form_valid(form)
-
+    success_message = "Se creó el salón con éxito"
 
     def form_invalid(self, form):
         response = super().form_invalid(form)

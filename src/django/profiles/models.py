@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 from django.db import IntegrityError
 from utils.validators import EmailValidator
 from django.urls import reverse
@@ -18,7 +19,7 @@ class Persona(models.Model):
     telefono = models.CharField(max_length=20)
     email = models.EmailField(validators=[EmailValidator()])
     fecha_baja = models.DateField(null=True, blank=True)
-
+    
     def save(self, *args, **kwargs):
         try:
             user = User.objects.get(username=self.slug)
@@ -27,7 +28,7 @@ class Persona(models.Model):
                 new_code = generate_unique_code()
                 print(new_code)
                 try:
-                    user = User.objects.create (username=new_code, password=self.dni)
+                    user = User.objects.create (username=new_code, password=make_password(self.dni))
                     break
                 except IntegrityError as e:
                     pass
@@ -38,6 +39,10 @@ class Persona(models.Model):
         user.email = self.email
         user.save()
         super().save(*args, **kwargs)
+        
+    def delete (self, *args, **kwargs):
+        self.user.delete()
+        super().delete (*args, **kwargs)
 
     class Meta:
         abstract = True
