@@ -1,13 +1,23 @@
 
 
-<form method="post"  action="{% url 'clases:create-class-block' grupo.pk %}"class="col-span-3 md:col-span-2 lg:col-span-2 max-w-md bg-gray-900 border border-gray-700 rounded p-8">
+<form  hx-post="{% url 'clases:create-class-block' grupo.pk %}" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-md bg-gray-900 border border-gray-700 rounded p-8 "
+  hx-target="#bloque-clase-modal">
     {% csrf_token %}
       <h5 class="text-xl font-bold leading-nonetext-white">Agregar Clase</h5>
       <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
-  
+
       {% include "clases/components/bloque_component.html" with form=form %}
-  
+
       <input class='main-action-button w-full' type="submit" value="Agregar">
-  
-       <button type="button"  class='main-action-button w-full' onclick="window.location.href = '{% url 'clases:list-groups' %}'">Cancelar</button>
+
+      {% if form.errors %}
+      <div class="alert alert-danger">
+          {% for field in form %}
+              {% for error in field.errors %}
+                  {{ error }}
+              {% endfor %}
+          {% endfor %}
+      </div>
+      {% endif %}
+
     </form>

@@ -8,7 +8,7 @@ from django.views.generic import (CreateView,
 from django.contrib.auth.mixins import LoginRequiredMixin
 from domain.models import BloqueDeClase,Grupo,Profesor,Salon
 from django.urls import reverse, reverse_lazy
-from django.http import HttpRequest, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory,formset_factory
 from .forms import CreateGroupForm, BloqueDeClaseForm
@@ -16,6 +16,7 @@ from datetime import datetime
 from django.utils.safestring import mark_safe
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
+
 
 # class CreateBloqueDeClase(LoginRequiredMixin, CreateView):
 #     model = BloqueDeClase
@@ -227,7 +228,7 @@ def build_new_formset(formset, new_total_formsets):
 
 class CreateGrupo(LoginRequiredMixin, CreateView):
 
-    model = Grupo  # Specify the model here
+    model = Grupo
     form_class=CreateGroupForm
     template_name='clases/grupo_form.html'
     success_message = "Se agregó grupo con éxito"
@@ -259,7 +260,9 @@ class UpdateGrupo(LoginRequiredMixin, UpdateView):
     template_name='clases/grupo_form.html'
     success_message = "Se agregó grupo con éxito"
     def get_success_url(self):
-        return reverse_lazy("clases:detail-group", kwargs={"pk": self.object.group.pk})
+
+
+        return reverse_lazy("clases:detail-group", kwargs={"pk": self.get_object().pk})
 
 class GrupoDetailView(LoginRequiredMixin,DetailView):
     model = Grupo
@@ -290,6 +293,7 @@ class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
         return render (request, self.template_name, context)
     # success_url = reverse_lazy('clases:list-groups')
 
+
     def post (self, request, *args, **kwargs):
         form = BloqueDeClaseForm (request.POST)
         grupo = Grupo.objects.get(pk=kwargs["pk"])
@@ -313,7 +317,14 @@ class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
                 )
                     print(f"Bloque ya ocupado {dia_obj}: {bloque_ya_ocupado}")
                     messages.add_message(request, messages.ERROR, "Ya existe una clase creada para el salon y el horario seleccionado.")
-                    return HttpResponseRedirect(reverse('clases:detail-group', kwargs={'pk': grupo.pk}))
+                    return HttpResponse()
+                    # grupo = Grupo.objects.get(pk=self.kwargs['pk'])
+                    # context = {
+                    #     'form': form,
+                    #     'grupo': grupo,
+
+                    # }
+                    # return self.render_to_response(context)
                 except BloqueDeClase.DoesNotExist:
                 # Continue to the next day
                  pass
@@ -328,12 +339,20 @@ class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
 
             bloque.dia.set(dias)
             bloque.save()
-
+            print(f"Bloque creado: {bloque}")
             messages.add_message (request, messages.SUCCESS, f"Clase creada con exito.")
-            return HttpResponseRedirect(reverse('clases:detail-group', kwargs={'pk':grupo.pk}))
+            return HttpResponse()
         else:
+            print("form invalid")
             messages.add_message (request, messages.ERROR, "Ha habido un error")
-            return HttpResponseRedirect(reverse('clases:detail-group', kwargs={'pk':grupo.pk}))
+            grupo = Grupo.objects.get(pk=self.kwargs['pk'])
+            context = {
+                'form': form,
+                'grupo': grupo
+            }
+            return self.render_to_response(context)
+
+
 
 
 class BloqueClaseUpdateView(LoginRequiredMixin, UpdateView):
