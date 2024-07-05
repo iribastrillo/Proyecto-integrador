@@ -35,22 +35,25 @@ class DetailBloqueDeClase(LoginRequiredMixin, DetailView):
 
 class DeleteBloqueDeClase(LoginRequiredMixin, DeleteView):
     model = BloqueDeClase
-    # template_name = 'clases/clases_confirm_delete.html'
-    template_name = 'clases/partials/bloque_clase_delete_form_partial.html'
-    form_class = BloqueDeClaseForm
-    
+    # template_name = 'clases/partials/bloque_clase_delete_form_partial.html'
+    template_name = 'clases/clases_confirm_delete.html'
+    # form_class = BloqueDeClaseForm
+    # success_url = reverse_lazy('clases:list-groups')
+
     def get_success_url(self):
-        return reverse_lazy("clases:detail-group", kwargs={"pk": self.object.grupo.pk})
-    
-    def get (self, request, *args, **kwargs):
-        form = self.form_class()
-        # print(f"pk de que  :{kwargs['pk']}")
-        grupo = Grupo.objects.get (pk =  self.object.grupo.pk)
-        context = {
-            'form': form,
-            'grupo': grupo
-        }
-        return render (request, self.template_name, context)
+        print("Success url")
+        return reverse("clases:detail-group", kwargs={"pk": self.get_object().grupo.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super(DeleteBloqueDeClase,self).get_context_data(**kwargs)
+        # Retrieve the BloqueDeClase instance being deleted
+        bloque_de_clase = self.get_object()
+        # Add the instance data to the context
+        context['bloque'] = bloque_de_clase
+        context['grupo_pk'] = bloque_de_clase.grupo.pk
+        return context
+
+
 
 
 
@@ -220,15 +223,15 @@ def build_new_formset(formset, new_total_formsets):
     return mark_safe(html)
 
 class CreateGrupo(LoginRequiredMixin, CreateView):
-    
+
     model = Grupo  # Specify the model here
     form_class=CreateGroupForm
     template_name='clases/grupo_form.html'
     success_message = "Se agregó grupo con éxito"
     def get_success_url(self):
         return reverse_lazy("clases:detail-group", kwargs={"pk": self.object.group.pk})
-    
-    
+
+
     def form_valid(self, form):
         print("form valid")
         # Save the form and get the newly created instance
@@ -240,14 +243,14 @@ class CreateGrupo(LoginRequiredMixin, CreateView):
         grupo.profesores.set(profesores)
         print(grupo.pk)
         print(f"Cantidad de alumnos en el grupo: {len(grupo.alumnos.all())}")
-     
+
         return redirect('clases:list-groups')
     def form_invalid(self, form):
         return render(self.request, self.template_name, {'form': form})
-    
+
 
 class UpdateGrupo(LoginRequiredMixin, UpdateView):
-    
+
     model = Grupo  # Specify the model here
     form_class=CreateGroupForm
     template_name='clases/grupo_form.html'
@@ -258,14 +261,14 @@ class UpdateGrupo(LoginRequiredMixin, UpdateView):
 class GrupoDetailView(LoginRequiredMixin,DetailView):
     model = Grupo
     context_object_name = 'grupo'
-    template_name = 'clases/grupo_detail.html'     
+    template_name = 'clases/grupo_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         grupo = self.object  # Get the current Grupo instance
         context['bloques_de_clase'] = BloqueDeClase.objects.filter(grupo=grupo)
         print(f"Bloques de clases encontrados: {context['bloques_de_clase']}")
-        return context      
+        return context
 
 class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
     print(f"Create bloque de clase ")
@@ -283,10 +286,10 @@ class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
         }
         return render (request, self.template_name, context)
     # success_url = reverse_lazy('clases:list-groups')
-    
+
     def post (self, request, *args, **kwargs):
-        form = BloqueDeClaseForm (request.POST)    
-        grupo = Grupo.objects.get(pk=kwargs["pk"])    
+        form = BloqueDeClaseForm (request.POST)
+        grupo = Grupo.objects.get(pk=kwargs["pk"])
         print(f"Creando bloque de clase para el grupo {grupo.pk}")
         if form.is_valid():
             print("Form is valid")
@@ -312,7 +315,7 @@ class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
                 # Continue to the next day
                  pass
 
-            
+
             bloque = BloqueDeClase.objects.create(
                 hora_inicio=hora_inicio,
                 hora_fin=hora_fin,
@@ -322,7 +325,7 @@ class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
 
             bloque.dia.set(dias)
             bloque.save()
-            
+
             messages.add_message (request, messages.SUCCESS, f"Clase creada con exito.")
             return HttpResponseRedirect(reverse('clases:detail-group', kwargs={'pk':grupo.pk}))
         else:
@@ -341,12 +344,12 @@ class BloqueClaseUpdateView(LoginRequiredMixin, UpdateView):
         print(f"self object pk {self.object.pk}")
         context = super(BloqueClaseUpdateView,self).get_context_data(**kwargs)
         grupo = self.object.grupo
-        print(f"Grupo Context: {grupo.pk}")
+        print(f"Grupo pk: {grupo.pk}")
         print(f" Context: {context}")
         return context
-    
+
     def form_valid(self, form):
-        
+
         grupo = self.object.grupo
         dias = form.cleaned_data["dia"]
         hora_inicio = form.cleaned_data["hora_inicio"]
@@ -354,8 +357,8 @@ class BloqueClaseUpdateView(LoginRequiredMixin, UpdateView):
         salon = form.cleaned_data["salon"]
 
         for dia_obj in dias.all():
-            try: 
-             
+            try:
+
                 bloque_ya_ocupado = BloqueDeClase.objects.get(
                         dia=dia_obj,
                         hora_inicio__lt=hora_fin,
@@ -393,4 +396,3 @@ def load_horas_disponibles(request):
     bloques = BloqueDeClase.objects.filter(salon__id=salon_id, dia__name=dia)
     horas_no_disponibles = [(bloque.hora_inicio, bloque.hora_fin) for bloque in bloques]
     return render(request, 'clases/horas_options.html', {'horas': horas_no_disponibles})
- 

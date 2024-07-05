@@ -1,11 +1,11 @@
-<form method="post" action="{% url 'clases:delete-class-block' bloquedeclase.pk %}" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-md bg-gray-900 border border-gray-700 rounded p-8">
+<form method="post" action="{% url 'clases:update-class-block' bloquedeclase.pk %}" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-md bg-gray-900 border border-gray-700 rounded p-8">
     {% csrf_token %}
       <h5 class="text-xl font-bold leading-nonetext-white">Modificar Clase</h5>
       <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
-  
+
       {% include "clases/components/bloque_component.html" with form=form %}
-  
+
       <input class='main-action-button w-full' type="submit" value="Modificar">
-  
+
       <button type="button"  class='main-action-button w-full' onclick="window.location.href = '{% url 'clases:detail-group' bloquedeclase.grupo.pk %}'">Cancelar</button>
     </form>
