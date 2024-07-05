@@ -36,7 +36,7 @@
             <div class="flex flex-col items-center p-4">
               <h5 class="mb-1 text-xl font-medium text-white">Alumnos</h5>
           </div>
-        {%if grupo.alumnos%}
+        {%if grupo.alumnos.all%}
         {%for alumno in grupo.alumnos.all%}
         <div class="flex flex-col items-center p-4 w-full mx-auto mb-0">
           <div class="py-2 text-sm text-gray-400 w-full border border-gray-700 rounded p-2">
@@ -74,10 +74,10 @@
             <div class="flex flex-col items-center p-4 w-full mx-auto mb-0">
               <div class="py-2 text-sm text-gray-400 w-full border border-gray-700 rounded p-2">
                   <p style="text-align: center;"  >
-                      Dias: {{ bloque.dia.all|join:", " }} |
-                      Hora Inicio: {{ bloque.hora_inicio }} |
-                      Hora Fin: {{ bloque.hora_fin }} |
-                      Salon: {{ bloque.salon }} |
+                     <strong>Dias:</strong> {{ bloque.dia.all|join:", " }} |
+                     <strong>Hora Inicio:</strong> {{ bloque.hora_inicio }} |
+                     <strong>Hora Fin:</strong> {{ bloque.hora_fin }} |
+                     <strong>Salon:</strong> {{ bloque.salon }}
 
                   </p>
                   <p style="text-align: center;">
