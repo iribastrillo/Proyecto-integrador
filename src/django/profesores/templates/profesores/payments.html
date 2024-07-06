@@ -25,11 +25,11 @@
         </a>
       </li>
       <li class="inline-flex items-center">
-          <a href="{% url 'professors' %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-accent-500 dark:text-gray-400 dark:hover:text-white">
+          <a href="{% url 'profiles:users' %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-accent-500 dark:text-gray-400 dark:hover:text-white">
               <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                 </svg>
-                Profesores
+                Profesores y estudiantes
           </a>
         </li>
         <li class="inline-flex items-center">
@@ -54,96 +54,94 @@
 
 {% block content %}
 
-<section class='col-span-3 md:col-span-2 lg:col-span-2'> 
-    <div class="w-full max-w-full p-4 bg-gray-900 border border-gray-700 rounded shadow sm:p-8">
-        <div class="flex items-center justify-between mb-4">
-            <h5 class="text-xl font-bold leading-nonetext-white">Pagos</h5>
-            <a href="#">
-              <svg class="text-sm font-medium text-white hover:text-accent-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z" clip-rule="evenodd"/>
-              </svg>          
-            </a>
-       </div>
-        <div class="relative overflow-x-auto shadow-md sm:rounded">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-400">
-                <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-white bg-gray-800">
-                    {{professor.nombre}} {{professor.apellido}}
-                    <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">{{professor.email}}</p>
-                </caption>
-                <thead class="text-xs uppercase bg-gray-700 text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">
-                            Grupo
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Curso
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Payout ratio
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Estudiantes
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Monto a pagar
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Acción
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for group in groups %}
-                    <tr class="border-b bg-gray-800 border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap text-white">
-                            {{group.identificador}}
-                        </th>
-                        <td class="px-6 py-4">
-                            {{group.curso.nombre}}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{group.curso.payout_ratio}}
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex -space-x-4 rtl:space-x-reverse">
-                                {% for student in group.alumnos.all %}
-                                {% include 'base/components/avatars/placeholder_initials.html' with first_name=student.nombre last_name=student.apellido %}
-                                {% endfor %}
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            ${{group.amount_payable|floatformat:'-2'}}
-                        </td>
-                        <td class="px-6 py-4">
-                            <a href="{{group.get_absolute_url}}">
-                                <svg class="w-6 h-6 text-white  hover:text-accent-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                  <path fill-rule="evenodd" d="M4.998 7.78C6.729 6.345 9.198 5 12 5c2.802 0 5.27 1.345 7.002 2.78a12.713 12.713 0 0 1 2.096 2.183c.253.344.465.682.618.997.14.286.284.658.284 1.04s-.145.754-.284 1.04a6.6 6.6 0 0 1-.618.997 12.712 12.712 0 0 1-2.096 2.183C17.271 17.655 14.802 19 12 19c-2.802 0-5.27-1.345-7.002-2.78a12.712 12.712 0 0 1-2.096-2.183 6.6 6.6 0 0 1-.618-.997C2.144 12.754 2 12.382 2 12s.145-.754.284-1.04c.153-.315.365-.653.618-.997A12.714 12.714 0 0 1 4.998 7.78ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd"/>
-                                </svg>                            
-                              </a>
-                        </td>
-                    </tr>
-                    {% endfor %%}
-                </tbody>
-                <tfoot>
-                    <tr class="font-semibold text-white rounded">
-                        <th scope="row" class="px-6 py-3 text-base">Total con IVA</th>
-                        <td class="px-6 py-3"></td>
-                        <td class="px-6 py-3"></td>
-                        <td class="px-6 py-3"></td>
-                        <td class="px-6 py-3">${{nominal|floatformat:'-2'}}</td>
-                    </tr>
-                    <tr class="font-semibold text-white rounded">
-                        <th scope="row" class="px-6 py-3 text-base">Total a pagar</th>
-                        <td class="px-6 py-3"></td>
-                        <td class="px-6 py-3"></td>
-                        <td class="px-6 py-3"></td>
-                        <td class="px-6 py-3">${{monthly_payment|floatformat:'-2'}}</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
-</section>
+<div class="relative overflow-x-auto shadow-md sm:rounded">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-400 border border-gray-700 border-t-0">
+        <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-white bg-gray-900 border border-gray-700 border-b-0">
+            {{professor.nombre}} {{professor.apellido}}
+            <p class="mt-1 text-sm font-normal text-gray-400">{{professor.email}}</p>
+        </caption>
+        <thead class="text-xs uppercase bg-gray-900 text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Grupo
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Curso
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Cuota ficta
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Payout ratio
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Estudiantes
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Monto a pagar
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Acción
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for group in groups %}
+            <tr class="border-b bg-gray-900 border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap text-white">
+                    {{group.identificador}}
+                </th>
+                <td class="px-6 py-4">
+                    {{group.curso.nombre}}
+                </td>
+                <td class="px-6 py-4">
+                    ${{group.curso.costo}}
+                </td>
+                <td class="px-6 py-4">
+                    {{group.curso.payout_ratio}}
+                </td>
+                <td class="px-6 py-4">
+                    <div class="flex -space-x-4 rtl:space-x-reverse">
+                        {% for student in group.alumnos.all %}
+                        {% include 'base/components/avatars/placeholder_initials.html' with first_name=student.nombre last_name=student.apellido %}
+                        {% endfor %}
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    ${{group.amount_payable|floatformat:'-2'}}
+                </td>
+                <td class="px-6 py-4">
+                    <a href="{{group.get_absolute_url}}">
+                        <svg class="w-6 h-6 text-white  hover:text-accent-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M4.998 7.78C6.729 6.345 9.198 5 12 5c2.802 0 5.27 1.345 7.002 2.78a12.713 12.713 0 0 1 2.096 2.183c.253.344.465.682.618.997.14.286.284.658.284 1.04s-.145.754-.284 1.04a6.6 6.6 0 0 1-.618.997 12.712 12.712 0 0 1-2.096 2.183C17.271 17.655 14.802 19 12 19c-2.802 0-5.27-1.345-7.002-2.78a12.712 12.712 0 0 1-2.096-2.183 6.6 6.6 0 0 1-.618-.997C2.144 12.754 2 12.382 2 12s.145-.754.284-1.04c.153-.315.365-.653.618-.997A12.714 12.714 0 0 1 4.998 7.78ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd"/>
+                        </svg>                            
+                        </a>
+                </td>
+            </tr>
+            {% endfor %%}
+        </tbody>
+        <tfoot class="text-xs uppercase bg-gray-900 text-gray-400 w-full">
+            <tr class="font-semibold text-white rounded">
+                <th scope="row" class="px-6 py-3 text-base">Total con IVA</th>
+                <td class="px-6 py-3"></td>
+                <td class="px-6 py-3"></td>
+                <td class="px-6 py-3"></td>
+                <td class="px-6 py-3"></td>
+                <td class="px-6 py-3">${{nominal|floatformat:'-2'}}</td>
+                <td class="px-6 py-3"></td>
+            </tr>
+            <tr class="font-semibold text-white rounded">
+                <th scope="row" class="px-6 py-3 text-base">Total a pagar</th>
+                <td class="px-6 py-3"></td>
+                <td class="px-6 py-3"></td>
+                <td class="px-6 py-3"></td>
+                <td class="px-6 py-3"></td>
+                <td class="px-6 py-3">${{monthly_payment|floatformat:'-2'}}</td>
+                <td class="px-6 py-3"></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
 
 <!-- Main modal -->
 <div id="enrolment-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">

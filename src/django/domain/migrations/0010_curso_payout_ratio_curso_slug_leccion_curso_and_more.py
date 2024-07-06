@@ -8,32 +8,52 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('domain', '0009_alter_dia_name_alter_grupo_alumnos'),
+        ("domain", "0009_alter_dia_name_alter_grupo_alumnos"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='curso',
-            name='payout_ratio',
-            field=models.DecimalField(decimal_places=2, default=1, max_digits=3, validators=[django.core.validators.MaxValueValidator(1, 'El valor debe estar entre 1 y 0.'), django.core.validators.MinValueValidator(0, 'El valor debe estar entre 1 y 0.')]),
+            model_name="curso",
+            name="payout_ratio",
+            field=models.DecimalField(
+                decimal_places=2,
+                default=1,
+                max_digits=3,
+                validators=[
+                    django.core.validators.MaxValueValidator(
+                        1, "El valor debe estar entre 1 y 0."
+                    ),
+                    django.core.validators.MinValueValidator(
+                        0, "El valor debe estar entre 1 y 0."
+                    ),
+                ],
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='curso',
-            name='slug',
-            field=models.SlugField(default='curso'),
+            model_name="curso",
+            name="slug",
+            field=models.SlugField(default="curso"),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='leccion',
-            name='curso',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='domain.curso'),
+            model_name="leccion",
+            name="curso",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="domain.curso",
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='bloquedeclase',
-            name='grupo',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='domain.grupo'),
+            model_name="bloquedeclase",
+            name="grupo",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="domain.grupo",
+            ),
             preserve_default=False,
         ),
     ]
