@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class SalonesConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'salones'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "salones"
