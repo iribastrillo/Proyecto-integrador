@@ -16,13 +16,16 @@ class PagoForm(forms.ModelForm):
         super(PagoForm, self).__init__(*args, **kwargs)
         if student_slug:
             student = Alumno.objects.get(slug=student_slug)
-            print(student.nombre)
-            self.fields['alumno'].initial = student.id
-            self.fields['alumno'].widget = forms.HiddenInput()
+
+            self.fields['alumno'].widget = forms.HiddenInput(attrs={'value': student.slug})
 
     def clean_alumno(self):
         slug = self.cleaned_data['alumno']
+        print(self)
         try:
+            print(f"finding alumno with slug {slug}")
+            alumno=Alumno.objects.get(slug=slug)
+            print(f"alumno found {alumno}")
             return Alumno.objects.get(slug=slug)
         except Alumno.DoesNotExist:
             raise ValidationError('No existe alumno')
