@@ -6,21 +6,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('domain', '0002_initial'),
+        ("domain", "0002_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='bloquedeclase',
-            name='duracion',
+            model_name="bloquedeclase",
+            name="duracion",
         ),
         migrations.RemoveField(
-            model_name='carrera',
-            name='costo',
+            model_name="carrera",
+            name="costo",
         ),
         migrations.AlterField(
-            model_name='curso',
-            name='fecha_fin',
+            model_name="curso",
+            name="fecha_fin",
             field=models.DateField(blank=True, null=True),
         ),
     ]

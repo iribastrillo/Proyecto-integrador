@@ -9,69 +9,83 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('domain', '0001_initial'),
-        ('profiles', '0001_initial'),
+        ("domain", "0001_initial"),
+        ("profiles", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='leccion',
-            name='alumnos',
-            field=models.ManyToManyField(to='profiles.alumno'),
+            model_name="leccion",
+            name="alumnos",
+            field=models.ManyToManyField(to="profiles.alumno"),
         ),
         migrations.AddField(
-            model_name='leccion',
-            name='bloque',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='domain.bloquedeclase'),
+            model_name="leccion",
+            name="bloque",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="domain.bloquedeclase"
+            ),
         ),
         migrations.AddField(
-            model_name='leccion',
-            name='profesores',
-            field=models.ManyToManyField(to='profiles.profesor'),
+            model_name="leccion",
+            name="profesores",
+            field=models.ManyToManyField(to="profiles.profesor"),
         ),
         migrations.AddField(
-            model_name='carrera',
-            name='cursos',
-            field=models.ManyToManyField(to='domain.curso'),
+            model_name="carrera",
+            name="cursos",
+            field=models.ManyToManyField(to="domain.curso"),
         ),
         migrations.AddField(
-            model_name='bloquedeclase',
-            name='alumnos_cursos',
-            field=models.ManyToManyField(to='domain.alumnocurso'),
+            model_name="bloquedeclase",
+            name="alumnos_cursos",
+            field=models.ManyToManyField(to="domain.alumnocurso"),
         ),
         migrations.AddField(
-            model_name='bloquedeclase',
-            name='curso',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='domain.curso'),
+            model_name="bloquedeclase",
+            name="curso",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="domain.curso"
+            ),
         ),
         migrations.AddField(
-            model_name='bloquedeclase',
-            name='profesores',
-            field=models.ManyToManyField(to='profiles.profesor'),
+            model_name="bloquedeclase",
+            name="profesores",
+            field=models.ManyToManyField(to="profiles.profesor"),
         ),
         migrations.AddField(
-            model_name='bloquedeclase',
-            name='salon',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='domain.salon'),
+            model_name="bloquedeclase",
+            name="salon",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="domain.salon"
+            ),
         ),
         migrations.AddField(
-            model_name='alumnocurso',
-            name='alumno',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='profiles.alumno'),
+            model_name="alumnocurso",
+            name="alumno",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="profiles.alumno"
+            ),
         ),
         migrations.AddField(
-            model_name='alumnocurso',
-            name='curso',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='domain.curso'),
+            model_name="alumnocurso",
+            name="curso",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="domain.curso"
+            ),
         ),
         migrations.AddField(
-            model_name='alumnocarrera',
-            name='alumno',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='profiles.alumno'),
+            model_name="alumnocarrera",
+            name="alumno",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="profiles.alumno"
+            ),
         ),
         migrations.AddField(
-            model_name='alumnocarrera',
-            name='carrera',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='domain.carrera'),
+            model_name="alumnocarrera",
+            name="carrera",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="domain.carrera"
+            ),
         ),
     ]

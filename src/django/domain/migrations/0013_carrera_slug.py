@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('domain', '0012_leccion_grupo_alter_leccion_alumnos_and_more'),
+        ("domain", "0012_leccion_grupo_alter_leccion_alumnos_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='carrera',
-            name='slug',
-            field=models.SlugField(default='carrera'),
+            model_name="carrera",
+            name="slug",
+            field=models.SlugField(default="carrera"),
             preserve_default=False,
         ),
     ]

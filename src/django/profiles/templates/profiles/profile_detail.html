@@ -13,8 +13,7 @@
 
 {% endblock %}
 
-{% block content %}
-
+{% block breadcrumb %}
 <nav class="col-span-3 flex pl-4" aria-label="Breadcrumb">
   <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
     <li class="inline-flex items-center">
@@ -35,6 +34,9 @@
     </li>
   </ol>
 </nav>
+{% endblock%}
+
+{% block content %}
 
 {% include 'profiles/components/profile_card_component.html' %}
 
