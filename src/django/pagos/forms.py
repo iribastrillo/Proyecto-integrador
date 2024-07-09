@@ -12,16 +12,15 @@ class PagoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         student_slug = kwargs.pop('student_slug', None)
-
+        print(  f"student_slug  init {student_slug}")
         super(PagoForm, self).__init__(*args, **kwargs)
         if student_slug:
             student = Alumno.objects.get(slug=student_slug)
-
             self.fields['alumno'].widget = forms.HiddenInput(attrs={'value': student.slug})
 
     def clean_alumno(self):
         slug = self.cleaned_data['alumno']
-        print(self)
+        print(f"clean alumno {self}")
         try:
             print(f"finding alumno with slug {slug}")
             alumno=Alumno.objects.get(slug=slug)

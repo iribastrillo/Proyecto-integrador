@@ -25,9 +25,10 @@ from .forms import PagoForm
 
 
 class CreartePago(LoginRequiredMixin, View):
-    print("Agregando Pago")
+    model = Pago
     form_class = PagoForm
     template_name = 'pagos/pago_form.html'
+    fields = [ 'monto','descripcion','comprobante','fecha']
 
     def get (self, request, *args, **kwargs):
         student = Alumno.objects.get(slug = kwargs['slug'])
@@ -52,6 +53,8 @@ class CreartePago(LoginRequiredMixin, View):
             pago.save()
             # Redirect to a success page or render the form again with a success message
             return redirect('estudiantes:detail-student', slug=student.slug)
+
+
 
         else:
             print("form invalid")
@@ -135,24 +138,23 @@ class DeletePago(LoginRequiredMixin, DeleteView):
         return reverse_lazy('pagos:payments', kwargs={'slug': student.slug})
 
 class UpdatePago(LoginRequiredMixin, UpdateView):
-    # model=Pago
-    # form_class = PagoForm
-    # template_name = 'pagos/pago_form.html'
-    # success_url=reverse_lazy('pagos:list-pagos')
-    def get(self, request, *args, **kwargs):
-        print("modificando pago")
 
-        print(self.kwargs)
-        pago = get_object_or_404(Pago, id=kwargs['pk'])
-        student = pago.alumno
-        return render(request, self.template_name, {'form': self.form_class, 'student': student,'form':pago})
     model = Pago
-    form_class = PagoForm
-    template_name = 'pagos/pago_form.html'
+    # form_class = PagoForm
+    template_name = 'pagos/update_form.html'
+    fields = [ 'monto','descripcion','comprobante']
+    # def get(self, request, *args, **kwargs):
+    #     print("modificando pago")
 
-    def get_object(self, queryset=None):
-        # Retrieve the Pago instance being edited
-        return get_object_or_404(Pago, id=self.kwargs['pk'])
+    #     print(self.kwargs)
+    #     pago = get_object_or_404(Pago, id=kwargs['pk'])
+    #     student = pago.alumno
+    #     return render(request, self.template_name, { 'pk':self.kwargs['pk']})
+
+
+    # def get_object(self, queryset=None):
+    #     # Retrieve the Pago instance being edited
+    #     return get_object_or_404(Pago, id=self.kwargs['pk'])
 
     # def get_form(self, form_class=None):
     #     # Initialize the form with the existing Pago instance data
@@ -164,10 +166,27 @@ class UpdatePago(LoginRequiredMixin, UpdateView):
     #     print(f"form{form}")
     #     return form
 
+    def post(self, request, *args, **kwargs):
+        print("Update posts")
+        student = Alumno.objects.get(slug=kwargs['slug'])
+        form = self.form_class(request.POST, request.FILES, student_slug=student.slug)
+        print(f"student slug{student.slug}")
+        if form.is_valid():
+            print("update form valid")
+            pago = form.save(commit=False)
+            pago.alumno = student
+            pago.save()
+            # Redirect to a success page or render the form again with a success message
+            return reverse('pagos:payments', kwargs={'slug': student.slug})
+
+
     def get_success_url(self):
         # Get the student associated with the Pago instance
         student = self.object.alumno
         # Generate the success URL with the student slug
-        return reverse_lazy('pagos:payments', kwargs={'slug': student.slug})
+        # return reverse_lazy('pagos:payments', kwargs={'slug': student.slug})
+
+        return reverse('pagos:payments', kwargs={'slug': student.slug})
+
 
 
