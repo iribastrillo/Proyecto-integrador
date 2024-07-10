@@ -211,3 +211,15 @@ class AlumnoExamen(models.Model):
 
     class Meta:
         verbose_name_plural = "Fallos"
+
+
+class Pago(models.Model):
+    alumno=models.ForeignKey(Alumno, on_delete=models.CASCADE)
+    monto=models.DecimalField(max_digits=10, decimal_places=2)
+    fecha=models.DateTimeField(auto_now_add=True)
+    descripcion=models.TextField(max_length=250, blank=True, null=True)
+    comprobante=models.ImageField(upload_to='pagos', null=True, blank=True)
+
+    def __str__(self):
+
+        return f"Pago: {self.alumno} {self.monto} {self.fecha}"
