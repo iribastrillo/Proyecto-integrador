@@ -6,24 +6,24 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('profiles', '0007_alter_alumno_slug_alter_profesor_slug'),
+        ("profiles", "0007_alter_alumno_slug_alter_profesor_slug"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='alumno',
-            name='activo',
+            model_name="alumno",
+            name="activo",
         ),
         migrations.RemoveField(
-            model_name='alumno',
-            name='fecha_alta',
+            model_name="alumno",
+            name="fecha_alta",
         ),
         migrations.RemoveField(
-            model_name='profesor',
-            name='activo',
+            model_name="profesor",
+            name="activo",
         ),
         migrations.RemoveField(
-            model_name='profesor',
-            name='fecha_alta',
+            model_name="profesor",
+            name="fecha_alta",
         ),
     ]

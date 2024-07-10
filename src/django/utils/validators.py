@@ -16,8 +16,6 @@ from django.utils.translation import ngettext_lazy
 EMPTY_VALUES = (None, "", [], (), {})
 
 
-
-
 @deconstructible
 class EmailValidator:
     message = _("Enter a valid email address.")
@@ -97,7 +95,6 @@ class EmailValidator:
         )
 
 
-
 def validate_ipv4_address(value):
     try:
         ipaddress.IPv4Address(value)
@@ -155,4 +152,3 @@ def ip_address_validators(protocol, unpack_ipv4):
             "The protocol '%s' is unknown. Supported: %s"
             % (protocol, list(ip_address_validator_map))
         )
-

@@ -1,0 +1,96 @@
+<div class="max-w-full w-full rounded shadow bg-gray-900 p-4 md:p-6 border border-gray-700">
+    <div class="flex justify-between mb-5">
+      <div class="grid gap-4 grid-cols-2">
+        <div>
+          <h5 class="inline-flex items-center text-gray-400 leading-none font-normal mb-2">Inscripciones
+          </h5>
+          <p class="text-white text-2xl leading-none font-bold">+{{total_additions}}</p>
+        </div>
+      </div>
+    </div>
+    <div id="line-chart"></div>
+    <div class="grid grid-cols-1 items-center border-t border-gray-700 justify-between mt-2.5">
+    </div>
+  </div>
+
+{{monthly_additions|json_script:"additions"}}
+
+<script>
+
+    const additions = JSON.parse(document.getElementById('additions').textContent);
+
+    const options = {
+        chart: {
+          height: "100%",
+          maxWidth: "100%",
+          type: "line",
+          fontFamily: "Inter, sans-serif",
+          dropShadow: {
+            enabled: false,
+          },
+          toolbar: {
+            show: false,
+          },
+        },
+        tooltip: {
+          enabled: true,
+          theme: "dark",
+          x: {
+            show: false,
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          width: 6,
+        },
+        grid: {
+          show: true,
+          strokeDashArray: 4,
+          padding: {
+            left: 2,
+            right: 2,
+            top: -26
+          },
+        },
+        series: [
+          {
+            name: "Additions",
+            data: additions.value,
+            color: "#D8C1B5",
+          },
+        ],
+        legend: {
+          show: false
+        },
+        stroke: {
+          curve: 'straight'
+        },
+        xaxis: {
+          categories: additions.month,
+          labels: {
+            show: false,
+            style: {
+              fontFamily: "Inter, sans-serif",
+              cssClass: 'text-xs font-normal fill-gray-500 fill-gray-400'
+            }
+          },
+          axisBorder: {
+            show: false,
+          },
+          axisTicks: {
+            show: false,
+          },
+        },
+        yaxis: {
+          show: false,
+        },
+      }
+      
+      if (document.getElementById("line-chart") && typeof ApexCharts !== 'undefined') {
+        const chart = new ApexCharts(document.getElementById("line-chart"), options);
+        chart.render();
+      }
+      
+</script>

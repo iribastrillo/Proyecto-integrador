@@ -1,10 +1,12 @@
 from django import forms
 from django.shortcuts import get_object_or_404, render, redirect
-from django.views.generic import (CreateView,
-                                  ListView,
-                                  DetailView,
-                                  UpdateView,
-                                  DeleteView)
+from django.views.generic import (
+    CreateView,
+    ListView,
+    DetailView,
+    UpdateView,
+    DeleteView,
+)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from domain.models import BloqueDeClase,Grupo,Profesor,Salon
 from django.urls import reverse, reverse_lazy
@@ -18,15 +20,15 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 
 
-class ListBloqueDeClases (LoginRequiredMixin, ListView):
+class ListBloqueDeClases(LoginRequiredMixin, ListView):
     model = BloqueDeClase
-    template_name = 'clases/clases_list.html'
-    context_object_name='lista_clases'
+    template_name = "clases/clases_list.html"
+    context_object_name = "lista_clases"
 
 
 class DetailBloqueDeClase(LoginRequiredMixin, DetailView):
     model = BloqueDeClase
-    template_name = 'clases/clases_list.html'
+    template_name = "clases/clases_list.html"
 
 
 class DeleteBloqueDeClase(LoginRequiredMixin, DeleteView):
@@ -52,26 +54,32 @@ def delete_group(request, pk):
     grupo = get_object_or_404(Grupo, id=pk)
     print(grupo.__dict__)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         grupo.delete()
-        return redirect(reverse_lazy('clases:list-groups'))
-    return render(request, 'clases/grupo_confirm_delete.html', {'grupo': grupo})
+        return redirect(reverse_lazy("clases:list-groups"))
+    return render(request, "clases/grupo_confirm_delete.html", {"grupo": grupo})
+
 
 def list_groups(request):
     grupos = Grupo.objects.all()
     for grupo in grupos:
         print(grupo.__dict__)
-    return render(request, 'clases/grupo_list.html', {'lista_grupos': grupos})
+    return render(request, "clases/grupo_list.html", {"lista_grupos": grupos})
+
 
 def load_professors(request):
-    curso_id = request.GET.get('curso')
+    curso_id = request.GET.get("curso")
     profesores = Profesor.objects.filter(cursos__id=curso_id)
-    return render(request, 'clases/profesores_options.html', {'profesores': profesores})
+    return render(request, "clases/profesores_options.html", {"profesores": profesores})
+
 
 def load_group(request):
-    id_grupo = request.GET.get('grupo')
-    grupo = Grupo.objects.get (pk=id_grupo)
-    return render(request, 'clases/partials/info_grupo_enrolment_modal.html', {'grupo': grupo})
+    id_grupo = request.GET.get("grupo")
+    grupo = Grupo.objects.get(pk=id_grupo)
+    return render(
+        request, "clases/partials/info_grupo_enrolment_modal.html", {"grupo": grupo}
+    )
+
 
 class CreateGrupo(LoginRequiredMixin, CreateView):
     model = Grupo

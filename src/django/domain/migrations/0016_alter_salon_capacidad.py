@@ -7,13 +7,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('domain', '0015_grupo_identificador'),
+        ("domain", "0015_grupo_identificador"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='salon',
-            name='capacidad',
-            field=models.IntegerField(blank=True, null=True, validators=[django.core.validators.MinValueValidator(1, 'La capacidad debe ser mayor o igual a 1.'), django.core.validators.MaxValueValidator(500, 'La capacidad debe ser menor o igual a 500.')]),
+            model_name="salon",
+            name="capacidad",
+            field=models.IntegerField(
+                blank=True,
+                null=True,
+                validators=[
+                    django.core.validators.MinValueValidator(
+                        1, "La capacidad debe ser mayor o igual a 1."
+                    ),
+                    django.core.validators.MaxValueValidator(
+                        500, "La capacidad debe ser menor o igual a 500."
+                    ),
+                ],
+            ),
         ),
     ]

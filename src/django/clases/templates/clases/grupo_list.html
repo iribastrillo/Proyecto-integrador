@@ -13,8 +13,7 @@
 
 {% endblock %}
 
-{% block content %}
-
+{% block breadcrumb %}
 <nav class="col-span-3 flex pl-4" aria-label="Breadcrumb">
   <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
     <li class="inline-flex items-center">
@@ -35,9 +34,10 @@
     </li>
   </ol>
 </nav>
+{% endblock %}
 
+{% block content %}
 <section class='col-span-3 md:col-span-2 lg:col-span-2'>
-
     <div class="w-full max-w-full p-4 bg-gray-900 border border-gray-700 rounded shadow sm:p-8">
         <div class="flex items-center justify-between mb-4">
             <h5 class="text-xl font-bold leading-none text-white">Grupos</h5>
