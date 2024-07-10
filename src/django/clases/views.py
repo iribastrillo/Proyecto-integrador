@@ -31,9 +31,11 @@ class DetailBloqueDeClase(LoginRequiredMixin, DetailView):
     template_name = "clases/clases_list.html"
 
 
-class DeleteBloqueDeClase(LoginRequiredMixin, DeleteView):
+class DeleteBloqueDeClase(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = BloqueDeClase
     template_name = 'clases/clases_confirm_delete.html'
+    success_message = "El grupo se eliminó con éxito"
+
 
     def get_success_url(self):
         print("Success url")
@@ -81,7 +83,7 @@ def load_group(request):
     )
 
 
-class CreateGrupo(LoginRequiredMixin, CreateView):
+class CreateGrupo(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Grupo
     form_class=CreateGroupForm
     template_name='clases/grupo_form.html'
@@ -99,10 +101,10 @@ class CreateGrupo(LoginRequiredMixin, CreateView):
         grupo = Grupo(curso=curso, cupo=cupo)
         grupo.save()
         grupo.profesores.set(profesores)
-        print(grupo.pk)
+        print()
         print(f"Cantidad de alumnos en el grupo: {len(grupo.alumnos.all())}")
 
-        return redirect('clases:list-groups')
+        return redirect("clases:detail-group",  pk=grupo.pk)
     def form_invalid(self, form):
         return render(self.request, self.template_name, {'form': form})
 
