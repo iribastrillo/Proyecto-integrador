@@ -8,15 +8,32 @@ class PagoForm(forms.ModelForm):
 
     class Meta:
         model = Pago
-        fields = ['alumno', 'monto','descripcion', 'comprobante']
+        fields = ['monto','descripcion', 'comprobante']
+        exclude = ['alumno','fecha']
 
     def __init__(self, *args, **kwargs):
-        student_slug = kwargs.pop('student_slug', None)
-        print(  f"student_slug  init {student_slug}")
-        super(PagoForm, self).__init__(*args, **kwargs)
-        if student_slug:
-            student = Alumno.objects.get(slug=student_slug)
-            self.fields['alumno'].widget = forms.HiddenInput(attrs={'value': student.slug})
+        if initial := kwargs.get('initial'):
+            print(f"initial {initial}")
+            if 'student_slug' in initial:
+                student_slug = initial['student_slug']
+                print(f"student_slug  FORM init {student_slug}")
+                super(PagoForm, self).__init__(*args, **kwargs)
+                if student_slug:
+                    student = Alumno.objects.get(slug=student_slug)
+                    print(found_student:=f"found student {student}")
+                    self.fields['alumno'].widget = forms.HiddenInput(attrs={'value': student.slug})
+
+        if kwargs.get('instance'):
+            print(f"kwargs {kwargs}")
+            print(f"student_slug  FORM init {kwargs['instance'].alumno.slug}")
+            if kwargs['instance'].alumno:
+                student_slug = kwargs['instance'].alumno.slug
+                print(  f"student_slug  FORM init {student_slug}")
+                super(PagoForm, self).__init__(*args, **kwargs)
+                if student_slug:
+                    student = Alumno.objects.get(slug=student_slug)
+                    self.fields['alumno'].widget = forms.HiddenInput(attrs={'value': student.slug})
+
 
     def clean_alumno(self):
         slug = self.cleaned_data['alumno']

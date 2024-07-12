@@ -2,10 +2,29 @@
 
 <h1>Detalles del pago</h1>
 
+{% if pago.fecha %}
 <p>Fecha: {{ pago.fecha }}</p>
+{%else%}
+<p>Fecha: No disponible</p>
+{% endif %}
+
+{% if pago.monto %}
 <p>Monto: {{ pago.monto }}</p>
+{% else %}
+<p>Monto: No disponible</p>
+{% endif %}
+
+{% if pago.descripcion %}
 <p>Descripción: {{ pago.descripcion }}</p>
+{% else %}
+<p>Descripción: No disponible</p>
+{% endif %}
+{% if pago.comprobante %}
 <p>Comprobante: <a  style=" text-decoration: underline" href="{{ pago.comprobante.url }}">Ver comprobante</a ></p>
-<!-- Add more payment details as needed -->
+{% else %}
+<p>Comprobante: No disponible</p>
+{% endif %}
+
+
 
 <a  class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-800 font-medium rounded text-sm inline-flex items-center px-5 py-2.5 text-center" href="{% url 'pagos:payments' student_slug  %}">Volver a la lista de pagos</a>

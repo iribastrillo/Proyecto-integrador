@@ -1,12 +1,14 @@
-<form method="POST" action="{% url 'pagos:add-payment' student.slug %}" enctype="multipart/form-data">
+<form method="POST" action="{% url 'pagos:add-payment' slug %}" enctype="multipart/form-data">
   {% csrf_token %}
-    <div>
-        <label for="id_alumno"></label>
-         {{ form.alumno }}
-    </div>
+
     <div>
         <label for="nombre">Alumno:</label>
          {{student.nombre }}
+    </div>
+
+    <div>
+        <label  for="id_alumno"></label>
+        {{ form.alumno }}
     </div>
     <div>
 

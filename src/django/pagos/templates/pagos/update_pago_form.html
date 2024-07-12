@@ -1,0 +1,26 @@
+<form method="POST" action="{% url 'pagos:update-payment' pago.pk %}" enctype="multipart/form-data">
+  {% csrf_token %}
+
+    <div>
+        <label for="id_alumno"></label>
+        {{ form.alumno }}
+    </div>
+    <div>
+
+        {{form.monto.label_tag}}
+        {{form.monto}}
+    </div>
+
+    <div>
+
+        {{form.descripcion.label_tag}}
+        {{form.descripcion}}
+    </div>
+    <div>
+
+        {{form.comprobante.label_tag}}
+        {{form.comprobante}}
+    </div>
+    <input class='main-action-button w-full' type="submit" value="Guardar">
+</form>
+

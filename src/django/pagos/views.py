@@ -1,3 +1,4 @@
+from typing import Any
 from django.shortcuts import render
 
 # Create your views here.
@@ -24,48 +25,133 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import PagoForm
 
 
-class CreartePago(LoginRequiredMixin, View):
+class CratePago(LoginRequiredMixin, CreateView):
     model = Pago
     form_class = PagoForm
     template_name = 'pagos/pago_form.html'
-    fields = [ 'monto','descripcion','comprobante','fecha']
+    def get(self, request, *args, **kwargs):
+        # Fetch the object based on the slug
+        print(f"Debug CratePago kwargs: {self.kwargs}")
+        obj =  self.kwargs['slug']
+        print(f"Debug: Retrieved object: {obj}")
+        student = Alumno.objects.get(slug=obj)
+        return super().get(request, *args, **kwargs)
 
-    def get (self, request, *args, **kwargs):
-        student = Alumno.objects.get(slug = kwargs['slug'])
-        print(f"Alumno {student.nombre}")
-        print(f"Slug {student.slug}")
-        form = self.form_class(student_slug=student.slug)
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["slug"] = self.kwargs['slug']
+        return context
 
-        context = {
-            'form': form,
-            'student': student
-
-        }
-        return render (request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        student = Alumno.objects.get(slug=kwargs['slug'])
-        form = self.form_class(request.POST, request.FILES, student_slug=student.slug)
-        print(f"student slug{student.slug}")
+def create_pago(request: HttpRequest, slug: str) -> HttpResponseRedirect:
+    student = Alumno.objects.get(slug=slug)
+    if request.method == 'POST':
+        print(f"post {student.slug}")
+        form = PagoForm(request.POST, request.FILES, initial={'student_slug': student.slug})
         if form.is_valid():
             pago = form.save(commit=False)
             pago.alumno = student
             pago.save()
-            # Redirect to a success page or render the form again with a success message
-            return redirect('estudiantes:detail-student', slug=student.slug)
-
-
-
+            return HttpResponseRedirect(reverse('pagos:payments', kwargs={'slug': student.slug}))
         else:
-            print("form invalid")
-            # Form is not valid, render the form again with error messages
-            print(form.errors)  # Print the error messages
+            print(f"form invalid {form.errors}")
+    else:
+        form = PagoForm(initial={'student_slug': student.slug})
+        print(f"get {student.slug}")
+    return render(request, 'pagos/pago_form.html', {'form': form, 'slug': student.slug})
 
-            context = {
-                'form': form,
-                'student': student
-            }
-            return render(request, self.template_name, context)
+
+
+class UpdatePago(LoginRequiredMixin, UpdateView):
+    model = Pago
+    form_class = PagoForm
+    template_name = 'pagos/update_pago_form.html'
+    fields = [ 'monto','descripcion','comprobante']
+
+    def get_object(self, queryset=None):
+        # Fetch the object based on the slug
+        obj=Pago.objects.get(slug=self.kwargs['pk'])
+        print(f"Debug: Retrieved object: {obj}")
+
+        return Pago.objects.get(slug=self.kwargs['pk'])
+
+    def get_success_url(self):
+        return reverse_lazy(
+            'pagos:payments', kwargs={'slug': self.object.alumno.slug}
+        )
+
+def update_pago(request: HttpRequest,  pk: int) -> HttpResponseRedirect:
+    pago = get_object_or_404(Pago, pk=pk)
+    student=pago.alumno
+    if request.method == 'POST':
+        form = PagoForm(request.POST, request.FILES, instance=pago)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('pagos:payments', kwargs={'slug': student.slug}))
+        else:
+            print(f"form invalid {form.errors}")
+    else:
+        form = PagoForm(instance=pago)
+        print(f"get {pago.pk}")
+    return render(request, 'pagos/update_pago_form.html', {'form': form, 'pago': pago,'student': student})
+
+class DeletePago(LoginRequiredMixin, DeleteView):
+    model = Pago
+    template_name = 'pagos/pago_confirm_delete.html'
+    def get_success_url(self):
+        # Get the student associated with the Pago instance
+        student = self.kwargs['slug']
+        # Generate the success URL with the student slug
+        return reverse_lazy('pagos:payments', kwargs={'slug': student})
+
+class DetailPago(LoginRequiredMixin, DetailView):
+    model = Pago
+    template_name = 'pagos/pago_detail.html'
+
+
+
+
+# class CreartePago(LoginRequiredMixin, View):
+#     model = Pago
+#     form_class = PagoForm
+#     template_name = 'pagos/pago_form.html'
+#     fields = [ 'monto','descripcion','comprobante','fecha']
+
+#     def get (self, request, *args, **kwargs):
+#         student = Alumno.objects.get(slug = kwargs['slug'])
+#         print(f"Alumno {student.nombre}")
+#         print(f"Slug {student.slug}")
+#         form = self.form_class(student_slug=student.slug)
+
+#         context = {
+#             'form': form,
+#             'student': student
+
+#         }
+#         return render (request, self.template_name, context)
+
+#     def post(self, request, *args, **kwargs):
+#         student = Alumno.objects.get(slug=kwargs['slug'])
+#         form = self.form_class(request.POST, request.FILES, student_slug=student.slug)
+#         print(f"student slug{student.slug}")
+#         if form.is_valid():
+#             pago = form.save(commit=False)
+#             pago.alumno = student
+#             pago.save()
+#             # Redirect to a success page or render the form again with a success message
+#             return redirect('estudiantes:detail-student', slug=student.slug)
+
+
+
+#         else:
+#             print("form invalid")
+#             # Form is not valid, render the form again with error messages
+#             print(form.errors)  # Print the error messages
+
+#             context = {
+#                 'form': form,
+#                 'student': student
+#             }
+#             return render(request, self.template_name, context)
 
 class ListPagos(LoginRequiredMixin, ListView):
     model = Pago
@@ -87,6 +173,21 @@ class ListPagos(LoginRequiredMixin, ListView):
         }
         return render(request, self.template_name, context)
 
+    def post (self, request, *args, **kwargs):
+        print("listando pagos")
+        print(self.kwargs)
+        student = Alumno.objects.get(slug = kwargs['slug'])
+        print(f"Alumno {student.nombre}")
+        print(f"Slug {student.slug}")
+        pagos= Pago.objects.filter(alumno=student)
+        print(f"Pagos {pagos}")
+
+        context = {
+            'payment_list': pagos,
+            'student': student,
+        }
+        return render(request, self.template_name, context)
+
 
 class DetailPago(LoginRequiredMixin, DetailView):
     model = Pago
@@ -94,7 +195,7 @@ class DetailPago(LoginRequiredMixin, DetailView):
     def get (self, request, *args, **kwargs):
         print("Detalle de pago")
         print(self.kwargs)
-        pago = get_object_or_404(Pago, id=kwargs['pago_id'])
+        pago = get_object_or_404(Pago, id=kwargs['pk'])
         student = pago.alumno
         print(f"Alumno {student.nombre}")
         print(f"Slug {student.slug}")
