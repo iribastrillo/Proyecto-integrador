@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from domain.models import Pago, Alumno
+from domain.models import Pago, Alumno,AlumnoCurso,Curso
 
 class PagoForm(forms.ModelForm):
     alumno = forms.SlugField()
@@ -8,7 +8,7 @@ class PagoForm(forms.ModelForm):
 
     class Meta:
         model = Pago
-        fields = ['monto','descripcion', 'comprobante']
+        fields = ['monto','descripcion', 'comprobante','curso']
         exclude = ['alumno','fecha']
 
     def __init__(self, *args, **kwargs):
@@ -22,6 +22,10 @@ class PagoForm(forms.ModelForm):
                     student = Alumno.objects.get(slug=student_slug)
                     print(found_student:=f"found student {student}")
                     self.fields['alumno'].widget = forms.HiddenInput(attrs={'value': student.slug})
+                    enrolled_courses = AlumnoCurso.objects.filter(alumno=student).values_list('curso__pk','curso__nombre')
+                    print(f"Cursos para alumno {enrolled_courses}")
+                    self.fields['curso'] = forms.ChoiceField(choices=enrolled_courses, widget=forms.Select(attrs={'class': 'form-control'}))
+
 
         if kwargs.get('instance'):
             print(f"kwargs {kwargs}")
@@ -33,6 +37,10 @@ class PagoForm(forms.ModelForm):
                 if student_slug:
                     student = Alumno.objects.get(slug=student_slug)
                     self.fields['alumno'].widget = forms.HiddenInput(attrs={'value': student.slug})
+                    enrolled_courses = AlumnoCurso.objects.filter(alumno=student).values_list('curso__pk','curso__nombre')
+                    print(f"Cursos para alumno {enrolled_courses}")
+                    self.fields['curso'] = forms.ChoiceField(choices=enrolled_courses, widget=forms.Select(attrs={'class': 'form-control'}))
+
 
 
     def clean_alumno(self):
@@ -45,6 +53,15 @@ class PagoForm(forms.ModelForm):
             return Alumno.objects.get(slug=slug)
         except Alumno.DoesNotExist:
             raise ValidationError('No existe alumno')
+    def clean_curso(self):
+        curso_id = self.cleaned_data['curso']
+        print(f"curso_id {curso_id}")
+        try:
+            curso=Curso.objects.get(pk=curso_id)
+            print(f"curso found {curso}")
+            return curso
+        except Curso.DoesNotExist:
+            raise ValidationError('No existe curso')
 
     def save(self, commit=True):
         instance = super(PagoForm, self).save(commit=False)

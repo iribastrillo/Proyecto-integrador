@@ -13,7 +13,11 @@
 {% else %}
 <p>Monto: No disponible</p>
 {% endif %}
-
+{% if pago.curso %}
+<p>Curso: {{ pago.curso.nombre }}</p>
+{% else %}
+<p>Monto: No disponible</p>
+{% endif %}
 {% if pago.descripcion %}
 <p>Descripción: {{ pago.descripcion }}</p>
 {% else %}

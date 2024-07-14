@@ -1,31 +1,31 @@
-<form method="POST" action="{% url 'pagos:add-payment' slug %}" enctype="multipart/form-data">
+<form method="POST" action="{% url 'pagos:add-payment' slug %}" enctype="multipart/form-data" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-full bg-gray-900 border border-gray-700 rounded p-8">
   {% csrf_token %}
+  <h5 class="text-xl font-bold leading-nonetext-white">Agregar Pago</h5>
+  <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
 
-    <div>
-        <label for="nombre">Alumno:</label>
-         {{student.nombre }}
-    </div>
-
-    <div>
+    <div class="flex flex-col mb-4">
         <label  for="id_alumno"></label>
         {{ form.alumno }}
     </div>
-    <div>
+    <div class="flex flex-col mb-4">
+        {{form.curso.label_tag}}
+        {{form.curso}}
+    </div>
 
+    <div class="flex flex-col mb-4">
         {{form.monto.label_tag}}
         {{form.monto}}
     </div>
 
-    <div>
-
+    <div class="flex flex-col mb-4">
         {{form.descripcion.label_tag}}
         {{form.descripcion}}
     </div>
-    <div>
-
+    <div class="flex flex-col mb-4">
         {{form.comprobante.label_tag}}
         {{form.comprobante}}
     </div>
     <input class='main-action-button w-full' type="submit" value="Guardar">
 </form>
+
 

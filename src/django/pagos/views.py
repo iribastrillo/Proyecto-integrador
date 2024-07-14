@@ -47,7 +47,11 @@ def create_pago(request: HttpRequest, slug: str) -> HttpResponseRedirect:
     if request.method == 'POST':
         print(f"post {student.slug}")
         form = PagoForm(request.POST, request.FILES, initial={'student_slug': student.slug})
+        print(f"form {form}")
+        curso=form.cleaned_data['curso']
+        print(f"curso {curso}")
         if form.is_valid():
+            print(f"form valid {form.cleaned_data}")
             pago = form.save(commit=False)
             pago.alumno = student
             pago.save()
@@ -108,50 +112,6 @@ class DetailPago(LoginRequiredMixin, DetailView):
     template_name = 'pagos/pago_detail.html'
 
 
-
-
-# class CreartePago(LoginRequiredMixin, View):
-#     model = Pago
-#     form_class = PagoForm
-#     template_name = 'pagos/pago_form.html'
-#     fields = [ 'monto','descripcion','comprobante','fecha']
-
-#     def get (self, request, *args, **kwargs):
-#         student = Alumno.objects.get(slug = kwargs['slug'])
-#         print(f"Alumno {student.nombre}")
-#         print(f"Slug {student.slug}")
-#         form = self.form_class(student_slug=student.slug)
-
-#         context = {
-#             'form': form,
-#             'student': student
-
-#         }
-#         return render (request, self.template_name, context)
-
-#     def post(self, request, *args, **kwargs):
-#         student = Alumno.objects.get(slug=kwargs['slug'])
-#         form = self.form_class(request.POST, request.FILES, student_slug=student.slug)
-#         print(f"student slug{student.slug}")
-#         if form.is_valid():
-#             pago = form.save(commit=False)
-#             pago.alumno = student
-#             pago.save()
-#             # Redirect to a success page or render the form again with a success message
-#             return redirect('estudiantes:detail-student', slug=student.slug)
-
-
-
-#         else:
-#             print("form invalid")
-#             # Form is not valid, render the form again with error messages
-#             print(form.errors)  # Print the error messages
-
-#             context = {
-#                 'form': form,
-#                 'student': student
-#             }
-#             return render(request, self.template_name, context)
 
 class ListPagos(LoginRequiredMixin, ListView):
     model = Pago
