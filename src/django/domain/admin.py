@@ -11,6 +11,8 @@ from .models import (
     Grupo,
     Examen,
     AlumnoExamen,
+    Dia,
+    Pago
 )
 
 
@@ -25,3 +27,5 @@ admin.site.register(Leccion)
 admin.site.register(Grupo)
 admin.site.register(Examen)
 admin.site.register(AlumnoExamen)
+admin.site.register(Dia)
+admin.site.register(Pago)
