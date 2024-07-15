@@ -131,14 +131,10 @@ class Salon(models.Model):
 
 class Grupo(models.Model):
     identificador = models.CharField(max_length=1)
-    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
-    alumnos = models.ManyToManyField(
-        Alumno, blank=True
-    )  # validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
-    cupo = models.IntegerField()
-    profesores = models.ManyToManyField(
-        Profesor
-    )  # validar que el profesor este asignado al curso
+    curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
+    alumnos=models.ManyToManyField(Alumno, blank=True) #validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
+    cupo=models.IntegerField(null=False,default=1,validators=[MinValueValidator(1, "La cantidad de alumnos debe estar entre 1 y 50"),MaxValueValidator(50,"La cantidad de alumnos debe estar entre 1 y 50")])
+    profesores=models.ManyToManyField(Profesor) #validar que el profesor este asignado al curso
 
     def __str__(self) -> str:
         return f"Grupo {self.pk} | {self.curso.nombre}"
