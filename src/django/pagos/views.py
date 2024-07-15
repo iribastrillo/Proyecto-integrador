@@ -25,22 +25,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import PagoForm
 
 
-class CratePago(LoginRequiredMixin, CreateView):
-    model = Pago
-    form_class = PagoForm
-    template_name = 'pagos/pago_form.html'
-    def get(self, request, *args, **kwargs):
-        # Fetch the object based on the slug
-        print(f"Debug CratePago kwargs: {self.kwargs}")
-        obj =  self.kwargs['slug']
-        print(f"Debug: Retrieved object: {obj}")
-        student = Alumno.objects.get(slug=obj)
-        return super().get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["slug"] = self.kwargs['slug']
-        return context
 
 def create_pago(request: HttpRequest, slug: str) -> HttpResponseRedirect:
     student = Alumno.objects.get(slug=slug)
@@ -63,25 +47,6 @@ def create_pago(request: HttpRequest, slug: str) -> HttpResponseRedirect:
         print(f"get {student.slug}")
     return render(request, 'pagos/pago_form.html', {'form': form, 'slug': student.slug})
 
-
-
-class UpdatePago(LoginRequiredMixin, UpdateView):
-    model = Pago
-    form_class = PagoForm
-    template_name = 'pagos/update_pago_form.html'
-    fields = [ 'monto','descripcion','comprobante']
-
-    def get_object(self, queryset=None):
-        # Fetch the object based on the slug
-        obj=Pago.objects.get(slug=self.kwargs['pk'])
-        print(f"Debug: Retrieved object: {obj}")
-
-        return Pago.objects.get(slug=self.kwargs['pk'])
-
-    def get_success_url(self):
-        return reverse_lazy(
-            'pagos:payments', kwargs={'slug': self.object.alumno.slug}
-        )
 
 def update_pago(request: HttpRequest,  pk: int) -> HttpResponseRedirect:
     pago = get_object_or_404(Pago, pk=pk)

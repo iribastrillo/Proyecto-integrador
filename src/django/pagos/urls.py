@@ -5,9 +5,7 @@ app_name = 'pagos'
 
 
 urlpatterns = [
-    # path('agregar-pago/<slug>/', views.CratePago.as_view(), name='add-payment'),
     path('agregar-pago/<slug>/', views.create_pago, name='add-payment'),
-    # path('modificar-pago/<pk>/', views.UpdatePago.as_view(), name='update-payment'),
     path('modificar-pago/<pk>/', views.update_pago, name='update-payment'),
     path('detalle-pago/<pk>/', views.DetailPago.as_view(), name='detail-payment'),
     path('listar-pagos/<slug>/', views.ListPagos.as_view(), name='payments'),
