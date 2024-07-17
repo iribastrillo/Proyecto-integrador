@@ -45,7 +45,7 @@
   <section class='col-span-3 md:col-span-2 lg:col-span-2'>
 
 
-    <form method="post" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-md bg-gray-900 border border-gray-700 rounded p-8">
+    <form method="post" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-md bg-gray-900 border border-gray-700 rounded p-8" >
   {% csrf_token %}
   {{form.errors}}
 
@@ -53,8 +53,12 @@
     <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
 
     {% include "clases/components/grupo_component.html" with form=form %}
-
+    {% if object %}
+    <input class='main-action-button w-full' type="submit" value="Modificar">
+    {% else %}
     <input class='main-action-button w-full' type="submit" value="Agregar">
+    {%endif%}
+
 
      <button type="button"  class='main-action-button w-full' onclick="window.location.href = '{% url 'clases:list-groups' %}'">Cancelar</button>
   </form>

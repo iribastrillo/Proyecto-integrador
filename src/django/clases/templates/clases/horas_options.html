@@ -1,0 +1,13 @@
+{% comment %} <form method="post">
+    <select name="hora_inicio" class="bg-gray-900 divide-y divide-gray-100 shadow dark:bg-gray-700">
+        {% for hour in unavailable_hours %}
+            <option value="{{ hour }}" disabled>{{ hour }}</option>
+        {% endfor %}
+    </select>
+    <!-- Other form fields -->
+</form> {% endcomment %}
+<select id="hora_inicio" name="hora_inicio" class="bg-gray-900 divide-y divide-gray-100 shadow dark:bg-gray-700">
+    {% for hour in available_hours %}
+        <option value="{{ hour }}" >{{ hour }}</option>
+    {% endfor %}
+</select>
