@@ -1,14 +1,18 @@
 <li class="py-3 sm:py-4 group">
     <div class="flex items-center">
       {% include 'base/components/avatars/placeholder_initials.html' with first_name=estudiante.nombre last_name=estudiante.apellido %}
+
         <div class="flex-1 min-w-0 ms-4">
-            <p class="text-sm font-medium truncate text-white">
-                {{student.nombre}}
-            </p>
-            <p class="text-sm truncate text-gray-400">
-                {{student.email}}
-            </p>
-        </div>
+          <p class="text-sm font-medium truncate text-white">
+              {{pago.curso.nombre}}
+          </p>
+          <p class="text-sm font-medium truncate text-white">
+            ${{pago.monto}}
+        </p>
+          <p class="text-sm truncate text-gray-400">
+              {{pago.fecha}}
+          </p>
+      </div>
         <div class="flex flex-row items-end text-base font-semibold text-white">
           {% comment %} <a href="{% url 'pagos:detail-payment' pago_id=pago.pk  %}" class='mr-2'> {% endcomment %}
             <a hx-get="{% url 'pagos:detail-payment' pago.pk %}" hx-target="#confirm-form" hx-trigger="click" hx-swap="innerHTML" data-modal-target="confirm-modal" data-modal-toggle="confirm-modal" >
