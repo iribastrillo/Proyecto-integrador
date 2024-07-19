@@ -16,7 +16,7 @@ from domain.models import Alumno,Pago
 
 from django.urls import reverse, reverse_lazy
 
-from django.http import HttpRequest, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse,HttpResponseRedirect
 
 from django.contrib.auth.decorators import login_required
 
@@ -24,6 +24,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import PagoForm
 
+from django.contrib import messages
+
+from django.template.response import TemplateResponse
 
 
 def create_pago(request: HttpRequest, slug: str) -> HttpResponseRedirect:
@@ -39,9 +42,15 @@ def create_pago(request: HttpRequest, slug: str) -> HttpResponseRedirect:
             pago = form.save(commit=False)
             pago.alumno = student
             pago.save()
-            return HttpResponseRedirect(reverse('pagos:payments', kwargs={'slug': student.slug}))
+            # return HttpResponseRedirect(reverse('pagos:payments', kwargs={'slug': student.slug}))
+            return HttpResponse()
         else:
             print(f"form invalid {form.errors}")
+            response = render(request, 'pagos/pago_form.html', {'form': form, 'slug': student.slug})
+            response['HX-Retarget'] = '#payment-modal'
+
+            return response
+            # return TemplateResponse(request, 'pagos/pago_form.html', {'form': form, 'slug': student.slug})
     else:
         form = PagoForm(initial={'student_slug': student.slug})
         print(f"get {student.slug}")
@@ -55,9 +64,13 @@ def update_pago(request: HttpRequest,  pk: int) -> HttpResponseRedirect:
         form = PagoForm(request.POST, request.FILES, instance=pago)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('pagos:payments', kwargs={'slug': student.slug}))
+            # return HttpResponseRedirect(reverse('pagos:payments', kwargs={'slug': student.slug}))
+            return HttpResponse()
         else:
-            print(f"form invalid {form.errors}")
+            print(f"form invalid update pago {form.errors}")
+            response = render(request, 'pagos/update_pago_form.html', {'form': form, 'pago': pago,'student': student})
+            response['HX-Retarget'] = '#payment-modal'
+            return response
     else:
         form = PagoForm(instance=pago)
         print(f"get {pago.pk}")

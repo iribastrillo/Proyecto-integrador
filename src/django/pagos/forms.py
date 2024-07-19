@@ -11,6 +11,12 @@ class PagoForm(forms.ModelForm):
         fields = ['monto','descripcion', 'comprobante','curso']
         exclude = ['alumno','fecha']
 
+    def clean_monto(self):
+        monto = self.cleaned_data['monto']
+        if monto <= 0:
+            raise ValidationError('El monto debe ser mayor a 0 validacion desde form')
+        return monto
+
     def __init__(self, *args, **kwargs):
         if initial := kwargs.get('initial'):
             print(f"initial {initial}")
