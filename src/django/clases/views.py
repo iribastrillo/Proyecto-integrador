@@ -119,26 +119,59 @@ def load_available_hours(request,pk=None):
         start_time += timedelta(minutes=30)
     simple_time_slots = [slot.strftime("%H:%M")for slot in all_time_slots]
     print(simple_time_slots)
+    available_hours=simple_time_slots
     # Retrieve existing blocked hours for the selected salon and days
     horas_no_disponibles = []
     print(selected_salon[0])
     for dia in selected_days:
 
         bloques = BloqueDeClase.objects.filter(salon__id=selected_salon[0])
-        print(f"bloques {bloques}")
-        horas_no_disponibles.extend([(bloque.hora_inicio.strftime("%H:%M"), bloque.hora_fin.strftime("%H:%M")) for bloque in bloques])
-    if bloques:
-        for bloque in bloques:
-            print (f"Bloque dia {bloque.dia.all()} hora inicio {bloque.hora_inicio} hora fin {bloque.hora_fin} salon {bloque.salon}")
-    print(f"horas no disponibles {horas_no_disponibles}")
-    # Calculate available hours
-    available_hours = [slot.strftime("%H:%M") for slot in all_time_slots if slot not in horas_no_disponibles]
+        if bloques:
+            print(f"bloques {bloques}")
+            horas_no_disponibles.extend([(bloque.hora_inicio.strftime("%H:%M"), bloque.hora_fin.strftime("%H:%M")) for bloque in bloques])
+
+                # Calculate intervals and store unique values
+            all_intervals = set()
+            for start, end in horas_no_disponibles:
+                intervals = get_minutes_in_range(start, end)
+                all_intervals.update(intervals)
+
+            # Convert minutes back to hours
+            formatted_intervals = []
+            for minutes in sorted(all_intervals):
+                hours, mins = divmod(minutes, 60)
+                formatted_hour = f"{hours:02}:{mins:02}"
+                formatted_intervals.append(formatted_hour)
+
+            print(f"intervalos formateados {formatted_intervals}")
+
+            print(f"horas no disponibles {horas_no_disponibles}")
+
+            ##Calculate available hours
+            available_hours = [slot  for slot in simple_time_slots if slot not in formatted_intervals]
+
+            for bloque in bloques:
+                print (f"Bloque dia {bloque.dia.all()} hora inicio {bloque.hora_inicio} hora fin {bloque.hora_fin} salon {bloque.salon}")
+
+
     print(f"available_hours {available_hours}")
 
 
 
 
-    return render(request, "clases/horas_options.html", {"available_hours": all_time_slots})
+    return render(request, "clases/horas_options.html", {"available_hours": available_hours})
+
+
+def convert_to_minutes(time_str):
+    hours, minutes = map(int, time_str.split(':'))
+    return hours * 60 + minutes
+
+def get_minutes_in_range(start_time, end_time):
+    start_minutes = convert_to_minutes(start_time)
+    end_minutes = convert_to_minutes(end_time)
+    return list(range(start_minutes, end_minutes+1, 30))
+
+# Unavailable hours
 
 
 class CreateGrupo(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -205,6 +238,8 @@ class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
 
 
     def post (self, request, *args, **kwargs):
+        if "Hx-Request" in request.headers:
+            print("CREATE BLOQUE DE CLASE Hx-Request")
         form = BloqueDeClaseForm (request.POST)
         grupo = Grupo.objects.get(pk=kwargs["pk"])
         print(f"Creando bloque de clase para el grupo {grupo.pk}")
