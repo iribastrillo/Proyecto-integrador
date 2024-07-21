@@ -1,19 +1,13 @@
-{% comment %} <form method="post">
-    <select name="hora_inicio" class="bg-gray-900 divide-y divide-gray-100 shadow dark:bg-gray-700">
-        {% for hour in unavailable_hours %}
-            <option value="{{ hour }}" disabled>{{ hour }}</option>
-        {% endfor %}
-    </select>
-    <!-- Other form fields -->
-</form> {% endcomment %}
+ {% comment %} This will load hora de inicio dropdown in clases {% endcomment %}
+    {% for hour, status in available_hours.items %}
+    <option value="{{ hour }}" class="{{ status }}" {% if status == "bloque-taken" %}style="background-color: red !important;"{% endif %}>{{ hour }}</option>
+{% endfor %}
 
-{% comment %}
-    {% for hour in available_hours %}
-        <option value="{{ hour }}" >{{ hour }}</option>
-    {% endfor %} {% endcomment %}
+ {% comment %} This will load hora de fin dropdown in clases {% endcomment %}
 
-
+<select name="hora_fin" id="id_hora_fin" hx-swap-oob="true" class="bg-gray-900 divide-y divide-gray-100 shadow dark:bg-gray-700">
 {% for hour, status in available_hours.items %}
     <option value="{{ hour }}" class="{{ status }}" {% if status == "bloque-taken" %}style="background-color: red !important;"{% endif %}>{{ hour }}</option>
 {% endfor %}
+</select>
 
