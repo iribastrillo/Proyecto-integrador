@@ -102,7 +102,7 @@ def load_available_hours(request,pk=None):
     print(simple_time_slots)
 
     available_hours=simple_time_slots
-    available_hours = {hour: 'bloque-available' for hour in simple_time_slots}
+    available_hours = {hour: 'bloque-available bg-gray-900' for hour in simple_time_slots}
 
 
     if "salon" in request.GET and request.GET.get('salon') != "":
@@ -170,7 +170,7 @@ def load_available_hours(request,pk=None):
             # available_hours = [slot  for slot in simple_time_slots if slot not in horas_no_disponibles_formateadas]
             # available_hours = [slot  for slot in simple_time_slots if slot not in horas_no_disponibles_formateadas]
 
-            available_hours = {hour: 'bloque-available' if hour not in horas_no_disponibles_formateadas else 'bloque-taken' for hour in simple_time_slots}
+            available_hours = {hour: 'bloque-available bg-gray-900' if hour not in horas_no_disponibles_formateadas else 'bloque-taken' for hour in simple_time_slots}
             # print(f"available_hours_2 {available_hours}")
             # for bloque in bloques:
             #     print (f"Bloque dia {bloque.dia.all()} hora inicio {bloque.hora_inicio} hora fin {bloque.hora_fin} salon {bloque.salon}")

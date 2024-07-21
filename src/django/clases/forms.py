@@ -42,27 +42,19 @@ class BloqueDeClaseForm(forms.ModelForm):
         model=BloqueDeClase
         fields=["dia","hora_inicio","hora_fin","salon"]
     #dia = forms.ModelMultipleChoiceField(queryset=Dia.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={"class": "bg-gray-900   shadow dark:bg-gray-700"}), required=True)
-    dia = forms.ModelMultipleChoiceField(queryset=Dia.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={"class": "bg-gray-900   shadow dark:bg-gray-700","hx-trigger":"change,load","hx-include":"[name='salon'],input[type='checkbox']:checked", "hx-get":"cargar-horas-disponibles/","hx-target":"#id_hora_inicio","hx-select-oob":"#id_hora_fin"}), required=True)
+    dia = forms.ModelMultipleChoiceField(queryset=Dia.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={"class": "bg-gray-900   shadow dark:bg-gray-900","hx-trigger":"change","hx-include":"[name='salon'],input[type='checkbox']:checked", "hx-get":"cargar-horas-disponibles/","hx-target":"#id_hora_inicio","hx-select-oob":"#id_hora_fin"}), required=True)
     hora_inicio = forms.ChoiceField(choices=[(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)],widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700","id":"id_hora_inicio"}), required=True)
-    hora_fin = forms.ChoiceField(choices=[(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)],widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}), required=True)
-    salon = forms.ModelChoiceField(queryset=Salon.objects.all(),widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700", "hx-get":"cargar-horas-disponibles/","hx-target":"#id_hora_inicio","hx-include":"[name='dia']"}), required=True)
+    hora_fin = forms.ChoiceField(choices=[(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)],widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700","id":"id_hora_fin"}), required=True)
+    salon = forms.ModelChoiceField(queryset=Salon.objects.all(),widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-900", "hx-get":"cargar-horas-disponibles/","hx-target":"#id_hora_inicio","hx-select-oob":"#id_hora_fin","hx-include":"[name='dia']"}), required=True)
 
     def __init__(self, *args, **kwargs):
         super(BloqueDeClaseForm,self).__init__(*args, **kwargs)
         if self.initial:
-            print("INITIAL VALUES: ",self.initial)
-
             self.initial['hora_inicio'] =self.initial['hora_inicio'].strftime('%H:%M')
             self.initial['hora_fin'] = self.initial['hora_fin'].strftime('%H:%M')
+            print("INITIAL VALUES: ",self.initial)
 
 
 
 
 
-BloqueFormSet = forms.formset_factory(BloqueDeClaseForm)
-# BloqueFormSet = forms.modelformset_factory(
-#     BloqueDeClase,
-#     form=BloqueDeClaseForm,  # Replace with your custom form class
-#     fields=('dia', 'hora_inicio', 'hora_fin', 'salon'),
-#     extra=0  # Set the number of extra forms to display
-# )
