@@ -9,6 +9,7 @@ from django.views.generic import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from domain.models import BloqueDeClase,Grupo,Profesor,Salon
+from django.db.models import Q
 from django.urls import reverse, reverse_lazy
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -125,38 +126,54 @@ def load_available_hours(request,pk=None):
         # Retrieve existing blocked hours for the selected salon and days
         horas_no_disponibles = []
         print(selected_salon[0])
-        for dia in selected_days:
+        bloques = BloqueDeClase.objects.filter(salon__id=selected_salon[0])
 
-            bloques = BloqueDeClase.objects.filter(salon__id=selected_salon[0])
-            if bloques:
-                print(f"bloques {bloques}")
-                horas_no_disponibles.extend([(bloque.hora_inicio.strftime("%H:%M"), bloque.hora_fin.strftime("%H:%M")) for bloque in bloques])
+        selected_days = [int(day) for day in selected_days]
+        q_objects = Q()
+        for day_id in selected_days:
+            q_objects |= Q(dia__id=day_id)
 
-                    # Calculate intervals and store unique values
-                all_intervals = set()
-                for start, end in horas_no_disponibles:
-                    intervals = get_minutes_in_range(start, end)
-                    all_intervals.update(intervals)
+        bloques = bloques.filter(q_objects)
+        print(f"bloques {bloques}")
 
-                # Convert minutes back to hours
-                horas_no_disponibles_formateadas = []
-                for minutes in sorted(all_intervals):
-                    hours, mins = divmod(minutes, 60)
-                    formatted_hour = f"{hours:02}:{mins:02}"
-                    horas_no_disponibles_formateadas.append(formatted_hour)
 
-                print(f"intervalos no disponibles  {horas_no_disponibles_formateadas}")
+        dias= [bloque.dia.all()  for bloque in bloques]
+        for dia_queryset in dias:
+            for dia in dia_queryset:
 
-                # print(f"horas {horas_no_disponibles}")
+                print(f"Day ID: {dia.id}, Day name: {dia.name}")
 
-                ##Calculate available hours
-                # available_hours = [slot  for slot in simple_time_slots if slot not in horas_no_disponibles_formateadas]
-                # available_hours = [slot  for slot in simple_time_slots if slot not in horas_no_disponibles_formateadas]
 
-                available_hours = {hour: 'bloque-available' if hour not in horas_no_disponibles_formateadas else 'bloque-taken' for hour in simple_time_slots}
-                print(f"available_hours_2 {available_hours}")
-                # for bloque in bloques:
-                #     print (f"Bloque dia {bloque.dia.all()} hora inicio {bloque.hora_inicio} hora fin {bloque.hora_fin} salon {bloque.salon}")
+        if bloques:
+
+
+            horas_no_disponibles.extend([(bloque.hora_inicio.strftime("%H:%M"), bloque.hora_fin.strftime("%H:%M")) for bloque in bloques])
+
+                # Calculate intervals and store unique values
+            all_intervals = set()
+            for start, end in horas_no_disponibles:
+                intervals = get_minutes_in_range(start, end)
+                all_intervals.update(intervals)
+
+            # Convert minutes back to hours
+            horas_no_disponibles_formateadas = []
+            for minutes in sorted(all_intervals):
+                hours, mins = divmod(minutes, 60)
+                formatted_hour = f"{hours:02}:{mins:02}"
+                horas_no_disponibles_formateadas.append(formatted_hour)
+
+            print(f"intervalos no disponibles  {horas_no_disponibles_formateadas}")
+
+            # print(f"horas {horas_no_disponibles}")
+
+            ##Calculate available hours
+            # available_hours = [slot  for slot in simple_time_slots if slot not in horas_no_disponibles_formateadas]
+            # available_hours = [slot  for slot in simple_time_slots if slot not in horas_no_disponibles_formateadas]
+
+            available_hours = {hour: 'bloque-available' if hour not in horas_no_disponibles_formateadas else 'bloque-taken' for hour in simple_time_slots}
+            # print(f"available_hours_2 {available_hours}")
+            # for bloque in bloques:
+            #     print (f"Bloque dia {bloque.dia.all()} hora inicio {bloque.hora_inicio} hora fin {bloque.hora_fin} salon {bloque.salon}")
 
 
     print(f"available_hours {available_hours}")

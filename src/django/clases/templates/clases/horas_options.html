@@ -14,6 +14,6 @@
 
 
 {% for hour, status in available_hours.items %}
-    <option value="{{ hour }}" class="{{ status }}" {% if status == "bloque-taken" %}style="background-color: red !important;   "{% endif %}>{{ hour }}</option>
+    <option value="{{ hour }}" class="{{ status }}" {% if status == "bloque-taken" %}style="background-color: red !important;"{% endif %}>{{ hour }}</option>
 {% endfor %}
 
