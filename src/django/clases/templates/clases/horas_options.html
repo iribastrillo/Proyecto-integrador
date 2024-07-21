@@ -6,8 +6,14 @@
     </select>
     <!-- Other form fields -->
 </form> {% endcomment %}
-<select id="hora_inicio" name="hora_inicio" class="bg-gray-900 divide-y divide-gray-100 shadow dark:bg-gray-700">
+
+{% comment %}
     {% for hour in available_hours %}
         <option value="{{ hour }}" >{{ hour }}</option>
-    {% endfor %}
-</select>
+    {% endfor %} {% endcomment %}
+
+
+{% for hour, status in available_hours.items %}
+    <option value="{{ hour }}" class="{{ status }}" {% if status == "bloque-taken" %}style="background-color: red !important;   "{% endif %}>{{ hour }}</option>
+{% endfor %}
+
