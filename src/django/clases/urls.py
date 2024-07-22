@@ -18,5 +18,7 @@ urlpatterns = [
     path('grupos/<int:pk>/eliminar', views.delete_group, name='delete-group'),
     path('grupos/<int:pk>/detalle', views.GrupoDetailView.as_view(), name='detail-group'),
     path('grupos/cargar-profesores/', views.load_professors, name='load-profesors'),
+    path('grupos/<int:pk>/cargar-profesores/', views.load_professors, name='load-profesors'),
+    path('grupos/<int:pk>/cargar-horas-disponibles/', views.load_available_hours, name='load-hours'),
     path('grupos/cargar-grupo/', views.load_group, name='load-group'),
 ]

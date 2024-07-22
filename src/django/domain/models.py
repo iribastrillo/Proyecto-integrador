@@ -14,10 +14,10 @@ class Dia(models.Model):
         ("JUE", "Jueves"),
         ("VIE", "Viernes"),
         ("SAB", "Sábado"),
-        ("DOM", "Domingos"),
+        ("DOM", "Domingo"),
     ]
     name = models.CharField(max_length=3, choices=WEEKDAYS)
-
+    id=models.IntegerField(primary_key=True)
     def __str__(self) -> str:
         return self.name
 

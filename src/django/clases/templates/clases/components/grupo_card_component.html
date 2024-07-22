@@ -157,16 +157,3 @@
   </div>
 </div>
 
-
-{% block page_js %}
-<script>
-  document.addEventListener("htmx:beforeSwap", function(e){
-    console.log("Swapped content 1");
-        console.log(e.detail.target.classList);
-	  if(e.detail.target.classList.contains("class-block-form") && !e.detail.xhr.response){
-		console.log("Swapped content 2");
-     location.reload();
-    }
-  })
-</script>
-{% endblock  %}

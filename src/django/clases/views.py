@@ -9,12 +9,13 @@ from django.views.generic import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from domain.models import BloqueDeClase,Grupo,Profesor,Salon
+from django.db.models import Q
 from django.urls import reverse, reverse_lazy
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory,formset_factory
 from .forms import CreateGroupForm, BloqueDeClaseForm
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils.safestring import mark_safe
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
@@ -68,8 +69,11 @@ def list_groups(request):
         print(grupo.__dict__)
     return render(request, "clases/grupo_list.html", {"lista_grupos": grupos})
 
-
-def load_professors(request):
+# se agrego pk del grupo en caso que sea un update de profesor
+## de grupo, para que pueda llegar aca la request y filtrar profesores
+## por curso
+def load_professors(request,pk=None):
+    print("Loading professors")
     curso_id = request.GET.get("curso")
     profesores = Profesor.objects.filter(cursos__id=curso_id)
     return render(request, "clases/profesores_options.html", {"profesores": profesores})
@@ -81,6 +85,79 @@ def load_group(request):
     return render(
         request, "clases/partials/info_grupo_enrolment_modal.html", {"grupo": grupo}
     )
+
+def load_available_hours(request,pk=None):
+    print(f"Loading available hours  request get{request.GET}")
+
+    selected_days = []
+    selected_salon=[]
+    all_time_slots = []
+    start_time = datetime.strptime("00:00", "%H:%M")  # Start at midnight (00:00)
+    end_time = datetime.strptime("23:59", "%H:%M")   # End just before midnight (23:59)
+
+    while start_time <= end_time:
+        all_time_slots.append(start_time)
+        start_time += timedelta(minutes=30)
+    simple_time_slots = [slot.strftime("%H:%M")for slot in all_time_slots]
+    print(simple_time_slots)
+
+    horas_para_dropdown=simple_time_slots
+    horas_para_dropdown = {hour: 'bloque-available bg-gray-900' for hour in simple_time_slots}
+
+
+    if "salon" in request.GET and request.GET.get('salon') != "":
+        print(f"Salon { request.GET.get('salon')}")
+        selected_salon=request.GET.getlist('salon')
+
+        if "dia"in request.GET:
+            selected_days=request.GET.getlist('dia')
+
+
+        # Bloques existentes para el salon seleccionado y dias seleccionados
+        horas_no_disponibles = []
+        print(selected_salon[0])
+        bloques = BloqueDeClase.objects.filter(salon__id=selected_salon[0])
+
+        selected_days = [int(day) for day in selected_days]
+        q_objects = Q()
+        for day_id in selected_days:
+            q_objects |= Q(dia__id=day_id)
+
+        bloques = bloques.filter(q_objects)
+
+        if bloques:
+            # Obtiene el par de horas de inicio y fin de cada bloque existente
+            horas_no_disponibles.extend([(bloque.hora_inicio.strftime("%H:%M"), bloque.hora_fin.strftime("%H:%M")) for bloque in bloques])
+
+            # obtiene todos los minutos ocupados en intervalos de 30 min
+            all_intervals = set()
+            for start, end in horas_no_disponibles:
+                intervals = get_minutes_in_range(start, end)
+                all_intervals.update(intervals)
+
+            # Convierte los minutos ocupados a horas formateadas
+            horas_no_disponibles_formateadas = []
+            for minutes in sorted(all_intervals):
+                hours, mins = divmod(minutes, 60)
+                formatted_hour = f"{hours:02}:{mins:02}"
+                horas_no_disponibles_formateadas.append(formatted_hour)
+
+            # Marca las horas libres y ocupadas en el diccionario de horas disponibles
+            horas_para_dropdown = {hour: 'bloque-available bg-gray-900' if hour not in horas_no_disponibles_formateadas else 'bloque-taken' for hour in simple_time_slots}
+
+    return render(request, "clases/horas_options.html", {"horas_para_dropdown": horas_para_dropdown})
+
+
+def convert_to_minutes(time_str):
+    hours, minutes = map(int, time_str.split(':'))
+    return hours * 60 + minutes
+
+def get_minutes_in_range(start_time, end_time):
+    start_minutes = convert_to_minutes(start_time)
+    end_minutes = convert_to_minutes(end_time)
+    return list(range(start_minutes, end_minutes+1, 30))
+
+# Unavailable hours
 
 
 class CreateGrupo(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -147,6 +224,8 @@ class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
 
 
     def post (self, request, *args, **kwargs):
+        if "Hx-Request" in request.headers:
+            print("CREATE BLOQUE DE CLASE Hx-Request")
         form = BloqueDeClaseForm (request.POST)
         grupo = Grupo.objects.get(pk=kwargs["pk"])
         print(f"Creando bloque de clase para el grupo {grupo.pk}")
@@ -234,10 +313,23 @@ class BloqueClaseUpdateView(LoginRequiredMixin, UpdateView):
                     # Continue to the next day
                     pass
         # Save the updated form
-        return super().form_valid(form)
+        super().form_valid(form)
+        return HttpResponse()
 
     def get_success_url(self):
         return reverse('clases:detail-group', kwargs={'pk': self.object.grupo.pk})
+
+    def form_invalid(self, form, **kwargs):
+        # messages.add_message (self.request, messages.ERROR, "Ha habido un error")
+        context = super(BloqueClaseUpdateView,self).get_context_data(**kwargs)
+        # return self.render_to_response(context)
+        print("bloque pk",self.object.pk)
+
+        response = render(self.request, 'clases/partials/bloque_clase_update_form_partial.html', {'context': context,'form':form, 'bloquedeclase':self.object})
+        response['HX-Retarget'] = '#bloque-clase-modal'
+        return response
+
+
 
 def crear_bloque_de_clase(request,pk=None):
     grupo = get_object_or_404(Grupo, pk=pk)
@@ -251,9 +343,3 @@ def crear_bloque_de_clase(request,pk=None):
             context={'bloque':bloque}
             return render()
 
-def load_horas_disponibles(request):
-    salon_id = request.GET.get('salon')
-    dia=request.GET.get('dia')
-    bloques = BloqueDeClase.objects.filter(salon__id=salon_id, dia__name=dia)
-    horas_no_disponibles = [(bloque.hora_inicio, bloque.hora_fin) for bloque in bloques]
-    return render(request, 'clases/horas_options.html', {'horas': horas_no_disponibles})
