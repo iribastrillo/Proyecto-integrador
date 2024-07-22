@@ -311,10 +311,17 @@ class BloqueClaseUpdateView(LoginRequiredMixin, UpdateView):
                     # Continue to the next day
                     pass
         # Save the updated form
-        return super().form_valid(form)
+        super().form_valid(form)
+        return HttpResponse()
 
     def get_success_url(self):
         return reverse('clases:detail-group', kwargs={'pk': self.object.grupo.pk})
+
+    def form_invalid(self, form, **kwargs):
+        messages.add_message (self.request, messages.ERROR, "Ha habido un error")
+        context = super(BloqueClaseUpdateView,self).get_context_data(**kwargs)
+        return self.render_to_response(context)
+
 
 def crear_bloque_de_clase(request,pk=None):
     grupo = get_object_or_404(Grupo, pk=pk)
