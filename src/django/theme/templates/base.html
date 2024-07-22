@@ -47,6 +47,13 @@
 			document.body.addEventListener('htmx:configRequest', (event) => {
 			event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
 			})
+			document.addEventListener("htmx:beforeSwap", function (e) {
+				if(e.detail.target.classList.contains("update-class-block-form")&& !e.detail.xhr.response){
+					console.log("update-class-block-form")
+					location.reload();
+
+				}
+			});
 		</script>
 
 	</body>

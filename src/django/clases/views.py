@@ -318,9 +318,15 @@ class BloqueClaseUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('clases:detail-group', kwargs={'pk': self.object.grupo.pk})
 
     def form_invalid(self, form, **kwargs):
-        messages.add_message (self.request, messages.ERROR, "Ha habido un error")
+        # messages.add_message (self.request, messages.ERROR, "Ha habido un error")
         context = super(BloqueClaseUpdateView,self).get_context_data(**kwargs)
-        return self.render_to_response(context)
+        # return self.render_to_response(context)
+        print("bloque pk",self.object.pk)
+
+        response = render(self.request, 'clases/partials/bloque_clase_update_form_partial.html', {'context': context,'form':form, 'bloquedeclase':self.object})
+        response['HX-Retarget'] = '#bloque-clase-modal'
+        return response
+
 
 
 def crear_bloque_de_clase(request,pk=None):
