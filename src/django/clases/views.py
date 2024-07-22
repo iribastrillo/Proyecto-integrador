@@ -101,8 +101,8 @@ def load_available_hours(request,pk=None):
     simple_time_slots = [slot.strftime("%H:%M")for slot in all_time_slots]
     print(simple_time_slots)
 
-    available_hours=simple_time_slots
-    available_hours = {hour: 'bloque-available bg-gray-900' for hour in simple_time_slots}
+    horas_para_dropdown=simple_time_slots
+    horas_para_dropdown = {hour: 'bloque-available bg-gray-900' for hour in simple_time_slots}
 
 
     if "salon" in request.GET and request.GET.get('salon') != "":
@@ -113,17 +113,7 @@ def load_available_hours(request,pk=None):
             selected_days=request.GET.getlist('dia')
 
 
-        print("Selected days: ", selected_days)
-        print("Selected salon: ", selected_salon)
-        print("Loading available hours")
-        salon_id = request.GET.get("salon")
-        print(f" salon_id  {salon_id}")
-        dia = request.GET.get("dia")
-        print(f" dia  {dia}")
-        # horas_no_disponibles = []
-
-
-        # Retrieve existing blocked hours for the selected salon and days
+        # Bloques existentes para el salon seleccionado y dias seleccionados
         horas_no_disponibles = []
         print(selected_salon[0])
         bloques = BloqueDeClase.objects.filter(salon__id=selected_salon[0])
@@ -134,54 +124,28 @@ def load_available_hours(request,pk=None):
             q_objects |= Q(dia__id=day_id)
 
         bloques = bloques.filter(q_objects)
-        print(f"bloques {bloques}")
-
-
-        dias= [bloque.dia.all()  for bloque in bloques]
-        for dia_queryset in dias:
-            for dia in dia_queryset:
-
-                print(f"Day ID: {dia.id}, Day name: {dia.name}")
-
 
         if bloques:
-
-
+            # Obtiene el par de horas de inicio y fin de cada bloque existente
             horas_no_disponibles.extend([(bloque.hora_inicio.strftime("%H:%M"), bloque.hora_fin.strftime("%H:%M")) for bloque in bloques])
 
-                # Calculate intervals and store unique values
+            # obtiene todos los minutos ocupados en intervalos de 30 min
             all_intervals = set()
             for start, end in horas_no_disponibles:
                 intervals = get_minutes_in_range(start, end)
                 all_intervals.update(intervals)
 
-            # Convert minutes back to hours
+            # Convierte los minutos ocupados a horas formateadas
             horas_no_disponibles_formateadas = []
             for minutes in sorted(all_intervals):
                 hours, mins = divmod(minutes, 60)
                 formatted_hour = f"{hours:02}:{mins:02}"
                 horas_no_disponibles_formateadas.append(formatted_hour)
 
-            print(f"intervalos no disponibles  {horas_no_disponibles_formateadas}")
+            # Marca las horas libres y ocupadas en el diccionario de horas disponibles
+            horas_para_dropdown = {hour: 'bloque-available bg-gray-900' if hour not in horas_no_disponibles_formateadas else 'bloque-taken' for hour in simple_time_slots}
 
-            # print(f"horas {horas_no_disponibles}")
-
-            ##Calculate available hours
-            # available_hours = [slot  for slot in simple_time_slots if slot not in horas_no_disponibles_formateadas]
-            # available_hours = [slot  for slot in simple_time_slots if slot not in horas_no_disponibles_formateadas]
-
-            available_hours = {hour: 'bloque-available bg-gray-900' if hour not in horas_no_disponibles_formateadas else 'bloque-taken' for hour in simple_time_slots}
-            # print(f"available_hours_2 {available_hours}")
-            # for bloque in bloques:
-            #     print (f"Bloque dia {bloque.dia.all()} hora inicio {bloque.hora_inicio} hora fin {bloque.hora_fin} salon {bloque.salon}")
-
-
-    print(f"available_hours {available_hours}")
-
-
-
-
-    return render(request, "clases/horas_options.html", {"available_hours": available_hours})
+    return render(request, "clases/horas_options.html", {"horas_para_dropdown": horas_para_dropdown})
 
 
 def convert_to_minutes(time_str):
@@ -364,9 +328,3 @@ def crear_bloque_de_clase(request,pk=None):
             context={'bloque':bloque}
             return render()
 
-# def load_horas_disponibles(request):
-#     salon_id = request.GET.get('salon')
-#     dia=request.GET.get('dia')
-#     bloques = BloqueDeClase.objects.filter(salon__id=salon_id, dia__name=dia)
-#     horas_no_disponibles = [(bloque.hora_inicio, bloque.hora_fin) for bloque in bloques]
-#     return render(request, 'clases/horas_options.html', {'horas': horas_no_disponibles})

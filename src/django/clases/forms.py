@@ -41,18 +41,28 @@ class BloqueDeClaseForm(forms.ModelForm):
     class Meta:
         model=BloqueDeClase
         fields=["dia","hora_inicio","hora_fin","salon"]
-    #dia = forms.ModelMultipleChoiceField(queryset=Dia.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={"class": "bg-gray-900   shadow dark:bg-gray-700"}), required=True)
-    dia = forms.ModelMultipleChoiceField(queryset=Dia.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={"class": "bg-gray-900   shadow dark:bg-gray-900","hx-trigger":"change","hx-include":"[name='salon'],input[type='checkbox']:checked", "hx-get":"cargar-horas-disponibles/","hx-target":"#id_hora_inicio","hx-select-oob":"#id_hora_fin"}), required=True)
+    dia = forms.ModelMultipleChoiceField(queryset=Dia.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={"class": "bg-gray-900   shadow dark:bg-gray-900","hx-trigger":"change","hx-include":"[name='salon'],[name='hora_inicio'],[name='hora_fin'],input[type='checkbox']:checked", "hx-get":"cargar-horas-disponibles/","hx-target":"#id_hora_inicio","hx-select-oob":"#id_hora_fin"}), required=True)
     hora_inicio = forms.ChoiceField(choices=[(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)],widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700","id":"id_hora_inicio"}), required=True)
     hora_fin = forms.ChoiceField(choices=[(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)],widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700","id":"id_hora_fin"}), required=True)
     salon = forms.ModelChoiceField(queryset=Salon.objects.all(),widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-900", "hx-get":"cargar-horas-disponibles/","hx-target":"#id_hora_inicio","hx-select-oob":"#id_hora_fin","hx-include":"[name='dia']"}), required=True)
+
+
+    def clean_hora_fin(self):
+        print(f"cleaned data {self.cleaned_data}")
+
+        hora_inicio = self.cleaned_data['hora_inicio']
+        hora_fin = self.cleaned_data['hora_fin']
+        if hora_fin <= hora_inicio:
+            raise forms.ValidationError("La hora de fin debe ser mayor a la hora de inicio")
+        return hora_fin
 
     def __init__(self, *args, **kwargs):
         super(BloqueDeClaseForm,self).__init__(*args, **kwargs)
         if self.initial:
             self.initial['hora_inicio'] =self.initial['hora_inicio'].strftime('%H:%M')
             self.initial['hora_fin'] = self.initial['hora_fin'].strftime('%H:%M')
-            print("INITIAL VALUES: ",self.initial)
+
+
 
 
 
