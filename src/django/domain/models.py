@@ -215,7 +215,7 @@ class AlumnoExamen(models.Model):
 
 class Pago(models.Model):
     alumno=models.ForeignKey(Alumno, on_delete=models.CASCADE)
-    monto=models.DecimalField(max_digits=10, decimal_places=2)
+    monto=models.DecimalField(max_digits=10, decimal_places=2,validators=[MinValueValidator(1, "El monto debe ser mayor que cero"),MaxValueValidator(1000000,"El monto no debe superar el millón de pesos")])
     curso=models.ForeignKey(Curso, on_delete=models.CASCADE, null=True, blank=True)
     fecha=models.DateTimeField(auto_now_add=True)
     descripcion=models.TextField(max_length=250, blank=True, null=True)

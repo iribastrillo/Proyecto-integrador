@@ -48,6 +48,13 @@
 			event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
 			})
 			document.addEventListener("htmx:beforeSwap", function (e) {
+				if(e.detail.target.classList.contains("payment-form")&& !e.detail.xhr.response){
+					console.log("payment-form")
+					location.reload();
+
+				}
+			});
+			document.addEventListener("htmx:beforeSwap", function (e) {
 				if(e.detail.target.classList.contains("update-class-block-form")&& !e.detail.xhr.response){
 					console.log("update-class-block-form")
 					location.reload();
@@ -55,6 +62,8 @@
 				}
 			});
 		</script>
+
+
 
 	</body>
 </html>
