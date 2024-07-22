@@ -209,7 +209,6 @@ class GrupoDetailView(LoginRequiredMixin,DetailView):
 class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
     print(f"Create bloque de clase ")
     model_name=BloqueDeClase
-    # template_name = 'clases/bloque_clase_form.html'
     template_name = 'clases/partials/bloque_clase_form_partial.html'
     form_class = BloqueDeClaseForm
 
