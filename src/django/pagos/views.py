@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django import forms
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
-from django.views.generic import (CreateView,
+from django.views.generic import (
                                   ListView,
                                   DetailView,
                                   UpdateView,
@@ -16,7 +16,7 @@ from domain.models import Alumno,Pago
 
 from django.urls import reverse, reverse_lazy
 
-from django.http import HttpRequest, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse,HttpResponseRedirect
 
 from django.contrib.auth.decorators import login_required
 
@@ -24,24 +24,29 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import PagoForm
 
+from django.contrib import messages
+
+from django.template.response import TemplateResponse
 
 
 def create_pago(request: HttpRequest, slug: str) -> HttpResponseRedirect:
     student = Alumno.objects.get(slug=slug)
     if request.method == 'POST':
-        print(f"post {student.slug}")
         form = PagoForm(request.POST, request.FILES, initial={'student_slug': student.slug})
-        print(f"form {form}")
-        curso=form.cleaned_data['curso']
-        print(f"curso {curso}")
+
         if form.is_valid():
-            print(f"form valid {form.cleaned_data}")
             pago = form.save(commit=False)
             pago.alumno = student
             pago.save()
-            return HttpResponseRedirect(reverse('pagos:payments', kwargs={'slug': student.slug}))
+            # return HttpResponseRedirect(reverse('pagos:payments', kwargs={'slug': student.slug}))
+            return HttpResponse()
         else:
             print(f"form invalid {form.errors}")
+            response = render(request, 'pagos/pago_form.html', {'form': form, 'slug': student.slug})
+            response['HX-Retarget'] = '#payment-modal'
+
+            return response
+            # return TemplateResponse(request, 'pagos/pago_form.html', {'form': form, 'slug': student.slug})
     else:
         form = PagoForm(initial={'student_slug': student.slug})
         print(f"get {student.slug}")
@@ -55,12 +60,14 @@ def update_pago(request: HttpRequest,  pk: int) -> HttpResponseRedirect:
         form = PagoForm(request.POST, request.FILES, instance=pago)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('pagos:payments', kwargs={'slug': student.slug}))
+            # return HttpResponseRedirect(reverse('pagos:payments', kwargs={'slug': student.slug}))
+            return HttpResponse()
         else:
-            print(f"form invalid {form.errors}")
+            response = render(request, 'pagos/update_pago_form.html', {'form': form, 'pago': pago,'student': student})
+            response['HX-Retarget'] = '#payment-modal'
+            return response
     else:
         form = PagoForm(instance=pago)
-        print(f"get {pago.pk}")
     return render(request, 'pagos/update_pago_form.html', {'form': form, 'pago': pago,'student': student})
 
 class DeletePago(LoginRequiredMixin, DeleteView):
@@ -84,13 +91,8 @@ class ListPagos(LoginRequiredMixin, ListView):
     context_object_name='lista_pagos'
 
     def get (self, request, *args, **kwargs):
-        print("listando pagos")
-        print(self.kwargs)
         student = Alumno.objects.get(slug = kwargs['slug'])
-        print(f"Alumno {student.nombre}")
-        print(f"Slug {student.slug}")
         pagos= Pago.objects.filter(alumno=student)
-        print(f"Pagos {pagos}")
 
         context = {
             'payment_list': pagos,
@@ -99,13 +101,8 @@ class ListPagos(LoginRequiredMixin, ListView):
         return render(request, self.template_name, context)
 
     def post (self, request, *args, **kwargs):
-        print("listando pagos")
-        print(self.kwargs)
         student = Alumno.objects.get(slug = kwargs['slug'])
-        print(f"Alumno {student.nombre}")
-        print(f"Slug {student.slug}")
         pagos= Pago.objects.filter(alumno=student)
-        print(f"Pagos {pagos}")
 
         context = {
             'payment_list': pagos,
@@ -118,14 +115,8 @@ class DetailPago(LoginRequiredMixin, DetailView):
     model = Pago
     template_name = 'pagos/pago_detail.html'
     def get (self, request, *args, **kwargs):
-        print("Detalle de pago")
-        print(self.kwargs)
         pago = get_object_or_404(Pago, id=kwargs['pk'])
         student = pago.alumno
-        print(f"Alumno {student.nombre}")
-        print(f"Slug {student.slug}")
-        pagos= Pago.objects.filter(alumno=student)
-        print(f"Pagos {pagos}")
 
         context = {
             'pago':pago,
@@ -135,26 +126,10 @@ class DetailPago(LoginRequiredMixin, DetailView):
 
 
 class DeletePago(LoginRequiredMixin, DeleteView):
-    # model = Pago
-    # template_name = 'pagos/pago_confirm_delete.html'
-    # success_url=reverse_lazy('pagos:payments')
-    # def get(self, request, *args, **kwargs):
-    #     pago = get_object_or_404(Pago, id=kwargs['pk'])
-    #     student = pago.alumno
-    #     print(f"Eliminando pago for alumno {student.nombre}")
-    #     context = {
-    #         'pago':pago,
-    #         'student_slug': student.slug,
-    #     }
-    #     return render(request, self.template_name, context)
-
-    # def get_success_url(self) -> str:
-    #     return super().get_success_url(f'pagos:payments {student.slug}')
     model = Pago
     template_name = 'pagos/pago_confirm_delete.html'
 
     def get_object(self, queryset=None):
-        # Retrieve the Pago instance being deleted
         return get_object_or_404(Pago, id=self.kwargs['pk'])
 
     def get_success_url(self):
@@ -169,28 +144,6 @@ class UpdatePago(LoginRequiredMixin, UpdateView):
     # form_class = PagoForm
     template_name = 'pagos/update_form.html'
     fields = [ 'monto','descripcion','comprobante']
-    # def get(self, request, *args, **kwargs):
-    #     print("modificando pago")
-
-    #     print(self.kwargs)
-    #     pago = get_object_or_404(Pago, id=kwargs['pk'])
-    #     student = pago.alumno
-    #     return render(request, self.template_name, { 'pk':self.kwargs['pk']})
-
-
-    # def get_object(self, queryset=None):
-    #     # Retrieve the Pago instance being edited
-    #     return get_object_or_404(Pago, id=self.kwargs['pk'])
-
-    # def get_form(self, form_class=None):
-    #     # Initialize the form with the existing Pago instance data
-    #     form = super().get_form(form_class)
-    #     form.instance = self.object
-    #     student = self.object.alumno
-    #     print(student.slug)
-    #     form.initial['student'] = student  # Assuming 'alumno' is the field name in your form
-    #     print(f"form{form}")
-    #     return form
 
     def post(self, request, *args, **kwargs):
         print("Update posts")
@@ -207,11 +160,7 @@ class UpdatePago(LoginRequiredMixin, UpdateView):
 
 
     def get_success_url(self):
-        # Get the student associated with the Pago instance
         student = self.object.alumno
-        # Generate the success URL with the student slug
-        # return reverse_lazy('pagos:payments', kwargs={'slug': student.slug})
-
         return reverse('pagos:payments', kwargs={'slug': student.slug})
 
 

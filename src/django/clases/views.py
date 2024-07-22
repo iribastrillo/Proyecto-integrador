@@ -188,13 +188,15 @@ class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
             messages.add_message (request, messages.SUCCESS, f"Clase creada con exito.")
             return HttpResponse()
         else:
-            print("form invalid")
-            messages.add_message (request, messages.ERROR, "Ha habido un error")
+            print("form invalid, Ha habido un error desde CreateBloqueDeClase")
+            messages.add_message (request, messages.ERROR, "Ha habido un error desde CreateBloqueDeClase")
             grupo = Grupo.objects.get(pk=self.kwargs['pk'])
             context = {
                 'form': form,
-                'grupo': grupo
+                'grupo': grupo,
+
             }
+            print(f"Error {messages.ERROR}")
             return self.render_to_response(context)
 
 
