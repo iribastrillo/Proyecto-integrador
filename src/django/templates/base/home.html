@@ -123,11 +123,11 @@
 {% block aside %}
 <div class="w-full max-w-md p-4 border rounded-lg shadow sm:p-8 bg-gray-900 border-gray-700 mb-4">
     <div class="flex items-center justify-between mb-4">
-        <h5 class="text-xl font-bold leading-none text-white truncate">Últimas inscripciones</h5>
+        <h5 class="text-xl font-bold leading-none text-white truncate">Últimos pagos</h5>
    </div>
    <div class="flow-root">
         <ul role="list" class="divide-y divide-gray-700">
-            {% for enrolment in enrolments %}
+            {% for payment in payments %}
             <li class="py-3 sm:py-4">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
@@ -135,14 +135,14 @@
                     </div>
                     <div class="flex-1 min-w-0 ms-4">
                         <p class="text-sm font-medium truncate text-white">
-                            {{enrolment.alumno.nombre}}
+                            {{payment.alumno.nombre}}
                         </p>
                         <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                            {{enrolment.curso.nombre}}
+                            {{payment.curso.nombre}}
                         </p>
                     </div>
                     <div class="inline-flex items-center text-base font-semibold text-white">
-                        ${{enrolment.curso.costo}}
+                        ${{payment.monto}}
                     </div>
                 </div>
             </li>

@@ -21,8 +21,9 @@ from core.domain.services import (
 def dashboard(request):
     template = "base/home.html"
     enrolments = AlumnoCurso.objects.all()
+    payments = Pago.objects.all()
     total_spending = calculate_total_teacher_spending(Profesor.objects.all())
-    total_earnings = calculate_total_product_earnings(Pago.objects.all())
+    total_earnings = calculate_total_product_earnings(payments)
     total_gains = calculate_gains(total_earnings, total_spending)
     data = generate_data_enrolments(Curso.objects.all())
     monthly_additions = prepare_monthly_addtions_data(
@@ -37,7 +38,7 @@ def dashboard(request):
         "total_earnings": total_earnings,
         "total_gains": total_gains,
         "courses": Curso.objects.all(),
-        "enrolments": enrolments[:5],
+        "payments": payments[:5],
         "careers": Carrera.objects.all(),
         "data": data,
         "monthly_additions": monthly_additions,
