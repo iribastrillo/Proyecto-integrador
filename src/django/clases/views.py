@@ -91,7 +91,9 @@ def load_available_hours(request,pk=None):
 
     selected_days = []
     selected_salon=[]
+    selected_hours = []
     all_time_slots = []
+    bloque_id=None
     start_time = datetime.strptime("00:00", "%H:%M")  # Start at midnight (00:00)
     end_time = datetime.strptime("23:59", "%H:%M")   # End just before midnight (23:59)
 
@@ -103,6 +105,19 @@ def load_available_hours(request,pk=None):
 
     horas_para_dropdown=simple_time_slots
     horas_para_dropdown = {hour: 'bloque-available bg-gray-900' for hour in simple_time_slots}
+    # if "hora_inicio" in request.GET and request.GET.get('hora_inicio') != "":
+    #     print(f"Hora inicio { request.GET.get('hora_inicio')}")
+    #     selected_hours.append(request.GET.get('hora_inicio'))
+    # if "hora_fin" in request.GET and request.GET.get('hora_fin') != "":
+    #     print(f"Hora fin { request.GET.get('hora_fin')}")
+    #     selected_hours.append(request.GET.get('hora_fin'))
+    if "id" in request.GET and request.GET.get('id') != "":
+        print(f"Modificando bloque id { request.GET.get('id')}")
+        bloque_id= request.GET.get('id')
+        print("Extayendo horas iniciales de bloque para marcarlas como selected")
+        selected_hours.append(BloqueDeClase.objects.get(pk=bloque_id).hora_inicio.strftime("%H:%M") )
+        selected_hours.append(BloqueDeClase.objects.get(pk=bloque_id).hora_fin.strftime("%H:%M") )
+        print(selected_hours)
 
 
     if "salon" in request.GET and request.GET.get('salon') != "":
@@ -144,7 +159,8 @@ def load_available_hours(request,pk=None):
 
             # Marca las horas libres y ocupadas en el diccionario de horas disponibles
             horas_para_dropdown = {hour: 'bloque-available bg-gray-900' if hour not in horas_no_disponibles_formateadas else 'bloque-taken' for hour in simple_time_slots}
-
+    horas_para_dropdown.update({hour: 'selected' for hour in horas_para_dropdown if hour in selected_hours  })
+    print(horas_para_dropdown)
     return render(request, "clases/horas_options.html", {"horas_para_dropdown": horas_para_dropdown})
 
 
