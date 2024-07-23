@@ -1,0 +1,17 @@
+# Git
+.git
+.gitignore
+ 
+# Docker
+.Docker
+# Python
+app/__pycache__/
+app/*/__pycache__/
+# como dockerignore no soporta ** para entrar en todos los subdirectorios lo hace asi
+app/*/*/__pycache__/
+app/*/*/*/__pycache__/
+ 
+# evitamos copiar entornos virtuales locales ya que creamos uno en el contenedor
+.env
+.venv/
+venv/
