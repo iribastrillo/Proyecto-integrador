@@ -1,7 +1,6 @@
 
 
-<form  hx-post="{% url 'clases:create-class-block' grupo.pk %}" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-md bg-gray-900 border border-gray-700 rounded p-8 "
-  hx-target="#bloque-clase-modal">
+<form  hx-post="{% url 'clases:create-class-block' grupo.pk %}" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-md bg-gray-900 border border-gray-700 rounded p-8 create-class-block">
     {% csrf_token %}
       <h5 class="text-xl font-bold leading-nonetext-white">Agregar Clase</h5>
       <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
@@ -10,7 +9,7 @@
 
       <input class='main-action-button w-full' type="submit" value="Agregar">
 
-      {% if form.errors %}
+      {% comment %} {% if form.errors %}
       <div class="alert alert-danger">
           {% for field in form %}
               {% for error in field.errors %}
@@ -18,6 +17,6 @@
               {% endfor %}
           {% endfor %}
       </div>
-      {% endif %}
+      {% endif %} {% endcomment %}
 
     </form>

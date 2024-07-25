@@ -57,6 +57,13 @@
 			document.addEventListener("htmx:beforeSwap", function (e) {
 				if(e.detail.target.classList.contains("update-class-block-form")&& !e.detail.xhr.response){
 					console.log("update-class-block-form")
+ 					location.reload();
+
+				}
+			});
+			document.addEventListener("htmx:beforeSwap", function (e) {
+				if(e.detail.target.classList.contains("create-class-block")&& !e.detail.xhr.response){
+					console.log("create-class-block")
 					location.reload();
 
 				}

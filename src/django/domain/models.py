@@ -151,6 +151,7 @@ class Grupo(models.Model):
 
 
 class BloqueDeClase(models.Model):
+    id=models.AutoField(primary_key=True)
     dia = models.ManyToManyField(Dia)
     hora_inicio = models.TimeField()
     hora_fin = models.TimeField()

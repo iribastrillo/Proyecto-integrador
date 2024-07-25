@@ -91,7 +91,9 @@ def load_available_hours(request,pk=None):
 
     selected_days = []
     selected_salon=[]
+    selected_hours = []
     all_time_slots = []
+    bloque_id=None
     start_time = datetime.strptime("00:00", "%H:%M")  # Start at midnight (00:00)
     end_time = datetime.strptime("23:59", "%H:%M")   # End just before midnight (23:59)
 
@@ -103,6 +105,19 @@ def load_available_hours(request,pk=None):
 
     horas_para_dropdown=simple_time_slots
     horas_para_dropdown = {hour: 'bloque-available bg-gray-900' for hour in simple_time_slots}
+    # if "hora_inicio" in request.GET and request.GET.get('hora_inicio') != "":
+    #     print(f"Hora inicio { request.GET.get('hora_inicio')}")
+    #     selected_hours.append(request.GET.get('hora_inicio'))
+    # if "hora_fin" in request.GET and request.GET.get('hora_fin') != "":
+    #     print(f"Hora fin { request.GET.get('hora_fin')}")
+    #     selected_hours.append(request.GET.get('hora_fin'))
+    if "id" in request.GET and request.GET.get('id') != "":
+        print(f"Modificando bloque id { request.GET.get('id')}")
+        bloque_id= request.GET.get('id')
+        print("Extayendo horas iniciales de bloque para marcarlas como selected")
+        selected_hours.append(BloqueDeClase.objects.get(pk=bloque_id).hora_inicio.strftime("%H:%M") )
+        selected_hours.append(BloqueDeClase.objects.get(pk=bloque_id).hora_fin.strftime("%H:%M") )
+        print(selected_hours)
 
 
     if "salon" in request.GET and request.GET.get('salon') != "":
@@ -144,7 +159,8 @@ def load_available_hours(request,pk=None):
 
             # Marca las horas libres y ocupadas en el diccionario de horas disponibles
             horas_para_dropdown = {hour: 'bloque-available bg-gray-900' if hour not in horas_no_disponibles_formateadas else 'bloque-taken' for hour in simple_time_slots}
-
+    horas_para_dropdown.update({hour: 'selected' for hour in horas_para_dropdown if hour in selected_hours  })
+    print(horas_para_dropdown)
     return render(request, "clases/horas_options.html", {"horas_para_dropdown": horas_para_dropdown})
 
 
@@ -209,7 +225,6 @@ class GrupoDetailView(LoginRequiredMixin,DetailView):
 class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
     print(f"Create bloque de clase ")
     model_name=BloqueDeClase
-    # template_name = 'clases/bloque_clase_form.html'
     template_name = 'clases/partials/bloque_clase_form_partial.html'
     form_class = BloqueDeClaseForm
 
@@ -238,22 +253,6 @@ class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
             salon = form.cleaned_data["salon"]
             print(f"BLOQUE A SER CREADO los dias: {dias} hora_inicio: {hora_inicio} hora_fin: {hora_fin} salon: {salon}")
 
-            for dia_obj in dias.all():
-                try:
-                    bloque_ya_ocupado = BloqueDeClase.objects.get(
-                        dia=dia_obj,
-                        hora_inicio__lt=hora_fin,
-                        hora_fin__gt=hora_inicio,
-                        salon=salon
-                )
-                    print(f"Bloque ya ocupado {dia_obj}: {bloque_ya_ocupado}")
-                    messages.add_message(request, messages.ERROR, "Ya existe una clase creada para el salon y el horario seleccionado.")
-                    return HttpResponse()
-
-                except BloqueDeClase.DoesNotExist:
-                # Continue to the next day
-                 pass
-
             bloque = BloqueDeClase.objects.create(
                 hora_inicio=hora_inicio,
                 hora_fin=hora_fin,
@@ -268,15 +267,14 @@ class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
             return HttpResponse()
         else:
             print("form invalid, Ha habido un error desde CreateBloqueDeClase")
-            messages.add_message (request, messages.ERROR, "Ha habido un error desde CreateBloqueDeClase")
+            # messages.add_message (request, messages.ERROR, "Ha habido un error desde CreateBloqueDeClase")
             grupo = Grupo.objects.get(pk=self.kwargs['pk'])
-            context = {
-                'form': form,
-                'grupo': grupo,
 
-            }
-            print(f"Error {messages.ERROR}")
-            return self.render_to_response(context)
+            # print(f"Error {messages.ERROR}")
+            # return self.render_to_response(context)
+            response = render(request, 'clases/partials/bloque_clase_form_partial.html', {'form': form, 'grupo': grupo})
+            response['HX-Retarget'] = '#bloque-clase-modal'
+            return response
 
 
 class BloqueClaseUpdateView(LoginRequiredMixin, UpdateView):

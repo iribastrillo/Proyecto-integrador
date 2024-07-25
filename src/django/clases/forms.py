@@ -40,21 +40,41 @@ class CreateGroupForm(forms.ModelForm):
 class BloqueDeClaseForm(forms.ModelForm):
     class Meta:
         model=BloqueDeClase
-        fields=["dia","hora_inicio","hora_fin","salon"]
-    dia = forms.ModelMultipleChoiceField(queryset=Dia.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={"class": "bg-gray-900   shadow dark:bg-gray-900","hx-trigger":"change","hx-include":"[name='salon'],[name='hora_inicio'],[name='hora_fin'],input[type='checkbox']:checked", "hx-get":"cargar-horas-disponibles/","hx-target":"#id_hora_inicio","hx-select-oob":"#id_hora_fin"}), required=True)
+        fields=["dia","hora_inicio","hora_fin","salon","id"]
+    dia = forms.ModelMultipleChoiceField(queryset=Dia.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={"class": "bg-gray-900   shadow dark:bg-gray-900","hx-trigger":"change","hx-include":"[name='salon'],[name='hora_inicio'],[name='hora_fin'],[name='dia'],[name='id'],input[type='checkbox']:checked", "hx-get":"cargar-horas-disponibles/","hx-target":"#id_hora_inicio","hx-select-oob":"#id_hora_fin"}), required=True)
     hora_inicio = forms.ChoiceField(choices=[(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)],widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700","id":"id_hora_inicio"}), required=True)
     hora_fin = forms.ChoiceField(choices=[(f'{i//2:02d}:{i%2*30:02d}', f'{i//2:02d}:{i%2*30:02d}') for i in range(48)],widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700","id":"id_hora_fin"}), required=True)
-    salon = forms.ModelChoiceField(queryset=Salon.objects.all(),widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-900", "hx-get":"cargar-horas-disponibles/","hx-target":"#id_hora_inicio","hx-select-oob":"#id_hora_fin","hx-include":"[name='dia']"}), required=True)
+    salon = forms.ModelChoiceField(queryset=Salon.objects.all(),widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-900", "hx-get":"cargar-horas-disponibles/","hx-target":"#id_hora_inicio","hx-select-oob":"#id_hora_fin","hx-include":"[name='dia'],[name='salon'],[name='hora_inicio'],[name='hora_fin'],[name='id']"}), required=True)
+    id = forms.CharField(widget=forms.HiddenInput(), required=False)
 
 
-    def clean_hora_fin(self):
-        print(f"cleaned data {self.cleaned_data}")
-
-        hora_inicio = self.cleaned_data['hora_inicio']
-        hora_fin = self.cleaned_data['hora_fin']
+    def clean(self):
+        cleaned_data = super().clean()
+        dias = cleaned_data.get("dia")
+        hora_inicio = cleaned_data.get("hora_inicio")
+        hora_fin = cleaned_data.get("hora_fin")
+        salon = cleaned_data.get("salon")
+        print(f"cleaned data {cleaned_data}")
+        # Check if a block already exists for the same day, salon, and overlapping time range
         if hora_fin <= hora_inicio:
             raise forms.ValidationError("La hora de fin debe ser mayor a la hora de inicio")
-        return hora_fin
+        # return hora_fin
+        try:
+            bloque_ya_ocupado = BloqueDeClase.objects.get(
+                dia__in=dias,  # Use '__in' to handle multiple selected days
+                hora_inicio__lt=hora_fin,
+                hora_fin__gt=hora_inicio,
+                salon=salon,
+            )
+            raise forms.ValidationError(
+                "Ya existe una clase creada para el salón y el horario seleccionado."
+            )
+        except BloqueDeClase.DoesNotExist:
+            # No existing block found, continue with form submission
+            pass
+
+        return cleaned_data
+
 
     def __init__(self, *args, **kwargs):
         super(BloqueDeClaseForm,self).__init__(*args, **kwargs)
@@ -62,8 +82,8 @@ class BloqueDeClaseForm(forms.ModelForm):
             self.initial['hora_inicio'] =self.initial['hora_inicio'].strftime('%H:%M')
             self.initial['hora_fin'] = self.initial['hora_fin'].strftime('%H:%M')
 
-
-
+            self.fields["id"] = forms.CharField(widget=forms.HiddenInput(), initial=self.initial['id'])
+            print(f"bloque_Clase_id {self.initial['id']}")
 
 
 
