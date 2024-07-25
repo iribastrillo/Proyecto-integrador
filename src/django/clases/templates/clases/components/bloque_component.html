@@ -1,4 +1,13 @@
 <div class="bloque-de-clase">
+  {% if form.errors %}
+         <ul class="error-list">
+            {% for error in form.errors.values %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+         {% endif %}
+
+
     <div>
         {{form.id}}
     </div>

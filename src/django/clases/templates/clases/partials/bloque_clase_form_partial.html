@@ -9,7 +9,7 @@
 
       <input class='main-action-button w-full' type="submit" value="Agregar">
 
-      {% if form.errors %}
+      {% comment %} {% if form.errors %}
       <div class="alert alert-danger">
           {% for field in form %}
               {% for error in field.errors %}
@@ -17,6 +17,6 @@
               {% endfor %}
           {% endfor %}
       </div>
-      {% endif %}
+      {% endif %} {% endcomment %}
 
     </form>
