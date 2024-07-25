@@ -67,7 +67,7 @@ class BloqueDeClaseForm(forms.ModelForm):
                 salon=salon,
             )
             raise forms.ValidationError(
-                "Ya existe una clase creada para el salón y el horario seleccionado. desde Forms"
+                "Ya existe una clase creada para el salón y el horario seleccionado."
             )
         except BloqueDeClase.DoesNotExist:
             # No existing block found, continue with form submission
