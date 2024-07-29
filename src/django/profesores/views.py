@@ -39,6 +39,11 @@ class ProfesorListView(LoginRequiredMixin, ListView):
 
 class ProfesorDetailView(LoginRequiredMixin, DetailView):
     model = Profesor
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["groups"] = context["object"].grupo_set.all()
+        return context
 
 
 class ProfesorUpdateView(LoginRequiredMixin, UpdateView):
