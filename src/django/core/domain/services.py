@@ -2,6 +2,7 @@ import uuid
 from decimal import Decimal
 from string import ascii_uppercase
 from itertools import repeat
+from datetime import date
 import calendar
 
 
@@ -32,10 +33,10 @@ def calculate_total_teacher_spending(professors):
     return total
 
 
-def calculate_total_product_earnings(enrolments):
+def calculate_total_product_earnings(payments):
     total = 0
-    for enrolment in enrolments:
-        total += Decimal(enrolment.curso.costo)
+    for payment in payments.filter(fecha__month=date.today().month):
+        total += Decimal(payment.monto)
     return total
 
 
@@ -56,5 +57,5 @@ def prepare_monthly_addtions_data (query):
         "value": [i for i in repeat(0, 12)]
     }
     for d in query:
-        data["value"][d["month"]] = d["count"]
+        data["value"][d["month"] - 1] = d["count"]
     return data
