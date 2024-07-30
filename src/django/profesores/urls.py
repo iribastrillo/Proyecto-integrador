@@ -14,4 +14,5 @@ urlpatterns = [
         "<slug>/eliminar", views.ProfesorDeleteView.as_view(), name="delete-professor"
     ),
     path("<slug>/pagos", views.Pagos.as_view(), name="payments-professor"),
-]
+    path("<slug>/reporte_clases", views.reporte_clases, name="report-professor-class"),
+ ]

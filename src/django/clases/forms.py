@@ -38,6 +38,20 @@ class CreateGroupForm(forms.ModelForm):
 
 
 class BloqueDeClaseForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(BloqueDeClaseForm,self).__init__(*args, **kwargs)
+        if self.initial:
+            self.initial['hora_inicio'] =self.initial['hora_inicio'].strftime('%H:%M')
+            self.initial['hora_fin'] = self.initial['hora_fin'].strftime('%H:%M')
+
+            self.fields["id"] = forms.CharField(widget=forms.HiddenInput(), initial=self.initial['id'])
+            print(f"bloque_Clase_id {self.initial['id']}")
+            # self.fields["dia"].initial = self.initial['dia']
+            self.fields["dia"]=forms.ModelMultipleChoiceField(queryset=Dia.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={"class": "bg-gray-900   shadow dark:bg-gray-900","hx-trigger":"change","hx-include":"[name='salon'],[name='hora_inicio'],[name='hora_fin'],[name='dia'],[name='id'],input[type='checkbox']:checked", "hx-get":f"/app/clases/grupos/{self.initial['id']}/cargar-horas-disponibles/","hx-target":"#id_hora_inicio","hx-select-oob":"#id_hora_fin"}), initial=self.initial['dia'], required=True)
+            self.fields["salon"]=forms.ModelChoiceField(queryset=Salon.objects.all(),widget=forms.Select(attrs={"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-900", "hx-get":f"/app/clases/grupos/{self.initial['id']}/cargar-horas-disponibles/","hx-target":"#id_hora_inicio","hx-select-oob":"#id_hora_fin","hx-include":"[name='dia'],[name='salon'],[name='hora_inicio'],[name='hora_fin'],[name='id']"}), initial=self.initial['salon'], required=True)
+
+
     class Meta:
         model=BloqueDeClase
         fields=["dia","hora_inicio","hora_fin","salon","id"]
@@ -76,14 +90,6 @@ class BloqueDeClaseForm(forms.ModelForm):
         return cleaned_data
 
 
-    def __init__(self, *args, **kwargs):
-        super(BloqueDeClaseForm,self).__init__(*args, **kwargs)
-        if self.initial:
-            self.initial['hora_inicio'] =self.initial['hora_inicio'].strftime('%H:%M')
-            self.initial['hora_fin'] = self.initial['hora_fin'].strftime('%H:%M')
-
-            self.fields["id"] = forms.CharField(widget=forms.HiddenInput(), initial=self.initial['id'])
-            print(f"bloque_Clase_id {self.initial['id']}")
 
 
 
