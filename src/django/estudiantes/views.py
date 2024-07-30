@@ -173,3 +173,7 @@ class InhabilitarAlumno(LoginRequiredMixin, View):
         return HttpResponseRedirect(
             reverse("estudiantes:detail-student", kwargs={"slug": student.slug})
         )
+
+
+def home (request):
+    pass

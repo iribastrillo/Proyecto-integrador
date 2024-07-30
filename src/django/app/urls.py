@@ -40,6 +40,26 @@ urlpatterns = (
             name="logout",
         ),
         path(
+            "accounts/password-reset/",
+            auth_views.PasswordResetView.as_view(),
+            name="password_reset",
+        ),
+        path(
+            "accounts/password-reset/done/",
+            auth_views.PasswordResetDoneView.as_view(),
+            name="password_reset_done",
+        ),
+        path(
+            "accounts/reset/<uidb64>/<token>/",
+            auth_views.PasswordResetConfirmView.as_view(),
+            name="password_reset_confirm",
+        ),
+        path(
+            "accounts/reset/done/",
+            auth_views.PasswordResetCompleteView.as_view(),
+            name="password_reset_complete",
+        ),
+        path(
             "accounts/password-change",
             views.CustomPasswordChangeView.as_view(),
             name="password-change",
@@ -48,7 +68,8 @@ urlpatterns = (
             "app/",
             include(
                 [
-                    path("", views.dashboard, name="home"),
+                    path("", views.home, name="home"),
+                    path("administracion/", views.dashboard, name="dashboard"),
                     path("carreras/", include("carreras.urls")),
                     path("profesores/", include("profesores.urls")),
                     path("salones/", include("salones.urls")),

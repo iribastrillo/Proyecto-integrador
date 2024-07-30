@@ -1,7 +1,9 @@
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
+from django.http import HttpResponse
 from django.contrib import messages
 from django.db.models.functions import ExtractMonth
 from django.db.models import Count
@@ -15,9 +17,19 @@ from core.domain.services import (
     generate_data_enrolments,
     prepare_monthly_addtions_data
 )
+from app.authorization import is_student, is_teacher, is_staff
 
 
-@login_required
+def home (request):
+    if is_student(request.user):
+        return HttpResponse ("<h1>Entraste como estudiante</h1>")
+    elif is_teacher(request.user):
+        return HttpResponse ("<h1>Entraste como profesor</h1>")
+    else:
+        return redirect ("dashboard")
+
+
+@user_passes_test(is_staff)
 def dashboard(request):
     template = "base/home.html"
     enrolments = AlumnoCurso.objects.all()

@@ -164,3 +164,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 NPM_BIN_PATH = which("npm")
+
+# Email configuration
+
+#Para que funcione todo el flujo de cambio de contraseña hay que configurar, si se usa gmail, una password. 
+#Seguir las instrucciones en este enlace support.google.com/accounts/answer/185833 
+
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend' # Para usar gmail, sustituir dummy por gmail.
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "host"
+EMAIL_HOST_PASSWORD = "false password"
