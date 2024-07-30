@@ -72,7 +72,8 @@ class BloqueDeClaseForm(forms.ModelForm):
         # Check if a block already exists for the same day, salon, and overlapping time range
         if hora_fin <= hora_inicio:
             raise forms.ValidationError("La hora de fin debe ser mayor a la hora de inicio")
-        # return hora_fin
+        if dias is None:
+            raise forms.ValidationError("Debe seleccionar al menos un día")
         try:
             bloque_ya_ocupado = BloqueDeClase.objects.get(
                 dia__in=dias,  # Use '__in' to handle multiple selected days
