@@ -75,17 +75,21 @@ class BloqueDeClaseForm(forms.ModelForm):
         if dias is None:
             raise forms.ValidationError("Debe seleccionar al menos un día")
         try:
-            bloque_ya_ocupado = BloqueDeClase.objects.get(
-                dia__in=dias,  # Use '__in' to handle multiple selected days
+
+            bloques_ya_ocupados = BloqueDeClase.objects.filter(
+                dia__in=dias,
                 hora_inicio__lt=hora_fin,
                 hora_fin__gt=hora_inicio,
                 salon=salon,
             )
-            raise forms.ValidationError(
-                "Ya existe una clase creada para el salón y el horario seleccionado."
-            )
+            bloque_ya_ocupado = any(bloque.id != self.instance.id for bloque in bloques_ya_ocupados)
+            if bloque_ya_ocupado:
+                raise forms.ValidationError(
+                    "Ya existe una clase creada para el salón y el horario seleccionado."
+                )
+
         except BloqueDeClase.DoesNotExist:
-            # No existing block found, continue with form submission
+            # No existe un bloque con los mismos datos, por lo que no hay problema
             pass
 
         return cleaned_data
