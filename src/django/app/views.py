@@ -20,12 +20,13 @@ from app.authorization import is_student, is_teacher, is_staff
 
 
 def home (request):
+    if is_staff(request.user):
+        return redirect ("dashboard")
     if is_student(request.user):
         return HttpResponse ("<h1>Entraste como estudiante</h1>")
-    elif is_teacher(request.user):
+    if is_teacher(request.user):
         return HttpResponse ("<h1>Entraste como profesor</h1>")
-    else:
-        return redirect ("dashboard")
+    
 
 
 @user_passes_test(is_staff)
