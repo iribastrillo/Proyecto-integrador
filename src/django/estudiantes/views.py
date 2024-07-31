@@ -48,6 +48,11 @@ class AlumnoDetailView(LoginRequiredMixin, DetailView):
     model = Alumno
     context_object_name = "estudiante"
     template_name = "estudiantes/estudiante_detail.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["groups"] = context["object"].grupo_set.all()
+        return context
 
 
 class AlumnoUpdateView(LoginRequiredMixin, UpdateView):
