@@ -159,7 +159,7 @@ class BloqueDeClase(models.Model):
     grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Dias: {', '.join([dia.name for dia in self.dia.all()])} - Hora inicio: {self.hora_inicio} - Hora fin: {self.hora_fin} - Grupo: {self.grupo} - Salon: {self.salon}"
+        return f"Bloque id: {self.id} :Dias: {', '.join([dia.name for dia in self.dia.all()])} - Hora inicio: {self.hora_inicio} - Hora fin: {self.hora_fin} - Grupo: {self.grupo} - Salon: {self.salon}"
 
 
 class Leccion(models.Model):
