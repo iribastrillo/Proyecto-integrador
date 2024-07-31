@@ -1,11 +1,12 @@
 {% load static %}
 
+{% if role == "staff"%}
 <aside
   id="default-sidebar"
-  class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-gray-950 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+  class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-black-900 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
   aria-label="Sidebar"
 >
-  <div class="h-full px-3 py-4 overflow-y-auto bg-gray-950">
+  <div class="h-full px-3 py-4 overflow-y-auto bg-black-900">
     <ul class="space-y-2 font-medium">
       <li>
         <a
@@ -167,3 +168,4 @@
     </ul>
   </div>
 </aside>
+{% endif %}

@@ -9,47 +9,73 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('domain', '0001_initial'),
+        ("domain", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Alumno',
+            name="Alumno",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nombre', models.CharField(max_length=50)),
-                ('apellido', models.CharField(max_length=50)),
-                ('dni', models.CharField(max_length=8)),
-                ('fecha_nacimiento', models.DateField(blank=True, null=True)),
-                ('direccion', models.CharField(max_length=100)),
-                ('telefono', models.CharField(max_length=20)),
-                ('email', models.EmailField(max_length=254, validators=[utils.validators.EmailValidator()])),
-                ('fecha_baja', models.DateField(blank=True, null=True)),
-                ('fecha_alta', models.DateField(auto_now_add=True)),
-                ('activo', models.BooleanField(default=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("nombre", models.CharField(max_length=50)),
+                ("apellido", models.CharField(max_length=50)),
+                ("dni", models.CharField(max_length=8)),
+                ("fecha_nacimiento", models.DateField(blank=True, null=True)),
+                ("direccion", models.CharField(max_length=100)),
+                ("telefono", models.CharField(max_length=20)),
+                (
+                    "email",
+                    models.EmailField(
+                        max_length=254, validators=[utils.validators.EmailValidator()]
+                    ),
+                ),
+                ("fecha_baja", models.DateField(blank=True, null=True)),
+                ("fecha_alta", models.DateField(auto_now_add=True)),
+                ("activo", models.BooleanField(default=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Profesor',
+            name="Profesor",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nombre', models.CharField(max_length=50)),
-                ('apellido', models.CharField(max_length=50)),
-                ('dni', models.CharField(max_length=8)),
-                ('fecha_nacimiento', models.DateField(blank=True, null=True)),
-                ('direccion', models.CharField(max_length=100)),
-                ('telefono', models.CharField(max_length=20)),
-                ('email', models.EmailField(max_length=254, validators=[utils.validators.EmailValidator()])),
-                ('fecha_baja', models.DateField(blank=True, null=True)),
-                ('fecha_alta', models.DateField(auto_now_add=True)),
-                ('activo', models.BooleanField(default=True)),
-                ('cursos', models.ManyToManyField(to='domain.curso')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("nombre", models.CharField(max_length=50)),
+                ("apellido", models.CharField(max_length=50)),
+                ("dni", models.CharField(max_length=8)),
+                ("fecha_nacimiento", models.DateField(blank=True, null=True)),
+                ("direccion", models.CharField(max_length=100)),
+                ("telefono", models.CharField(max_length=20)),
+                (
+                    "email",
+                    models.EmailField(
+                        max_length=254, validators=[utils.validators.EmailValidator()]
+                    ),
+                ),
+                ("fecha_baja", models.DateField(blank=True, null=True)),
+                ("fecha_alta", models.DateField(auto_now_add=True)),
+                ("activo", models.BooleanField(default=True)),
+                ("cursos", models.ManyToManyField(to="domain.curso")),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

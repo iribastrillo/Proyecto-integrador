@@ -28,7 +28,12 @@ SECRET_KEY = "django-insecure-@$qz#@%8n2njd)3dpu36!k8pitwydd^u@v4+rgpsblgd!e^jn2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = getenv("IS_DEVELOPMENT", True)
 
-ALLOWED_HOSTS = [getenv("APP_HOST"), 'localhost', '127.0.0.1',  'hidden-fortress-37452-206e312e47f7.herokuapp.com']
+ALLOWED_HOSTS = [
+    getenv("APP_HOST"),
+    "localhost",
+    "127.0.0.1",
+    "hidden-fortress-37452-206e312e47f7.herokuapp.com",
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -47,7 +52,8 @@ INSTALLED_APPS = [
     "profesores",
     "salones",
     "estudiantes",
-    "clases"
+    "clases",
+    "pagos",
 ]
 
 MIDDLEWARE = [
@@ -74,6 +80,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "app.context_processors.get_role_processor",
             ],
         },
     },
@@ -86,10 +93,14 @@ TAILWIND_APP_NAME = "theme"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-"default": {
-    "ENGINE": "django.db.backends.sqlite3",
-    "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    },
+    "testing": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "dbtesting.sqlite3",
+    },
 }
 
 INTERNAL_IPS = [
@@ -130,7 +141,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 STORAGES = {
     "default": {
@@ -141,13 +152,11 @@ STORAGES = {
     },
 }
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
-MEDIA_URL = '/media/'
+MEDIA_URL = "/media/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -156,3 +165,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 NPM_BIN_PATH = which("npm")
 
+# Email configuration
+
+#Para que funcione todo el flujo de cambio de contraseña hay que configurar, si se usa gmail, una password. 
+#Seguir las instrucciones en este enlace support.google.com/accounts/answer/185833 
+
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend' # Para usar gmail, sustituir dummy por gmail.
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "host"
+EMAIL_HOST_PASSWORD = "false password"

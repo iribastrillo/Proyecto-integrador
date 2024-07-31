@@ -1,88 +1,145 @@
-<section class='col-span-3 md:col-span-2 lg:col-span-2'>  
-    <div class="w-full max-w-full border border-gray-700 rounded shadow bg-gray-900">
-        <div class="flex flex-col items-center wooden-cover p-4 py-8 border-b border-gray-700 rounded">
-            <div class="relative inline-flex items-center justify-center w-12 h-12 overflow-hidden rounded-full bg-accent-50 mb-2">
-              <span class="font-medium text-white">{{estudiante.nombre|make_list|first}}{{estudiante.apellido|make_list|first}}</span>
-            </div>
-            <h5 class="mb-1 text-xl font-medium text-white">{{estudiante.nombre}} {{estudiante.apellido}}</h5>
-            <span class="text-sm text-gray-500 dark:text-gray-400">{{estudiante.email}}</span>
-        </div>
-        <div class="flex flex-col items-center p-4 w-full mx-auto mb-0">
-          <div class="py-2 text-sm text-gray-400 w-full border border-gray-700 rounded p-2">
-            <p class="border-b border-gray-700 m-8">
-              Fecha de nacimiento: {{estudiante.fecha_nacimiento}}
+<section class='col-span-3 md:col-span-2 lg:col-span-2'>
+  <div class="border border-gray-700 rounded shadow bg-gray-900 mb-4">
+    <div class="flex w-full max-w-full">
+      <div class="flex flex-col items-start p-4 py-8 rounded">
+          <div class="relative inline-flex items-center justify-center w-12 h-12 overflow-hidden rounded bg-accent-50 mb-2">
+            <span class="font-medium text-white">{{estudiante.nombre|make_list|first}}{{estudiante.apellido|make_list|first}}</span>
+          </div>
+          <h5 class="mb-1 text-xl font-medium text-white">{{estudiante.nombre}} {{estudiante.apellido}}</h5>
+          <span class="text-sm text-gray-400">{{estudiante.email}}</span>
+      </div>
+      <div class="flex flex-col items-center p-4 w-full mx-auto mb-0">
+        <div class="py-2 text-sm w-full p-2">
+          <div>
+            <p class="mr-8 mb-2 text-gray-700">
+              Fecha de nacimiento
             </p>
-            <p class="border-b border-gray-700 m-8">
-              Cédula de identidad: {{estudiante.dni}}
+            <p class="mr-8 mb-4 text-white">
+              {{estudiante.fecha_nacimiento}}
             </p>
-            <p class="border-b border-gray-700 m-8">
-              Dirección: {{estudiante.direccion}}
+          </div>
+          <div>
+            <p class="mr-8 mb-2 text-gray-700">
+              Cédula de identidad
             </p>
-            <p class="border-b border-gray-700 m-8">
-              Teléfono: {{estudiante.telefono}}
+            <p class="mr-8 mb-4 text-white">
+              {{estudiante.dni}}
+            </p>
+          </div>
+          <div>
+            <p class="mr-8 mb-2 text-gray-700">
+              Dirección
+            </p>
+            <p class="mr-8 mb-4 text-white">
+              {{estudiante.direccion}}
+            </p>
+          </div>
+          <div>
+            <p class="mr-8 mb-2 text-gray-700">
+              Teléfono
+            </p>
+            <p class="mr-8 mb-4 text-white">
+              {{estudiante.telefono}}
             </p>
           </div>
         </div>
-        <div class="flex flex-col items-center p-4 w-full mx-auto mb-0">
-          <ul class="py-2 text-sm text-gray-700 dark:text-gray-200 w-full" aria-labelledby="dropdownHoverButton">
-            <li>
-              <a href="{% url 'estudiantes:update-student' estudiante.slug %}" class="flex items-center p-2 text-gray-400 rounded dark:text-white hover:bg-accent-100 dark:hover:bg-gray-700 group border border-gray-700 mb-1">
-              <svg class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd"/>
-                <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd"/>
-              </svg>              
-              <span class="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">Editar perfil</span>
-              <svg class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-400 dark:bg-gray-700 dark:text-gray-300 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
-              </svg>
-            </a>
-            </li>
-            <li>
-              <a href="#" hx-get="{% url 'estudiantes:enrolment-student' estudiante.slug %}" hx-trigger="click" hx-swap="innerHTML" hx-target="#enrolment-form" data-modal-target="enrolment-modal" data-modal-toggle="enrolment-modal" class="flex items-center p-2 text-gray-400 rounded dark:text-white hover:bg-accent-100 dark:hover:bg-gray-700 group border border-gray-700 mb-1">
-              <svg class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M11 4.717c-2.286-.58-4.16-.756-7.045-.71A1.99 1.99 0 0 0 2 6v11c0 1.133.934 2.022 2.044 2.007 2.759-.038 4.5.16 6.956.791V4.717Zm2 15.081c2.456-.631 4.198-.829 6.956-.791A2.013 2.013 0 0 0 22 16.999V6a1.99 1.99 0 0 0-1.955-1.993c-2.885-.046-4.76.13-7.045.71v15.081Z" clip-rule="evenodd"/>
-              </svg>
-              <span class="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">Inscribir a un grupo</span>
-              <svg class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-400 dark:bg-gray-700 dark:text-gray-300 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
-              </svg>
-            </a>
-            </li>
-            <li>
-              <a href="#" hx-get="{% url 'estudiantes:resign-student' estudiante.slug %}" hx-trigger="click" hx-swap="innerHTML" hx-target="#enrolment-form" data-modal-target="enrolment-modal" data-modal-toggle="enrolment-modal" class="flex items-center p-2 text-gray-400 rounded dark:text-white hover:bg-accent-100 dark:hover:bg-gray-700 group border border-gray-700 mb-1">
-              <svg class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z" clip-rule="evenodd"/>
-              </svg>
-              
-              <span class="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">Bajar de un grupo</span>
-              <svg class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-400 dark:bg-gray-700 dark:text-gray-300 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
-              </svg>
-            </a>
-            </li>
-            <li>
-              <a href="#" class="flex items-center p-2 text-gray-400 rounded dark:text-white hover:bg-accent-100 dark:hover:bg-gray-700 group border border-gray-700 mb-1">
-              <svg class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M5.617 2.076a1 1 0 0 1 1.09.217L8 3.586l1.293-1.293a1 1 0 0 1 1.414 0L12 3.586l1.293-1.293a1 1 0 0 1 1.414 0L16 3.586l1.293-1.293A1 1 0 0 1 19 3v18a1 1 0 0 1-1.707.707L16 20.414l-1.293 1.293a1 1 0 0 1-1.414 0L12 20.414l-1.293 1.293a1 1 0 0 1-1.414 0L8 20.414l-1.293 1.293A1 1 0 0 1 5 21V3a1 1 0 0 1 .617-.924ZM9 7a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2H9Zm0 4a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Zm0 4a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Z" clip-rule="evenodd"/>
-              </svg>   
-              <span class="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">Historial de pagos</span>
-              <svg class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-400 dark:bg-gray-700 dark:text-gray-300 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
-              </svg>
-            </a>
-            </li>
-            <li>
-              <a href="#" class="flex items-center p-2 text-gray-400 rounded dark:text-white hover:bg-accent-100 dark:hover:bg-gray-700 group border border-gray-700 mb-1">
-              <svg class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M6 2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 1 0 0-2h-2v-2h2a1 1 0 0 0 1-1V4a2 2 0 0 0-2-2h-8v16h5v2H7a1 1 0 1 1 0-2h1V2H6Z" clip-rule="evenodd"/>
-              </svg>              
-              <span class="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">Historial acádemico</span>
-              <svg class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-400 dark:bg-gray-700 dark:text-gray-300 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
-              </svg>
-            </a>
-            </li>
-          </ul>
-        </div>
+      </div>
     </div>
+    <div class="m-4">
+      {% for course in estudiante.cursos.all %}
+        <span class="text-xs font-medium me-2 p-2 rounded bg-green-900 text-green-300">{{course.nombre}}</span>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="relative overflow-x-auto mb-4 rounded border border-gray-700">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-400">
+        <thead class="text-xs uppercase bg-gray-900 text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    PROFESOR
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    GRUPO
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for group in groups %}
+              {% for teacher in group.profesores.all %}
+                <tr class="border-b bg-gray-900 border-gray-700">
+                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                        {{teacher.apellido}}, {{teacher.nombre}}
+                    </th>
+                    <td class="px-6 py-4">
+                        {{group.identificador}} {{group.curso}}
+                    </td>
+                </tr>
+              {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+  </div>
+
+  <div class="flex flex-col items-center p-4 w-full mx-auto mb-0  border border-gray-700 rounded shadow bg-gray-900">
+    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200 w-full" aria-labelledby="dropdownHoverButton">
+      <li>
+        <a href="{% url 'estudiantes:update-student' estudiante.slug %}" class="flex items-center p-2 text-gray-400 rounded dark:text-white hover:bg-accent-100 dark:hover:bg-gray-700 group border border-gray-700 mb-1">
+        <svg class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+          <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd"/>
+          <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd"/>
+        </svg>
+        <span class="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">Editar perfil</span>
+        <svg class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-400 dark:bg-gray-700 dark:text-gray-300 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
+        </svg>
+      </a>
+      </li>
+      <li>
+        <a href="#" hx-get="{% url 'estudiantes:enrolment-student' estudiante.slug %}" hx-trigger="click" hx-swap="innerHTML" hx-target="#enrolment-form" data-modal-target="enrolment-modal" data-modal-toggle="enrolment-modal" class="flex items-center p-2 text-gray-400 rounded dark:text-white hover:bg-accent-100 dark:hover:bg-gray-700 group border border-gray-700 mb-1">
+        <svg class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+          <path fill-rule="evenodd" d="M11 4.717c-2.286-.58-4.16-.756-7.045-.71A1.99 1.99 0 0 0 2 6v11c0 1.133.934 2.022 2.044 2.007 2.759-.038 4.5.16 6.956.791V4.717Zm2 15.081c2.456-.631 4.198-.829 6.956-.791A2.013 2.013 0 0 0 22 16.999V6a1.99 1.99 0 0 0-1.955-1.993c-2.885-.046-4.76.13-7.045.71v15.081Z" clip-rule="evenodd"/>
+        </svg>
+        <span class="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">Inscribir a un grupo</span>
+        <svg class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-400 dark:bg-gray-700 dark:text-gray-300 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
+        </svg>
+      </a>
+      </li>
+      <li>
+        <a href="#" hx-get="{% url 'estudiantes:resign-student' estudiante.slug %}" hx-trigger="click" hx-swap="innerHTML" hx-target="#enrolment-form" data-modal-target="enrolment-modal" data-modal-toggle="enrolment-modal" class="flex items-center p-2 text-gray-400 rounded dark:text-white hover:bg-accent-100 dark:hover:bg-gray-700 group border border-gray-700 mb-1">
+        <svg class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+          <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z" clip-rule="evenodd"/>
+        </svg>
+
+        <span class="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">Bajar de un grupo</span>
+        <svg class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-400 dark:bg-gray-700 dark:text-gray-300 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
+        </svg>
+      </a>
+      </li>
+      <li>
+        <a href="#" hx-get="{% url 'pagos:add-payment' estudiante.slug %}" hx-trigger="click" hx-swap="innerHTML" hx-target="#payment-form" data-modal-target="payment-modal" data-modal-toggle="payment-modal" class="flex items-center p-2 text-gray-400 rounded dark:text-white hover:bg-accent-100 dark:hover:bg-gray-700 group border border-gray-700 mb-1">
+        <svg class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+          <path fill-rule="evenodd" d="M5.617 2.076a1 1 0 0 1 1.09.217L8 3.586l1.293-1.293a1 1 0 0 1 1.414 0L12 3.586l1.293-1.293a1 1 0 0 1 1.414 0L16 3.586l1.293-1.293A1 1 0 0 1 19 3v18a1 1 0 0 1-1.707.707L16 20.414l-1.293 1.293a1 1 0 0 1-1.414 0L12 20.414l-1.293 1.293a1 1 0 0 1-1.414 0L8 20.414l-1.293 1.293A1 1 0 0 1 5 21V3a1 1 0 0 1 .617-.924ZM9 7a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2H9Zm0 4a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Zm0 4a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Z" clip-rule="evenodd"/>
+        </svg>
+        <span class="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">Agregar pago</span>
+        <svg class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-400 dark:bg-gray-700 dark:text-gray-300 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
+        </svg>
+      </a>
+      </li>
+      <li>
+        <a href="{% url 'pagos:payments' estudiante.slug %}" class="flex items-center p-2 text-gray-400 rounded dark:text-white hover:bg-accent-100 dark:hover:bg-gray-700 group border border-gray-700 mb-1">
+        <svg class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+          <path fill-rule="evenodd" d="M5.617 2.076a1 1 0 0 1 1.09.217L8 3.586l1.293-1.293a1 1 0 0 1 1.414 0L12 3.586l1.293-1.293a1 1 0 0 1 1.414 0L16 3.586l1.293-1.293A1 1 0 0 1 19 3v18a1 1 0 0 1-1.707.707L16 20.414l-1.293 1.293a1 1 0 0 1-1.414 0L12 20.414l-1.293 1.293a1 1 0 0 1-1.414 0L8 20.414l-1.293 1.293A1 1 0 0 1 5 21V3a1 1 0 0 1 .617-.924ZM9 7a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2H9Zm0 4a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Zm0 4a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Z" clip-rule="evenodd"/>
+        </svg>
+        <span class="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">Historial de pagos</span>
+        <svg class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-400 dark:bg-gray-700 dark:text-gray-300 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
+        </svg>
+      </a>
+      </li>
+    </ul>
+  </div>
 </section>
