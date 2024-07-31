@@ -1,4 +1,3 @@
-from domain.models import Salon
 from django.views.generic import (
     CreateView,
     ListView,
@@ -6,14 +5,16 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
-from django.urls import reverse_lazy
-from domain.models import Salon
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
+from django.urls import reverse_lazy
+
+from domain.models import Salon
+from app.authorization import is_staff
 
 
-class SalonesCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class SalonesCreateView(UserPassesTestMixin, SuccessMessageMixin, CreateView):
     model = Salon
     fields = ["nombre", "capacidad", "descripcion"]
     template_name = "salones/salones_form.html"
@@ -26,20 +27,28 @@ class SalonesCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             for error in form.errors[field]:
                 messages.add_message(self.request, messages.ERROR, error)
         return response
+    
+    def test_func(self):
+        return is_staff(self.request.user)
 
-
-class SalonesListView(LoginRequiredMixin, ListView):
+class SalonesListView(UserPassesTestMixin, ListView):
     model = Salon
     context_object_name = "lista_salones"
     template_name = "salones/salones_list.html"
+    
+    def test_func(self):
+        return is_staff(self.request.user)
 
 
-class SalonesDetailView(LoginRequiredMixin, DetailView):
+class SalonesDetailView(UserPassesTestMixin, DetailView):
     model = Salon
     template_name = "salones/salones_detail.html"
+    
+    def test_func(self):
+        return is_staff(self.request.user)
 
 
-class SalonesUpdateView(LoginRequiredMixin, UpdateView):
+class SalonesUpdateView(UserPassesTestMixin, UpdateView):
     model = Salon
     fields = "__all__"
     template_name = "salones/salones_form.html"
@@ -56,10 +65,16 @@ class SalonesUpdateView(LoginRequiredMixin, UpdateView):
             for error in form.errors["capacidad"]:
                 messages.add_message(self.request, messages.ERROR, error)
         return response
+    
+    def test_func(self):
+        return is_staff(self.request.user)
 
 
-class SalonesDeleteView(LoginRequiredMixin, DeleteView):
+class SalonesDeleteView(UserPassesTestMixin, DeleteView):
     model = Salon
     template_name = "salones/salones_confirm_delete.html"
     success_url = reverse_lazy("salones:classrooms")
     success_message = "El salon se eliminó con éxito"
+    
+    def test_func(self):
+        return is_staff(self.request.user)

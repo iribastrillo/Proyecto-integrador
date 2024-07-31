@@ -41,8 +41,7 @@ def calculate_total_product_earnings(payments):
 
 
 def calculate_gains(earnings, spending):
-    return (earnings - spending) / IVA
-
+    return (earnings - spending)
 
 def generate_data_enrolments(products):
     data = []

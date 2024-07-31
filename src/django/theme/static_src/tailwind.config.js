@@ -55,6 +55,9 @@ module.exports = {
                 light: {
                     100: '#D8C1B5'
                 },
+                black: {
+                    900: '#000000'
+                }
             }
         },
     },
