@@ -244,6 +244,7 @@ class CreateBloqueDeClase(LoginRequiredMixin,CreateView):
         form = BloqueDeClaseForm (request.POST)
         grupo = Grupo.objects.get(pk=kwargs["pk"])
         print(f"Creando bloque de clase para el grupo {grupo.pk}")
+
         if form.is_valid():
             print("Form is valid")
             # grupo = form.cleaned_data["grupo"]
