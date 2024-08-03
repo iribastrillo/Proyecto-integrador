@@ -69,12 +69,13 @@ class PagoForm(forms.ModelForm):
 
         # Check if alumno has made a payment for curso in the current month
         mes_actual = datetime.datetime.now().month
+        anio_actual = datetime.datetime.now().year
         pago_en_mes_actual = Pago.objects.filter(
             alumno=alumno,
             curso=curso,
-            fecha__month=mes_actual
+            fecha__month=mes_actual,
+            fecha__year=anio_actual
         )
-        print(pago_en_mes_actual)
 
         if pago_en_mes_actual.exists() and pago_en_mes_actual.first().id != self.instance.id:
             raise forms.ValidationError('El alumno ya ha realizado un pago para este curso en el mes actual.')
