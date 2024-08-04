@@ -1,3 +1,5 @@
+import datetime
+from typing import Any
 from django import forms
 from django.core.exceptions import ValidationError
 from domain.models import Pago, Alumno,AlumnoCurso,Curso
@@ -11,12 +13,6 @@ class PagoForm(forms.ModelForm):
         fields = ['monto','descripcion', 'comprobante','curso']
         exclude = ['alumno','fecha']
 
-    def clean_monto(self):
-        monto = self.cleaned_data['monto']
-        if monto <= 0:
-            raise ValidationError('El monto debe ser mayor a $0.00')
-
-        return monto
 
     def __init__(self, *args, **kwargs):
         if initial := kwargs.get('initial'):
@@ -42,20 +38,50 @@ class PagoForm(forms.ModelForm):
 
 
 
+    def clean_monto(self):
+        monto = self.cleaned_data['monto']
+        if monto <= 0:
+            raise ValidationError('El monto debe ser mayor a $0.00')
+
+        return monto
+
     def clean_alumno(self):
         slug = self.cleaned_data['alumno']
         try:
             alumno=Alumno.objects.get(slug=slug)
-            return Alumno.objects.get(slug=slug)
+            return alumno
         except Alumno.DoesNotExist:
             raise ValidationError('No existe alumno')
+
     def clean_curso(self):
         curso_id = self.cleaned_data['curso']
         try:
             curso=Curso.objects.get(pk=curso_id)
+
             return curso
         except Curso.DoesNotExist:
             raise ValidationError('No existe curso')
+
+    def clean(self):
+        cleaned_data = super().clean()
+        alumno = cleaned_data.get('alumno')
+        curso = cleaned_data.get('curso')
+
+        # Check if alumno has made a payment for curso in the current month
+        mes_actual = datetime.datetime.now().month
+        anio_actual = datetime.datetime.now().year
+        pago_en_mes_actual = Pago.objects.filter(
+            alumno=alumno,
+            curso=curso,
+            fecha__month=mes_actual,
+            fecha__year=anio_actual
+        )
+
+        if pago_en_mes_actual.exists() and pago_en_mes_actual.first().id != self.instance.id:
+            raise forms.ValidationError('El alumno ya ha realizado un pago para este curso en el mes actual.')
+
+        return cleaned_data
+
 
     def save(self, commit=True):
         instance = super(PagoForm, self).save(commit=False)

@@ -215,6 +215,7 @@ class AlumnoExamen(models.Model):
 
 
 class Pago(models.Model):
+    id=models.AutoField(primary_key=True)
     alumno=models.ForeignKey(Alumno, on_delete=models.CASCADE)
     monto=models.DecimalField(max_digits=10, decimal_places=2,validators=[MinValueValidator(1, "El monto debe ser mayor que cero"),MaxValueValidator(1000000,"El monto no debe superar el millón de pesos")])
     curso=models.ForeignKey(Curso, on_delete=models.CASCADE, null=True, blank=True)
@@ -224,4 +225,4 @@ class Pago(models.Model):
 
     def __str__(self):
 
-        return f"Pago: {self.alumno} {self.monto} {self.fecha}"
+        return f"Pago:{self.id} {self.alumno} {self.monto} {self.fecha}"
