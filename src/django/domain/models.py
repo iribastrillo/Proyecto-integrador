@@ -1,3 +1,4 @@
+from django.utils.timezone import now
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -130,14 +131,31 @@ class Salon(models.Model):
 
 
 class Grupo(models.Model):
-    identificador = models.CharField(max_length=1)
+    id=models.AutoField(primary_key=True)
     curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
     alumnos=models.ManyToManyField(Alumno, blank=True) #validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
     cupo=models.IntegerField(null=False,default=1,validators=[MinValueValidator(1, "La cantidad de alumnos debe estar entre 1 y 50"),MaxValueValidator(50,"La cantidad de alumnos debe estar entre 1 y 50")])
     profesores=models.ManyToManyField(Profesor) #validar que el profesor este asignado al curso
+    fecha_inicio = models.DateTimeField(null=False, blank=False, default=now().date())
+    fecha_baja=models.DateTimeField(null=True, blank=True)
+    activo=models.BooleanField(default=True)
+
+    def is_inactive(self):
+        return self.fecha_baja and self.fecha_baja <= now()
+
+    def save(self, *args, **kwargs):
+        if not self.activo:
+            # If "Activo" checkbox is unchecked, set fecha_baja to the current date
+            self.fecha_baja = now()
+        elif self.is_inactive():
+            # If fecha_baja has passed, set activo to False
+            self.activo = False
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
-        return f"Grupo {self.pk} | {self.curso.nombre}"
+
+            return f"Grupo: {self.id} - Curso: {self.curso.nombre} - Activo: {self.activo}"
+
 
     def get_absolute_url(self):
         return reverse("clases:detail-group", kwargs={"pk": self.pk})
