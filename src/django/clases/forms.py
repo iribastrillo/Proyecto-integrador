@@ -6,19 +6,23 @@ from domain.models import Curso,Salon,Profesor,Dia,Grupo,BloqueDeClase
 class CreateGroupForm(forms.ModelForm):
     class Meta:
         model=Grupo
-        fields=["curso","profesores","cupo"]
+        fields=["id","curso","profesores","cupo","fecha_inicio","fecha_baja","activo"]
     curso = forms.ModelChoiceField(queryset=Curso.objects.all(),
                                   widget=forms.Select(attrs={"hx-get":"cargar-profesores/","hx-target":"#id_profesores"}) )
     profesores = forms.ModelMultipleChoiceField(queryset=Profesor.objects.none())
     cupo = forms.IntegerField(min_value=0, max_value=500)
+    fecha_inicio = forms.DateTimeField(widget=forms.DateInput(attrs={"type": "date"}))
+    fecha_baja = forms.DateTimeField(widget=forms.DateInput(attrs={"type": "date","hidden":"hidden"}), required=False, label='')
+    activo = forms.BooleanField(required=False,initial=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        print(self.fields)
         self.fields["curso"].widget.attrs.update(
             {"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700 "}
         )
         self.fields["profesores"].widget.attrs.update(
-            {"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}
+            {"class": "bg-gray-900    shadow dark:bg-gray-700"}
         )
         self.fields["cupo"].widget.attrs.update(
             {
@@ -27,6 +31,15 @@ class CreateGroupForm(forms.ModelForm):
                 "max": "500",
             }
         )
+        self.fields["fecha_inicio"].widget.attrs.update(
+            {"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}
+        )
+        self.fields["fecha_baja"].widget.attrs.update(
+            {"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}
+        )
+        if  'fecha_inicio' in self.initial:
+            self.initial['fecha_inicio']=self.initial['fecha_inicio'].strftime('%Y-%m-%d')
+
         if "curso" in self.data:
             curso_id = int(self.data.get("curso"))
             self.fields["profesores"].queryset = Profesor.objects.filter(cursos__id=curso_id).order_by("nombre")
@@ -34,7 +47,17 @@ class CreateGroupForm(forms.ModelForm):
             print(f"THERE IS AN INITIAL VALUE:  {self.initial} " )
             # curso_id = self.initial['curso'].id
             curso_id = self.initial['curso']
+
             self.fields["profesores"].queryset = Profesor.objects.filter(cursos__id=curso_id).order_by("nombre")
+
+        if self.instance.id is not None:
+
+            self.fields["fecha_baja"] = forms.DateTimeField(widget=forms.DateInput(attrs={"type": "date"}), required=False)
+            self.fields["fecha_baja"].widget.attrs.update(
+            {"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}
+            )
+            if 'fecha_baja' in self.initial and self.initial['fecha_baja'] is not None:
+                self.initial['fecha_baja']=self.initial['fecha_baja'].strftime('%Y-%m-%d')
 
 
 class BloqueDeClaseForm(forms.ModelForm):
