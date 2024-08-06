@@ -25,6 +25,11 @@ def calculate_payment(groups):
             total += Decimal(course.payout_ratio) * Decimal(course.costo)
     return total / IVA, total
 
+def calculate_actual_fee (enrolments):
+    total = 0
+    for enrolment in enrolments:
+        total += enrolment.fee
+    return total
 
 def calculate_total_teacher_spending(professors):
     total = 0

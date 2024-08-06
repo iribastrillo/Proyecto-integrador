@@ -93,10 +93,16 @@
                         <p class="text-sm font-medium truncate text-white">
                             {{group.curso.nombre}}
                         </p>
+                        <p class="text-sm font-medium truncate text-white">
+                            $ {{group.amount_payable|floatformat:"-2"}}
+                        </p>
                     </div>
                 </div>
             </li>
             {% endfor %%}
+            <li class="py-3 sm:py-4 text-right text-gray-700">
+                Salario mensual: <span class="text-xs font-medium me-2 p-2 rounded bg-yellow-900 text-yellow-300">$ {{monthly_salary|floatformat:"-2"}}</span>
+              </li>
         </ul>
    </div>
 </div>

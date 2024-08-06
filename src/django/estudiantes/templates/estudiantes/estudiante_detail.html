@@ -108,20 +108,26 @@
    </div>
    <div class="flow-root">
         <ul role="list" class="divide-y divide-gray-700">
-            {% for group in groups %}
+            {% for enrolment in enrolments %}
             <li class="py-3 sm:py-4">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <img class="w-8 h-8 rounded" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="">
+                        <img class="w-8 h-8 rounded" src="{% static 'app/conservatorio-rodo-icon-beige-128px.png' %}" alt="Logo Rodó">
                     </div>
                     <div class="flex-1 min-w-0 ms-4">
                         <p class="text-sm font-medium truncate text-white">
-                            {{group.curso.nombre}}
+                            {{enrolment.curso.nombre}}
                         </p>
+                        <p class="text-sm font-medium truncate text-white">
+                          $ {{enrolment.fee}}
+                      </p>
                     </div>
                 </div>
             </li>
             {% endfor %%}
+            <li class="py-3 sm:py-4 text-right text-gray-700">
+              Cuota real mensual: <span class="text-xs font-medium me-2 p-2 rounded bg-yellow-900 text-yellow-300">$ {{actual_fee}}</span>
+            </li>
         </ul>
    </div>
 </div>
