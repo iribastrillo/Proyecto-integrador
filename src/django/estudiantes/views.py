@@ -102,6 +102,7 @@ class InscripcionNueva(LoginRequiredMixin, View):
         student = Alumno.objects.get(slug=kwargs["slug"])
         if form.is_valid():
             grupo = form.cleaned_data["grupo"]
+            fee = form.cleaned_data["fee"]
             if grupo.alumnos.filter(slug=student.slug).exists():
                 messages.add_message(
                     request,
@@ -114,7 +115,7 @@ class InscripcionNueva(LoginRequiredMixin, View):
             else:
                 grupo.alumnos.add(student)
                 grupo.save()
-                AlumnoCurso.objects.create(alumno=student, curso=grupo.curso)
+                AlumnoCurso.objects.create(alumno=student, curso=grupo.curso, fee=fee)
                 messages.add_message(
                     request,
                     messages.SUCCESS,
