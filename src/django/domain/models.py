@@ -227,5 +227,7 @@ class Pago(models.Model):
     comprobante=models.FileField(upload_to='pagos', null=True, blank=True)
 
     def __str__(self):
-
         return f"Pago:{self.id} {self.alumno} {self.monto} {self.fecha}"
+    
+    class Meta:
+        ordering = ["-fecha"]
