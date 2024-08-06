@@ -17,6 +17,8 @@ from .forms import InscripcionForm, BajaForm
 from profiles.models import Alumno
 from domain.models import AlumnoCurso
 
+from core.domain.services import calculate_actual_fee
+
 
 class AlumnoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Alumno
@@ -51,7 +53,9 @@ class AlumnoDetailView(LoginRequiredMixin, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["groups"] = context["object"].grupo_set.all()
+        context["groups"] = context["object"].grupo_set.all()        
+        context["enrolments"] = AlumnoCurso.objects.filter(alumno=context["object"])
+        context["actual_fee"] = calculate_actual_fee (context["enrolments"])
         return context
 
 

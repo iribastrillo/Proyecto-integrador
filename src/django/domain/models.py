@@ -88,6 +88,9 @@ class AlumnoCurso(models.Model):
     fecha_finalizado = models.DateField(null=True, blank=True)
     fecha_baja = models.DateField(null=True, blank=True)
     aprobado = models.BooleanField(default=False)
+    fee = models.DecimalField(max_digits=7 ,decimal_places=2, default=1, validators=[
+        MinValueValidator(0, "La cuota real debe ser mayor a 0."),
+        MaxValueValidator(50000, "La cuota real debe ser menor a $50000.")])
 
     def __str__(self):
         return f"Inscripcion: {self.alumno.apellido} -> {self.curso.nombre}"
