@@ -1,0 +1,47 @@
+<form hx-post="{% url 'pagos:add-payment' slug %}"  enctype="multipart/form-data" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-full bg-gray-900 border border-gray-700 rounded p-8 payment-form ">
+  {% csrf_token %}
+  <h5 class="text-xl font-bold leading-nonetext-white">Agregar Pago</h5>
+  <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        {{ form.non_field_errors }}
+
+    </div>
+    <div>
+        {% for field in form %}
+        {% if field.errors %}
+            {{ field.label_tag }}
+            {% for error in field.errors %}
+                {{ error }}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="flex flex-col mb-4">
+        <label  for="id_alumno"></label>
+        {{ form.alumno }}
+    </div>
+    <div class="flex flex-col mb-4">
+        {{form.curso.label_tag}}
+        {{form.curso}}
+    </div>
+
+    <div class="flex flex-col mb-4">
+        {{form.monto.label_tag}}
+        {{form.monto}}
+    </div>
+
+    <div class="flex flex-col mb-4">
+        {{form.descripcion.label_tag}}
+        {{form.descripcion}}
+    </div>
+    <div class="flex flex-col mb-4">
+        {{form.comprobante.label_tag}}
+        {{form.comprobante}}
+    </div>
+    <input class='main-action-button w-full' type="submit" value="Guardar">
+</form>
+
+

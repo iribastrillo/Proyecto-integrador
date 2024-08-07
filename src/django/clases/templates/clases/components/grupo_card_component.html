@@ -1,0 +1,159 @@
+<section class='col-span-3 md:col-span-2 lg:col-span-2'>
+    <div class="w-full max-w-full border border-gray-700 rounded shadow bg-gray-900">
+        <div class="flex flex-col items-center wooden-cover p-4 py-8 border-b border-gray-700 rounded">
+            <div class="relative inline-flex items-center justify-center w-12 h-12 overflow-hidden rounded-full bg-accent-50 mb-2">
+              <span class="font-medium text-white">{{grupo.pk}}</span>
+            </div>
+            <div class="flex flex-col items-center p-4">
+              <span class="mb-1 text-xl font-medium text-white">{{grupo.curso.nombre}}</span>
+            </div>
+        </div>
+        <div class="flex flex-col items-center p-4">
+            <h5 class="mb-1 text-xl font-medium text-white">Profesores</h5>
+        </div>
+        {%if grupo.profesores%}
+            {%for profesor in grupo.profesores.all%}
+            <div class="flex flex-col items-center p-4 w-full mx-auto mb-0">
+              <div class="py-2 text-sm text-gray-400 w-full border border-gray-700 rounded p-2">
+                <p class="border-b border-gray-700 m-8">
+                  Nombre profesor: {{profesor.nombre}}
+                </p>
+                <p class="border-b border-gray-700 m-8">
+                  Apellido profesor: {{profesor.apellido}}
+                </p>
+                <p class="border-b border-gray-700 m-8">
+                  Email profesor: {{profesor.email}}
+                </p>
+                <p class="border-b border-gray-700 m-8">
+                  Teléfono profesor: {{profesor.telefono}}
+                </p>
+              </div>
+            </div>
+            {%endfor%}
+            {%else%}
+            <h5 class="mb-1 text-xl font-medium text-white">No hay profesores asignados</h5>
+            {%endif%}
+            <div class="flex flex-col items-center p-4">
+              <h5 class="mb-1 text-xl font-medium text-white">Alumnos</h5>
+          </div>
+        {%if grupo.alumnos.all%}
+        {%for alumno in grupo.alumnos.all%}
+        <div class="flex flex-col items-center p-4 w-full mx-auto mb-0">
+          <div class="py-2 text-sm text-gray-400 w-full border border-gray-700 rounded p-2">
+            <p class="border-b border-gray-700 m-8">
+              Nombre de alumno: {{alumno.nombre}}
+            </p>
+            <p class="border-b border-gray-700 m-8">
+              Alumno apellido: {{alumno.apellido}}
+            </p>
+            <p class="border-b border-gray-700 m-8">
+              email: {{alumno.email}}
+            </p>
+            <p class="border-b border-gray-700 m-8">
+              Teléfono: {{alumno.telefono}}
+            </p>
+          </div>
+        </div>
+        {%endfor%}
+        {%else%}
+         <div class="flex flex-col items-center p-4 w-full mx-auto mb-0">
+          <div class="py-2 text-sm text-gray-400 w-full border border-gray-700 rounded p-2">
+            <p class="border-b border-gray-700 m-8">
+              No hay alumnos en este grupo.
+            </p>
+          </div>
+        {%endif%}
+        {%if bloques_de_clase%}
+        <div class="flex flex-col items-center p-4">
+          <h5 class="mb-1 text-xl font-medium text-white">Clases</h5>
+      </div>
+
+      <div class="flex flex-col items-center p-4 w-full mx-auto mb-0">
+        <div class="py-2 text-sm text-gray-400 w-full border border-gray-700 rounded p-2">
+            {% for bloque in bloques_de_clase %}
+            <div class="flex flex-col items-center p-4 w-full mx-auto mb-0">
+              <div class="py-2 text-sm text-gray-400 w-full border border-gray-700 rounded p-2">
+                  <p style="text-align: center;"  >
+                     <strong>Dias:</strong> {{ bloque.dia.all|join:", " }} |
+                     <strong>Hora Inicio:</strong> {{ bloque.hora_inicio }} |
+                     <strong>Hora Fin:</strong> {{ bloque.hora_fin }} |
+                     <strong>Salon:</strong> {{ bloque.salon }}
+
+                  </p>
+                  <p style="text-align: center;">
+                    <a style="display: inline-block" href="#" hx-get="{% url 'clases:update-class-block' bloque.pk  %}" hx-trigger="click" hx-swap="innerHTML" hx-target="#bloque-clase-modal" data-modal-target="bloque-clase-modal" data-modal-toggle="bloque-clase-modal" >
+                      <svg class="w-6 h-6 text-white  hover:text-accent-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd"/>
+                        <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd"/>
+                      </svg>
+                    </a>
+                     <a  style="display: inline-block" href="#" hx-get="{% url 'clases:delete-class-block' bloque.pk  %}"  hx-trigger="click" hx-swap="innerHTML" hx-target="#confirm-form" data-modal-target="confirm-modal" data-modal-toggle="confirm-modal" ><svg class="w-6 h-6 text-white  hover:text-accent-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-6 h-6 text-white  hover:text-accent-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
+                      </svg>
+                    </a>
+                  </p>
+              </div>
+          </div>
+            {% endfor %}
+          </div>
+        </div>
+        {%else%}
+        <div class="flex flex-col items-center p-4">
+          <h5 class="mb-1 text-xl font-medium text-white">Clases</h5>
+      </div>
+         <div class="flex flex-col items-center p-4 w-full mx-auto mb-0">
+          <div class="py-2 text-sm text-gray-400 w-full border border-gray-700 rounded p-2">
+            <p class="border-b border-gray-700 m-8">
+              No hay clases creadas aun
+                        </p>
+          </div>
+        {%endif%}
+        <div class="flex flex-col items-center p-4 w-full mx-auto mb-0">
+          <ul class="py-2 text-sm text-gray-700 dark:text-gray-200 w-full" aria-labelledby="dropdownHoverButton">
+            <li>
+              <a href="{% url 'clases:update-group' grupo.pk %}" class="flex items-center p-2 text-gray-400 rounded dark:text-white hover:bg-accent-100 dark:hover:bg-gray-700 group border border-gray-700 mb-1">
+              <svg class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd"/>
+                <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd"/>
+              </svg>
+              <span class="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">Editar grupo</span>
+              <svg class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-400 dark:bg-gray-700 dark:text-gray-300 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
+              </svg>
+            </a>
+            </li>
+            <li>
+              <!-- <a href="{% url 'clases:create-class-block' grupo.pk %}" class="flex items-center p-2 text-gray-400 rounded dark:text-white hover:bg-accent-100 dark:hover:bg-gray-700 group border border-gray-700 mb-1"> -->
+              <a href="#" hx-get="{% url 'clases:create-class-block' grupo.pk  %}" hx-trigger="click" hx-swap="innerHTML" hx-target="#bloque-clase-modal" data-modal-target="bloque-clase-modal" data-modal-toggle="bloque-clase-modal"  class="flex items-center p-2 text-gray-400 rounded dark:text-white hover:bg-accent-100 dark:hover:bg-gray-700 group border border-gray-700 mb-1">
+              <svg class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M11.32 6.176H5c-1.105 0-2 .949-2 2.118v10.588C3 20.052 3.895 21 5 21h11c1.105 0 2-.948 2-2.118v-7.75l-3.914 4.144A2.46 2.46 0 0 1 12.81 16l-2.681.568c-1.75.37-3.292-1.263-2.942-3.115l.536-2.839c.097-.512.335-.983.684-1.352l2.914-3.086Z" clip-rule="evenodd"/>
+                <path fill-rule="evenodd" d="M19.846 4.318a2.148 2.148 0 0 0-.437-.692 2.014 2.014 0 0 0-.654-.463 1.92 1.92 0 0 0-1.544 0 2.014 2.014 0 0 0-.654.463l-.546.578 2.852 3.02.546-.579a2.14 2.14 0 0 0 .437-.692 2.244 2.244 0 0 0 0-1.635ZM17.45 8.721 14.597 5.7 9.82 10.76a.54.54 0 0 0-.137.27l-.536 2.84c-.07.37.239.696.588.622l2.682-.567a.492.492 0 0 0 .255-.145l4.778-5.06Z" clip-rule="evenodd"/>
+              </svg>
+              <span class="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">Agregar clases</span>
+              <svg class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-400 dark:bg-gray-700 dark:text-gray-300 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/>
+              </svg>
+            </a>
+            </li>
+          </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Confirm modal -->
+<div id="confirm-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+  <div class="relative p-4 w-full max-w-md max-h-full">
+      <div class="relative rounded shadow bg-gray-900 border border-gray-700">
+          <button type="button" class="absolute top-3 end-2.5 text-gray-400 bg-transparent rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center hover:bg-gray-600 hover:text-white" data-modal-hide="confirm-modal">
+              <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+              </svg>
+              <span class="sr-only">Cerrar modal</span>
+          </button>
+          <div id="confirm-form" class="p-4 md:p-5 text-center">
+          </div>
+      </div>
+  </div>
+</div>
+
