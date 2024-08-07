@@ -1,6 +1,6 @@
 from typing import Any
 from django.shortcuts import render
-
+from django.utils.timezone import now
 # Create your views here.
 
 from django import forms
@@ -49,6 +49,7 @@ def create_pago(request: HttpRequest, slug: str) -> HttpResponseRedirect:
             # return TemplateResponse(request, 'pagos/pago_form.html', {'form': form, 'slug': student.slug})
     else:
         form = PagoForm(initial={'student_slug': student.slug})
+        # form.initial['fecha'] = now().strftime('%Y-%m-%d')
         print(f"get {student.slug}")
     return render(request, 'pagos/pago_form.html', {'form': form, 'slug': student.slug})
 
