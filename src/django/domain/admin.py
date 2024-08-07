@@ -12,7 +12,8 @@ from .models import (
     Examen,
     AlumnoExamen,
     Dia,
-    Pago
+    Pago,
+    FaltaProfesor
 )
 
 
@@ -29,3 +30,4 @@ admin.site.register(Examen)
 admin.site.register(AlumnoExamen)
 admin.site.register(Dia)
 admin.site.register(Pago)
+admin.site.register(FaltaProfesor)

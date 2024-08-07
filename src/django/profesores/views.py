@@ -1,4 +1,5 @@
 import datetime
+from django.http import HttpRequest, HttpResponse
 from django.views.generic import (
     CreateView,
     ListView,
@@ -9,9 +10,10 @@ from django.views.generic import (
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
-from domain.models import Profesor,BloqueDeClase,Dia
+from .forms import FaltaProfesorForm
+from domain.models import Profesor,BloqueDeClase,Dia,FaltaProfesor
 
 from core.domain.services import calculate_payment
 
@@ -40,7 +42,7 @@ class ProfesorListView(LoginRequiredMixin, ListView):
 
 class ProfesorDetailView(LoginRequiredMixin, DetailView):
     model = Profesor
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["groups"] = context["object"].grupo_set.all()
@@ -153,3 +155,48 @@ def generate_time_slots():
         time_slots.append(f"{hour}:30 AM")
     time_slots.append("12:00 PM")  # Add noon
     return time_slots
+
+
+class FaltaProfesorCreateView(LoginRequiredMixin, CreateView):
+    model = FaltaProfesor
+    template_name = "profesores/falta_profesor_form.html"
+    fields = [
+        "profesor_suplente",
+        "fecha",
+        "grupo",
+        "descripcion",
+    ]
+    # def get(self, request, *args, **kwargs):
+    #     professor = Profesor.objects.get(slug=kwargs["slug"])
+    #     groups = professor.grupo_set.all()
+    #     context = {
+    #         "professor": professor,
+    #         "groups": groups,
+    #         "form": self.form_class,
+    #     }
+    #     return render(request, self.template_name, context)
+    success_url = reverse_lazy( "detail-professor", kwargs={"slug": "2445645"})
+    #  return reverse_lazy(
+    #         "detail-professor", kwargs={"slug": self.object.user.username}
+    #     )
+
+def falta_profesor(request,slug):
+
+    if request.method == 'POST':
+        form = FaltaProfesorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('profesores:profesor-list')
+        else:
+            print(form.errors)
+    else:
+
+        professor = Profesor.objects.get(slug=slug)
+        groups = professor.grupo_set.filter(activo=True)
+        form = FaltaProfesorForm(initial={"profesor_titular": professor, "grupo": groups})
+        context = {
+            "form": form,
+            "professor": professor,
+            "groups": groups,
+        }
+        return render(request, "profesores/falta_profesor_form.html", context)

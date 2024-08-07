@@ -15,4 +15,6 @@ urlpatterns = [
     ),
     path("<slug>/pagos", views.Pagos.as_view(), name="payments-professor"),
     path("<slug>/reporte_clases", views.reporte_clases, name="report-professor-class"),
+    # path("<slug>/falta_profesor", views.FaltaProfesorCreateView.as_view(), name="missing-professor"),
+    path("<slug>/falta_profesor", views.falta_profesor, name="missing-professor"),
  ]
