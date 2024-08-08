@@ -10,20 +10,31 @@ class PagoForm(forms.ModelForm):
 
     class Meta:
         model = Pago
-        fields = ['monto','descripcion', 'comprobante','curso']
-        exclude = ['alumno','fecha']
+        fields = ['monto','fecha','descripcion', 'comprobante','curso']
+        exclude = ['alumno']
+    fecha = forms.DateTimeField(widget=forms.DateInput(attrs={"type": "date","class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}))
+
 
 
     def __init__(self, *args, **kwargs):
+        print("Pago Form init")
+        print(kwargs)
+        print(args)
+        super(PagoForm, self).__init__(*args, **kwargs)
         if initial := kwargs.get('initial'):
             if 'student_slug' in initial:
                 student_slug = initial['student_slug']
-                super(PagoForm, self).__init__(*args, **kwargs)
                 if student_slug:
                     student = Alumno.objects.get(slug=student_slug)
                     self.fields['alumno'].widget = forms.HiddenInput(attrs={'value': student.slug})
                     enrolled_courses = AlumnoCurso.objects.filter(alumno=student).values_list('curso__pk','curso__nombre')
                     self.fields['curso'] = forms.ChoiceField(choices=enrolled_courses, widget=forms.Select(attrs={'class': 'form-control'}))
+            if  'fecha' in self.initial:
+                print("Hay fecha in initial y es {}".format(self.initial['fecha']))
+                self.initial['fecha']=self.initial['fecha'].strftime('%Y-%m-%d')
+                self.fields["fecha"].widget.attrs.update(
+            {"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}
+        )
 
 
         if kwargs.get('instance'):
@@ -35,6 +46,9 @@ class PagoForm(forms.ModelForm):
                     self.fields['alumno'].widget = forms.HiddenInput(attrs={'value': student.slug})
                     enrolled_courses = AlumnoCurso.objects.filter(alumno=student).values_list('curso__pk','curso__nombre')
                     self.fields['curso'] = forms.ChoiceField(choices=enrolled_courses, widget=forms.Select(attrs={'class': 'form-control'}))
+            if kwargs['instance'].fecha:
+                self.initial['fecha']=kwargs['instance'].fecha.strftime('%Y-%m-%d')
+
 
 
 
@@ -66,10 +80,14 @@ class PagoForm(forms.ModelForm):
         cleaned_data = super().clean()
         alumno = cleaned_data.get('alumno')
         curso = cleaned_data.get('curso')
+        fecha_pago = cleaned_data.get('fecha')
 
         # Check if alumno has made a payment for curso in the current month
-        mes_actual = datetime.datetime.now().month
-        anio_actual = datetime.datetime.now().year
+        # mes_actual = datetime.datetime.now().month
+        # anio_actual = datetime.datetime.now().year
+        mes_actual = fecha_pago.month
+        anio_actual = fecha_pago.year
+
         pago_en_mes_actual = Pago.objects.filter(
             alumno=alumno,
             curso=curso,
