@@ -70,6 +70,7 @@ class AlumnoUpdateView(LoginRequiredMixin, UpdateView):
         "telefono",
         "email",
         "sexo",
+        "emergency_contact"
     ]
     template_name = "estudiantes/estudiante_form.html"
 

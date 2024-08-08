@@ -5,6 +5,8 @@ from django.db import IntegrityError
 from utils.validators import EmailValidator
 from django.urls import reverse
 
+from datetime import date
+
 from core.domain.services import generate_unique_code
 
 
@@ -51,11 +53,25 @@ class Persona(models.Model):
 
     class Meta:
         abstract = True
-
+        
 
 class Alumno(Persona):
+    emergency_contact = models.CharField(max_length=20, null=True, blank=True)
+    
     def __str__(self):
         return f"Alumno: {self.apellido}, {self.nombre}"
+    
+    @property
+    def is_up_to_date_with_payments (self):
+        enrolments = self.alumnocurso_set.all()
+        payments = self.pago_set.filter(fecha__month=date.today().month)
+        up_to_date = True
+        for enrolment in enrolments:
+            try:
+                up_to_date = up_to_date and payments.get(curso=enrolment.curso).exists()
+            except AttributeError as e:
+                pass
+        return up_to_date
 
 
 class Profesor(Persona):
