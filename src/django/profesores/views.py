@@ -44,6 +44,7 @@ class ProfesorDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["groups"] = context["object"].grupo_set.all()
+        context["monthly_salary"] = calculate_payment (context["groups"])[0]
         return context
 
 

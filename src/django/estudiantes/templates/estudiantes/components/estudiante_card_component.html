@@ -6,7 +6,8 @@
             <span class="font-medium text-white">{{estudiante.nombre|make_list|first}}{{estudiante.apellido|make_list|first}}</span>
           </div>
           <h5 class="mb-1 text-xl font-medium text-white">{{estudiante.nombre}} {{estudiante.apellido}}</h5>
-          <span class="text-sm text-gray-400">{{estudiante.email}}</span>
+          <span class="text-sm text-gray-400 mb-2">{{estudiante.email}}</span>
+          <span class="text-xs font-medium me-2 p-2 rounded bg-indigo-900 text-indigo-300">Estudiante</span>
       </div>
       <div class="flex flex-col items-center p-4 w-full mx-auto mb-0">
         <div class="py-2 text-sm w-full p-2">
@@ -40,6 +41,30 @@
             </p>
             <p class="mr-8 mb-4 text-white">
               {{estudiante.telefono}}
+            </p>
+          </div>
+          <div>
+            <p class="mr-8 mb-2 text-gray-700">
+              Contacto de emergencia
+            </p>
+            <p class="mr-8 mb-4 text-white">
+              {{estudiante.emergency_contact}}
+            </p>
+          </div>
+          <div>
+            <p class="mr-8 mb-2 text-gray-700">
+              Status de pagos
+            </p>
+            <p class="mr-8 mb-4 text-white">
+              {% if estudiante.is_up_to_date_with_payments %}
+                <div class="flex items-center">
+                  <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> Al día
+                </div>
+              {% else %}
+                <div class="flex items-center">
+                  <div class="h-2.5 w-2.5 rounded-full bg-red-500 me-2"></div> No está al día
+                </div>    
+              {% endif %}
             </p>
           </div>
         </div>

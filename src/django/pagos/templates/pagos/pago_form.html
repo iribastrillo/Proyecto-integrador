@@ -2,7 +2,22 @@
   {% csrf_token %}
   <h5 class="text-xl font-bold leading-nonetext-white">Agregar Pago</h5>
   <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
-    {{ form.errors }}
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        {{ form.non_field_errors }}
+
+    </div>
+    <div>
+        {% for field in form %}
+        {% if field.errors %}
+            {{ field.label_tag }}
+            {% for error in field.errors %}
+                {{ error }}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+    </div>
+    {% endif %}
 
     <div class="flex flex-col mb-4">
         <label  for="id_alumno"></label>
@@ -16,6 +31,10 @@
     <div class="flex flex-col mb-4">
         {{form.monto.label_tag}}
         {{form.monto}}
+    </div>
+    <div class="flex flex-col mb-4">
+        {{form.fecha.label_tag}}
+        {{form.fecha}}
     </div>
 
     <div class="flex flex-col mb-4">
