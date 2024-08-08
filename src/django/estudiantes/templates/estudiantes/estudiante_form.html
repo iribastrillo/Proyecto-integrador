@@ -51,40 +51,58 @@
     <h5 class="text-xl font-bold leading-nonetext-white">Ficha del estudiante</h5>
     <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
     <div class="flex flex-col mb-4">
-        {{ form.nombre.label_tag }}
+      <p class="text-xs mb-2">
+        Nombre
+      </p>
         {{ form.nombre }}
     </div>
     <div class="flex flex-col mb-4">
-        {{ form.apellido.label_tag }}
+      <p class="text-xs mb-2">
+        Apellido
+      </p>
         {{ form.apellido }}
     </div>
     <div class="flex flex-col mb-4">
-        {{ form.dni.label_tag }}
+      <p class="text-xs mb-2">
+        Cédula de identidad
+      </p>
         {{ form.dni }}
     </div>
     <div class="flex flex-col mb-4">
-        {{ form.telefono.label_tag }}
-        {{ form.telefono }}
+      <p class="text-xs mb-2">
+        Teléfono
+      </p>
+      {{ form.telefono }}
     </div>
     <div class="flex flex-col mb-4">
-        {{ form.email.label_tag }}
+      <p class="text-xs mb-2">
+        Contacto de emergencia
+      </p>
+      {{ form.emergency_contact }}
+  </div>
+    <div class="flex flex-col mb-4">
+      <p class="text-xs mb-2">
+        Correo electrónico
+      </p>
         {{ form.email }}
     </div>
     <div class="flex flex-col mb-4">
-      {{ form.sexo.label_tag }}
+      <p class="text-xs mb-2">
+        Sexo
+      </p>
       {{ form.sexo }}
   </div>
     <div class="flex flex-col mb-4">
-        {{ form.direccion.label_tag }}
+      <p class="text-xs mb-2">
+        Dirección
+      </p>
         {{ form.direccion }}
     </div>
     <div class="flex flex-col mb-4">
-        {{ form.fecha_nacimiento.label_tag }}
+      <p class="text-xs mb-2">
+        Fecha de nacimiento
+      </p>
         {{ form.fecha_nacimiento }}
-    </div>
-    <div class="flex flex-col mb-4">
-        {{ form.cursos.label_tag }}
-        {{ form.cursos }}
     </div>
     <input class='main-action-button w-full' type="submit" value="Aceptar">
 </form>

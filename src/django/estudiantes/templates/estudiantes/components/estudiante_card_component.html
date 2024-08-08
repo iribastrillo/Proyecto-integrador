@@ -43,6 +43,30 @@
               {{estudiante.telefono}}
             </p>
           </div>
+          <div>
+            <p class="mr-8 mb-2 text-gray-700">
+              Contacto de emergencia
+            </p>
+            <p class="mr-8 mb-4 text-white">
+              {{estudiante.emergency_contact}}
+            </p>
+          </div>
+          <div>
+            <p class="mr-8 mb-2 text-gray-700">
+              Status de pagos
+            </p>
+            <p class="mr-8 mb-4 text-white">
+              {% if estudiante.is_up_to_date_with_payments %}
+                <div class="flex items-center">
+                  <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> Al día
+                </div>
+              {% else %}
+                <div class="flex items-center">
+                  <div class="h-2.5 w-2.5 rounded-full bg-red-500 me-2"></div> No está al día
+                </div>    
+              {% endif %}
+            </p>
+          </div>
         </div>
       </div>
     </div>
