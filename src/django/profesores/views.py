@@ -1,5 +1,5 @@
 import datetime
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse,HttpResponseRedirect
 from django.views.generic import (
     CreateView,
     ListView,
@@ -185,8 +185,8 @@ class FaltaProfesorCreateView(LoginRequiredMixin, CreateView):
     #         "detail-professor", kwargs={"slug": self.object.user.username}
     #     )
 
-def falta_profesor(request,slug):
-
+def falta_profesor_create(request: HttpRequest, slug: str) -> HttpResponseRedirect:
+    professor=Profesor.objects.get(slug=slug)
     if request.method == 'POST':
         form = FaltaProfesorForm(request.POST)
         print("Post")
@@ -198,7 +198,11 @@ def falta_profesor(request,slug):
             form.save()
             return redirect('detail-professor', slug=slug)
         else:
-            print(form.errors)
+            print(f"form invalid {form.errors}")
+            response = render(request, 'profesores/falta_profesor_form.html', {'form': form, 'professor': professor})
+            response['HX-Retarget'] = '#abscence-modal'
+
+            return response
     else:
 
         professor = Profesor.objects.get(slug=slug)
@@ -212,11 +216,76 @@ def falta_profesor(request,slug):
         return render(request, "profesores/falta_profesor_form.html", context)
 
 def load_professors(request,pk=None):
-
     print("Loading professors")
     grupo = request.GET.get("grupo")
     print(f"REQYEST {request.GET}")
     curso=Grupo.objects.get(pk=grupo).curso
     profesor_titular_id=request.GET.get("profesor_titular")
     profesores = Profesor.objects.filter(cursos__id=curso.id).exclude(id=profesor_titular_id)
+    print(profesores)
+
+    ### ver que se hace en caso de que no haya profesores que den el mismo
+    ### curso que el porofesor titular, se podria mostrar un mensaje de error
+    ### o simplemente mostrar todos los profesores
+
+    # if profesores is None or profesores.count()==0:
+    #     profesores = Profesor.objects.all()
     return render(request, "profesores/profesores_options.html", {"profesores": profesores})
+
+
+def list_faltas_profesor(request,slug):
+    print(f"Listando faltas de {slug}")
+    profesor=Profesor.objects.get(slug=slug)
+    faltas=FaltaProfesor.objects.filter(profesor_titular=profesor)
+    print(f"faltas: {faltas}")
+    context={
+        'profesor':profesor,
+        'faltas':faltas,
+    }
+    return render(request, "profesores/listar_faltas.html",context)
+
+def detail_falta(request,pk):
+    falta=FaltaProfesor.objects.get(pk=pk)
+    context={
+        'falta':falta,
+    }
+    return render(request, "profesores/detalle_falta.html",context)
+
+def update_falta(request,pk):
+    print(f"Update falta {pk}")
+    falta=FaltaProfesor.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = FaltaProfesorForm(request.POST, instance=falta)
+        if form.is_valid():
+            form.save()
+            return redirect('list-missing-professor', slug=falta.profesor_titular.slug)
+    else:
+        print(f"Update falta {pk}")
+
+        form = FaltaProfesorForm(instance=falta)
+        print(f" update Form: {form}")
+    context = {
+        'form': form,
+        'falta': falta,
+        'professor':falta.profesor_titular,
+    }
+    return render(request, "profesores/falta_profesor_form.html", context)
+
+def delete_falta(request,pk):
+    falta=FaltaProfesor.objects.get(pk=pk)
+    falta.delete()
+    return redirect(request,'list-missing-professor', slug=falta.profesor_titular.slug)
+
+
+class DeleteFaltaProfesor(LoginRequiredMixin, DeleteView):
+    model = FaltaProfesor
+    template_name = 'profesores/profesor_falta_confirm_delete.html'
+    def get_success_url(self):
+        # Get the student associated with the Pago instance
+        profesor = self.kwargs['slug']
+        # Generate the success URL with the student slug
+        return reverse_lazy('list-missing-professor', kwargs={'pk': profesor})
+
+class DetailFaltaProfesor(LoginRequiredMixin, DetailView):
+    model = FaltaProfesor
+    template_name = 'profesores/detalle_falta.html'
