@@ -13,7 +13,7 @@ from django.views import View
 from django.shortcuts import redirect, render
 
 from .forms import FaltaProfesorForm
-from domain.models import Profesor,BloqueDeClase,Dia,FaltaProfesor
+from domain.models import Profesor,BloqueDeClase,Dia,FaltaProfesor,Grupo
 
 from core.domain.services import calculate_payment
 
@@ -166,6 +166,11 @@ class FaltaProfesorCreateView(LoginRequiredMixin, CreateView):
         "grupo",
         "descripcion",
     ]
+    def post(self, request: HttpRequest, *args: str, **kwargs: reverse_lazy) -> HttpResponse:
+        print("Post")
+        print(request.POST)
+
+        return super().post(request, *args, **kwargs)
     # def get(self, request, *args, **kwargs):
     #     professor = Profesor.objects.get(slug=kwargs["slug"])
     #     groups = professor.grupo_set.all()
@@ -184,9 +189,14 @@ def falta_profesor(request,slug):
 
     if request.method == 'POST':
         form = FaltaProfesorForm(request.POST)
+        print("Post")
+        print(request.POST)
         if form.is_valid():
+            print(f"Form is valid {form.cleaned_data}")
+            profesor_titular_value = form.cleaned_data['profesor_titular']
+            print(f"profesor_titular_value: {profesor_titular_value}")
             form.save()
-            return redirect('profesores:profesor-list')
+            return redirect('detail-professor', slug=slug)
         else:
             print(form.errors)
     else:
@@ -200,3 +210,13 @@ def falta_profesor(request,slug):
             "groups": groups,
         }
         return render(request, "profesores/falta_profesor_form.html", context)
+
+def load_professors(request,pk=None):
+
+    print("Loading professors")
+    grupo = request.GET.get("grupo")
+    print(f"REQYEST {request.GET}")
+    curso=Grupo.objects.get(pk=grupo).curso
+    profesor_titular_id=request.GET.get("profesor_titular")
+    profesores = Profesor.objects.filter(cursos__id=curso.id).exclude(id=profesor_titular_id)
+    return render(request, "profesores/profesores_options.html", {"profesores": profesores})

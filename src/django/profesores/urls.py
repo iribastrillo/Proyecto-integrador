@@ -17,4 +17,6 @@ urlpatterns = [
     path("<slug>/reporte_clases", views.reporte_clases, name="report-professor-class"),
     # path("<slug>/falta_profesor", views.FaltaProfesorCreateView.as_view(), name="missing-professor"),
     path("<slug>/falta_profesor", views.falta_profesor, name="missing-professor"),
+    path('<pk>/cargar-profesores/', views.load_professors, name='load-profesors'),
+
  ]
