@@ -7,7 +7,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.shortcuts import redirect, render
@@ -16,7 +16,7 @@ from .forms import FaltaProfesorForm
 from domain.models import Profesor,BloqueDeClase,Dia,FaltaProfesor,Grupo
 
 from core.domain.services import calculate_payment
-
+from django.contrib import messages
 
 class ProfesorCreateView(LoginRequiredMixin, CreateView):
     model = Profesor
@@ -187,6 +187,7 @@ class FaltaProfesorCreateView(LoginRequiredMixin, CreateView):
 
 def falta_profesor_create(request: HttpRequest, slug: str) -> HttpResponseRedirect:
     professor=Profesor.objects.get(slug=slug)
+    groups = professor.grupo_set.filter(activo=True)
     if request.method == 'POST':
         form = FaltaProfesorForm(request.POST)
         print("Post")
@@ -196,22 +197,24 @@ def falta_profesor_create(request: HttpRequest, slug: str) -> HttpResponseRedire
             profesor_titular_value = form.cleaned_data['profesor_titular']
             print(f"profesor_titular_value: {profesor_titular_value}")
             form.save()
-            return redirect('detail-professor', slug=slug)
+            # return redirect('detail-professor', slug=slug)
+            messages.add_message (request, messages.SUCCESS, f"Falta registrada con exito.")
+            return HttpResponse()
         else:
             print(f"form invalid {form.errors}")
-            response = render(request, 'profesores/falta_profesor_form.html', {'form': form, 'professor': professor})
+            response = render(request, 'profesores/falta_profesor_form.html', {'form': form, 'professor': professor,"groups":groups})
             response['HX-Retarget'] = '#abscence-modal'
 
             return response
     else:
-
         professor = Profesor.objects.get(slug=slug)
-        groups = professor.grupo_set.filter(activo=True)
-        form = FaltaProfesorForm(initial={"profesor_titular": professor, "grupo": groups})
+
+        form = FaltaProfesorForm(initial={  "profesor_titular": professor.pk, "grupo": groups})
         context = {
             "form": form,
             "professor": professor,
             "groups": groups,
+            "slug": slug,
         }
         return render(request, "profesores/falta_profesor_form.html", context)
 
@@ -259,6 +262,8 @@ def update_falta(request,pk):
         if form.is_valid():
             form.save()
             return redirect('list-missing-professor', slug=falta.profesor_titular.slug)
+
+
     else:
         print(f"Update falta {pk}")
 
@@ -280,11 +285,28 @@ def delete_falta(request,pk):
 class DeleteFaltaProfesor(LoginRequiredMixin, DeleteView):
     model = FaltaProfesor
     template_name = 'profesores/profesor_falta_confirm_delete.html'
+    # def get_success_url(self):
+    #     # Get the student associated with the Pago instance
+    #     profesor = self.kwargs['slug']
+    #     print(profesor)
+    #     # Generate the success URL with the student slug
+    #     return reverse_lazy('list-missing-professor', kwargs={'pk': profesor})
+
+
     def get_success_url(self):
-        # Get the student associated with the Pago instance
-        profesor = self.kwargs['slug']
-        # Generate the success URL with the student slug
-        return reverse_lazy('list-missing-professor', kwargs={'pk': profesor})
+        print("Success url")
+        return reverse("list-missing-professor", kwargs={"slug": self.get_object().profesor_titular.slug})
+
+    def get_context_data(self, **kwargs):
+        context = super(DeleteFaltaProfesor,self).get_context_data(**kwargs)
+        # Retrieve the BloqueDeClase instance being deleted
+        falta = self.get_object()
+        print(f"Context {falta}")
+        # Add the instance data to the context
+        context['professor'] = falta.profesor_titular
+        context['pk'] = falta.pk
+        # context['grupo_pk'] = bloque_de_clase.grupo.pk
+        return context
 
 class DetailFaltaProfesor(LoginRequiredMixin, DetailView):
     model = FaltaProfesor

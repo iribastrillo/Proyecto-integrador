@@ -14,26 +14,31 @@ class FaltaProfesorForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(FaltaProfesorForm, self).__init__(*args, **kwargs)
         print(f"FORMM {kwargs}")
+        print(f"FORMM {self.initial}")
         self.fields['profesor_suplente'].queryset = Profesor.objects.all()
         self.fields['fecha'].widget = forms.DateInput(attrs={'type': 'date'})
         self.fields["fecha"].widget.attrs.update(
         {"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"}
         )
-        self.fields['grupo'].queryset = Grupo.objects.all()
+        self.fields['profesor_titular'].widget = forms.HiddenInput()
+        self.fields['grupo'].queryset = Grupo.objects.filter(activo=True)
 
         if(initial:=kwargs.get('initial')):
             if 'profesor_titular' in initial:
                 print(f"Profe titular {initial['profesor_titular']}")
                 # profesor_titular = Profesor.objects.get(pk=initial['profesor_titular'])
-                self.fields['profesor_titular'].widget = forms.HiddenInput(attrs={'value': initial['profesor_titular'].pk})
+                self.fields['profesor_titular'].widget = forms.HiddenInput(attrs={'value': initial['profesor_titular']})
                 # self.fields['grupo'].queryset = Grupo.objects.filter(profesores__profesor_titular=True, profesores=self.initial['profesor_titular'])
         # self.fields['profesor_titular'].widget = forms.HiddenInput(attrs={'value': 123})
 
 
         self.fields['descripcion'].widget = forms.Textarea(attrs={'rows': 4, 'cols': 15})
         if 'grupo' in self.initial:
-                self.fields['grupo'].queryset = Grupo.objects.filter(profesores__pk=self.initial['profesor_titular'].pk, activo=True)
-                self.initial['grupo'] = self.initial['grupo']
+            ####### cuando creeo una nueva ausencia viene  el objeto profesor titular
+            ####### cuando modifico una nueva ausencia viene el pk del profesor
+            print(f"profesor titular {self.initial['profesor_titular']}")
+            self.fields['grupo'].queryset = Grupo.objects.filter(profesores__pk=self.initial['profesor_titular'], activo=True)
+            self.initial['grupo'] = self.initial['grupo']
 
             # markar como selected value pero listar todos los cursos que el profesor es teacher
             # if 'grupo' in self.initial:
@@ -60,10 +65,13 @@ class FaltaProfesorForm(forms.ModelForm):
         profesor_suplente = cleaned_data.get("profesor_suplente")
         if grupo.curso not in profesor_suplente.cursos.all():
             raise ValidationError('El profesor seleccionado no puede dar ese curso')
+        if grupo.curso not in cleaned_data.get("profesor_titular").cursos.all():
+            raise ValidationError('El profesor titular no pertenece al curso seleccionado')
         profesor_titutar = cleaned_data.get("profesor_titular")
-        faltas=FaltaProfesor.objects.filter(profesor_titular=profesor_titutar,fecha=cleaned_data.get("fecha"))
+        faltas = FaltaProfesor.objects.filter(profesor_titular=profesor_titutar, fecha=cleaned_data.get("fecha"), grupo=grupo)
         print(f"falts {faltas}")
         if faltas.exists():
-            raise ValidationError('Ya existe una falta para ese profesor en esa fecha')
+            raise ValidationError('Ya existe una falta para ese profesor en esa fecha y ese grupo')
         return cleaned_data
+
 
