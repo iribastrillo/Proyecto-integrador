@@ -2,6 +2,5 @@
     {% for profesor in profesores %}
         <option value="{{ profesor.id }}">{{ profesor.nombre }}</option>
     {% endfor %}
-{% else %}
-    <option value="-1" disabled selected>No se han encontrado profesores para ese curso</option>
+
 {% endif %}

@@ -67,6 +67,11 @@
  					location.reload();
 				}
 			});
+			document.addEventListener("htmx:beforeSwap", function (e) {
+				if(e.detail.target.classList.contains("crate-falta-form")&& !e.detail.xhr.response){
+ 					location.reload();
+				}
+			});
 		</script>
 
 

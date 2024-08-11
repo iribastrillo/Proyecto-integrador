@@ -3,17 +3,21 @@
       {% include 'base/components/avatars/placeholder_initials.html' with first_name=professor.nombre last_name=professor.apellido %}
 
         <div class="flex-1 min-w-0 ms-4">
-          <p class="text-sm font-medium truncate text-white">
-              {{falta.profesor_suplente.nombre}} {{falta.profesor_suplente.apellido}}
+            <p class="text-sm font-medium truncate text-white">
+            {% if falta.profesor_suplente %}
+              <strong>Profesor:</strong> <span class="text-sm truncate text-gray-400">{{falta.profesor_suplente.nombre}} {{falta.profesor_suplente.apellido}}</span>
+            {% else %}
+            <strong>Profesor Suplente No Asignado</strong>
+            {% endif %}
           </p>
           <p class="text-sm font-medium truncate text-white">
-            ${{falta.grupo.curso}}
+            <strong>Curso: </strong> <span class="text-sm truncate text-gray-400">{{falta.grupo.curso}}</span>
         </p>
-          <p class="text-sm truncate text-gray-400">
-              {{falta.fecha}}
+          <p class="text-sm font-medium truncate text-white">
+            <strong>Fecha: </strong> <span class="text-sm truncate text-gray-400"> {{falta.fecha}}</span>
           </p>
-          <p class="text-sm truncate text-gray-400">
-              {{falta.descripcion}}
+          <p class="text-sm font-medium truncate text-white">
+            <strong>Descripcion:  </strong><span class="text-sm truncate text-gray-400"> {{falta.descripcion}}</span>
           </p>
       </div>
         <div class="flex flex-row items-end text-base font-semibold text-white">

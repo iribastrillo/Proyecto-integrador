@@ -41,10 +41,12 @@ class FaltaProfesorForm(forms.ModelForm):
 
     def clean(self) -> Any:
         cleaned_data = super().clean()
+        print(f"cleaned_data {cleaned_data}")
         grupo = cleaned_data.get("grupo")
         profesor_suplente = cleaned_data.get("profesor_suplente")
-        if grupo.curso not in profesor_suplente.cursos.all():
-            raise ValidationError('El profesor seleccionado no puede dar ese curso')
+        if profesor_suplente:
+            if grupo.curso not in profesor_suplente.cursos.all():
+                raise ValidationError('El profesor seleccionado no puede dar ese curso')
         if grupo.curso not in cleaned_data.get("profesor_titular").cursos.all():
             raise ValidationError('El profesor titular no pertenece al curso seleccionado')
         profesor_titutar = cleaned_data.get("profesor_titular")

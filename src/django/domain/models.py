@@ -253,7 +253,7 @@ class Pago(models.Model):
 
 class FaltaProfesor(models.Model):
     profesor_titular=models.ForeignKey(Profesor, on_delete=models.CASCADE)
-    profesor_suplente=models.ForeignKey(Profesor, on_delete=models.CASCADE, related_name="substituto")
+    profesor_suplente=models.ForeignKey(Profesor, on_delete=models.CASCADE,blank=True, null=True, related_name="substituto")
     grupo=models.ForeignKey(Grupo, on_delete=models.CASCADE)
     fecha=models.DateTimeField()
     descripcion=models.TextField(max_length=250, blank=True, null=True)
