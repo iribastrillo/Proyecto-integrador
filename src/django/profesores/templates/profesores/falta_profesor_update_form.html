@@ -1,7 +1,6 @@
+<form hx-post="{% url 'update-falta' pk=falta.pk%}" enctype="multipart/form-data" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-full bg-gray-900 border border-gray-700 rounded p-8 update-falta-form">
 
-<form  hx-post="{% url 'missing-professor' slug=professor.slug%}" enctype="multipart/form-data"  class="col-span-3 md:col-span-2 lg:col-span-2 max-w-full bg-gray-900 border border-gray-700 rounded p-8">
-
-    <h5 class="text-xl font-bold leading-nonetext-white">Crear Ausencia</h5>
+    <h5 class="text-xl font-bold leading-nonetext-white">Modificar Ausencia</h5>
     <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
     {% csrf_token %}
     {% if form.errors %}
@@ -32,7 +31,7 @@
         {{ form.descripcion }}
     </div>
 
-    <button type="submit" class='main-action-button w-full'>Crear</button>
+    <button type="submit" class='main-action-button w-full'>Modificar</button>
 
 
 </form>

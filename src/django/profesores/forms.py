@@ -8,13 +8,11 @@ class FaltaProfesorForm(forms.ModelForm):
     class Meta:
         model = FaltaProfesor
         fields = ['profesor_titular','profesor_suplente','fecha','grupo','descripcion']
-        # exclude = ['profesor_titular']
+
     grupo = forms.ModelChoiceField(queryset=Profesor.objects.all(),
                                   widget=forms.Select(attrs={"hx-get":"cargar-profesores/","hx-include":"[name='profesor_titular']","hx-target":"#id_profesor_suplente"}) )
     def __init__(self, *args, **kwargs):
         super(FaltaProfesorForm, self).__init__(*args, **kwargs)
-        print(f"FORMM {kwargs}")
-        print(f"FORMM {self.initial}")
         self.fields['profesor_suplente'].queryset = Profesor.objects.all()
         self.fields['fecha'].widget = forms.DateInput(attrs={'type': 'date'})
         self.fields["fecha"].widget.attrs.update(
@@ -25,26 +23,11 @@ class FaltaProfesorForm(forms.ModelForm):
 
         if(initial:=kwargs.get('initial')):
             if 'profesor_titular' in initial:
-                print(f"Profe titular {initial['profesor_titular']}")
-                # profesor_titular = Profesor.objects.get(pk=initial['profesor_titular'])
                 self.fields['profesor_titular'].widget = forms.HiddenInput(attrs={'value': initial['profesor_titular']})
-                # self.fields['grupo'].queryset = Grupo.objects.filter(profesores__profesor_titular=True, profesores=self.initial['profesor_titular'])
-        # self.fields['profesor_titular'].widget = forms.HiddenInput(attrs={'value': 123})
-
-
         self.fields['descripcion'].widget = forms.Textarea(attrs={'rows': 4, 'cols': 15})
         if 'grupo' in self.initial:
-            ####### cuando creeo una nueva ausencia viene  el objeto profesor titular
-            ####### cuando modifico una nueva ausencia viene el pk del profesor
-            print(f"profesor titular {self.initial['profesor_titular']}")
             self.fields['grupo'].queryset = Grupo.objects.filter(profesores__pk=self.initial['profesor_titular'], activo=True)
             self.initial['grupo'] = self.initial['grupo']
-
-            # markar como selected value pero listar todos los cursos que el profesor es teacher
-            # if 'grupo' in self.initial:
-            #     self.initial['grupo'] = self.initial['grupo'].pk
-        # if 'profesor_titular' in self.initial:
-        #     self.fields['profesor_titular'].queryset = Profesor.objects.filter(pk=self.initial['profesor_titular'])
         if 'profesor_suplente' in self.initial:
             grupo=Grupo.objects.get(pk=self.initial['grupo'])
             self.fields['profesor_suplente'].queryset = Profesor.objects.filter(cursos__nombre=grupo.curso.nombre).exclude(pk=self.initial['profesor_titular'])
@@ -57,10 +40,7 @@ class FaltaProfesorForm(forms.ModelForm):
 
 
     def clean(self) -> Any:
-        print("Cleaning fooooorm")
         cleaned_data = super().clean()
-        print(cleaned_data)
-        print("Getting grupo")
         grupo = cleaned_data.get("grupo")
         profesor_suplente = cleaned_data.get("profesor_suplente")
         if grupo.curso not in profesor_suplente.cursos.all():
@@ -68,8 +48,7 @@ class FaltaProfesorForm(forms.ModelForm):
         if grupo.curso not in cleaned_data.get("profesor_titular").cursos.all():
             raise ValidationError('El profesor titular no pertenece al curso seleccionado')
         profesor_titutar = cleaned_data.get("profesor_titular")
-        faltas = FaltaProfesor.objects.filter(profesor_titular=profesor_titutar, fecha=cleaned_data.get("fecha"), grupo=grupo)
-        print(f"falts {faltas}")
+        faltas = FaltaProfesor.objects.filter(profesor_titular=profesor_titutar, fecha=cleaned_data.get("fecha"), grupo=grupo).exclude(pk=self.instance.pk)
         if faltas.exists():
             raise ValidationError('Ya existe una falta para ese profesor en esa fecha y ese grupo')
         return cleaned_data

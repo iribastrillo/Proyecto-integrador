@@ -94,7 +94,6 @@ class Pagos(View):
 def reporte_clases(request,slug):
     profesor=Profesor.objects.get(slug=slug)
     bloques_profesor= BloqueDeClase.objects.filter(grupo__profesores__slug=slug)
-    print(f"bloques_profesor: {bloques_profesor}")
     request_salon=request.GET.get("salon")
     request_dias=request.GET.get("dias")
     bloques_por_dia=[]
@@ -116,15 +115,9 @@ def reporte_clases(request,slug):
     for dia_info in bloques_por_dia:
         for bloque in dia_info["bloques"]:
             if bloque.hora_inicio and bloque.hora_fin:
-                print(f"bloque.hora_inicio: {bloque.hora_inicio}")
-                print(f"bloque.hora_fin: {bloque.hora_fin}")
                 start_row, end_row = calculate_row_indices(bloque.hora_inicio), calculate_row_indices(bloque.hora_fin)
                 bloque.start_row = start_row
                 bloque.end_row = end_row
-                print(f"bloque.start_row: {bloque.start_row}")
-
-    print(f"bloques_por_dia: {bloques_por_dia.__str__()}")
-
 
     context={
         'professor':profesor,
@@ -141,8 +134,6 @@ def reporte_clases(request,slug):
 
 
 def calculate_row_indices(hora_inicio):
-    print(f" calculate row indices hora_inicio: {hora_inicio}")
-    # Assuming reference time is 8:00 AM
     reference_time = datetime.datetime.combine(datetime.date.today(), datetime.time(7, 0))
     hora_inicio_datetime = datetime.datetime.combine(datetime.date.today(), hora_inicio)
     time_difference = (hora_inicio_datetime - reference_time).seconds // 60
@@ -167,44 +158,23 @@ class FaltaProfesorCreateView(LoginRequiredMixin, CreateView):
         "descripcion",
     ]
     def post(self, request: HttpRequest, *args: str, **kwargs: reverse_lazy) -> HttpResponse:
-        print("Post")
-        print(request.POST)
-
         return super().post(request, *args, **kwargs)
-    # def get(self, request, *args, **kwargs):
-    #     professor = Profesor.objects.get(slug=kwargs["slug"])
-    #     groups = professor.grupo_set.all()
-    #     context = {
-    #         "professor": professor,
-    #         "groups": groups,
-    #         "form": self.form_class,
-    #     }
-    #     return render(request, self.template_name, context)
-    success_url = reverse_lazy( "detail-professor", kwargs={"slug": "2445645"})
-    #  return reverse_lazy(
-    #         "detail-professor", kwargs={"slug": self.object.user.username}
-    #     )
+
+    # success_url = reverse_lazy( "detail-professor", kwargs={"slug": "2445645"})
 
 def falta_profesor_create(request: HttpRequest, slug: str) -> HttpResponseRedirect:
     professor=Profesor.objects.get(slug=slug)
     groups = professor.grupo_set.filter(activo=True)
     if request.method == 'POST':
         form = FaltaProfesorForm(request.POST)
-        print("Post")
-        print(request.POST)
         if form.is_valid():
-            print(f"Form is valid {form.cleaned_data}")
             profesor_titular_value = form.cleaned_data['profesor_titular']
-            print(f"profesor_titular_value: {profesor_titular_value}")
             form.save()
-            # return redirect('detail-professor', slug=slug)
             messages.add_message (request, messages.SUCCESS, f"Falta registrada con exito.")
             return HttpResponse()
         else:
-            print(f"form invalid {form.errors}")
             response = render(request, 'profesores/falta_profesor_form.html', {'form': form, 'professor': professor,"groups":groups})
             response['HX-Retarget'] = '#abscence-modal'
-
             return response
     else:
         professor = Profesor.objects.get(slug=slug)
@@ -219,17 +189,16 @@ def falta_profesor_create(request: HttpRequest, slug: str) -> HttpResponseRedire
         return render(request, "profesores/falta_profesor_form.html", context)
 
 def load_professors(request,pk=None):
-    print("Loading professors")
     grupo = request.GET.get("grupo")
-    print(f"REQYEST {request.GET}")
     curso=Grupo.objects.get(pk=grupo).curso
     profesor_titular_id=request.GET.get("profesor_titular")
     profesores = Profesor.objects.filter(cursos__id=curso.id).exclude(id=profesor_titular_id)
-    print(profesores)
 
     ### ver que se hace en caso de que no haya profesores que den el mismo
     ### curso que el porofesor titular, se podria mostrar un mensaje de error
     ### o simplemente mostrar todos los profesores
+    ### o crear un profesor dummy para llenar la ausencia
+    ### o hacer el campo nullable
 
     # if profesores is None or profesores.count()==0:
     #     profesores = Profesor.objects.all()
@@ -237,12 +206,10 @@ def load_professors(request,pk=None):
 
 
 def list_faltas_profesor(request,slug):
-    print(f"Listando faltas de {slug}")
     profesor=Profesor.objects.get(slug=slug)
     faltas=FaltaProfesor.objects.filter(profesor_titular=profesor)
-    print(f"faltas: {faltas}")
     context={
-        'profesor':profesor,
+        'professor':profesor,
         'faltas':faltas,
     }
     return render(request, "profesores/listar_faltas.html",context)
@@ -255,59 +222,37 @@ def detail_falta(request,pk):
     return render(request, "profesores/detalle_falta.html",context)
 
 def update_falta(request,pk):
-    print(f"Update falta {pk}")
     falta=FaltaProfesor.objects.get(pk=pk)
     if request.method == 'POST':
         form = FaltaProfesorForm(request.POST, instance=falta)
         if form.is_valid():
             form.save()
-            return redirect('list-missing-professor', slug=falta.profesor_titular.slug)
-
-
+            messages.add_message (request, messages.SUCCESS, f"Falta modificada con exito.")
+            return HttpResponse()
     else:
-        print(f"Update falta {pk}")
-
         form = FaltaProfesorForm(instance=falta)
-        print(f" update Form: {form}")
-    context = {
-        'form': form,
-        'falta': falta,
-        'professor':falta.profesor_titular,
-    }
-    return render(request, "profesores/falta_profesor_form.html", context)
-
-def delete_falta(request,pk):
-    falta=FaltaProfesor.objects.get(pk=pk)
-    falta.delete()
-    return redirect(request,'list-missing-professor', slug=falta.profesor_titular.slug)
-
+        context = {
+            'form': form,
+            'falta': falta,
+            'professor':falta.profesor_titular,
+        }
+        return render(request, "profesores/falta_profesor_update_form.html", context)
 
 class DeleteFaltaProfesor(LoginRequiredMixin, DeleteView):
     model = FaltaProfesor
     template_name = 'profesores/profesor_falta_confirm_delete.html'
-    # def get_success_url(self):
-    #     # Get the student associated with the Pago instance
-    #     profesor = self.kwargs['slug']
-    #     print(profesor)
-    #     # Generate the success URL with the student slug
-    #     return reverse_lazy('list-missing-professor', kwargs={'pk': profesor})
-
 
     def get_success_url(self):
-        print("Success url")
         return reverse("list-missing-professor", kwargs={"slug": self.get_object().profesor_titular.slug})
 
     def get_context_data(self, **kwargs):
         context = super(DeleteFaltaProfesor,self).get_context_data(**kwargs)
-        # Retrieve the BloqueDeClase instance being deleted
         falta = self.get_object()
-        print(f"Context {falta}")
-        # Add the instance data to the context
         context['professor'] = falta.profesor_titular
-        context['pk'] = falta.pk
-        # context['grupo_pk'] = bloque_de_clase.grupo.pk
+        context['falta'] = falta
         return context
 
-class DetailFaltaProfesor(LoginRequiredMixin, DetailView):
+class FaltaProfesorDetailView(LoginRequiredMixin, DetailView):
     model = FaltaProfesor
-    template_name = 'profesores/detalle_falta.html'
+    template_name = 'profesores/falta_profesor_detail.html'
+    context_object_name = 'falta'
