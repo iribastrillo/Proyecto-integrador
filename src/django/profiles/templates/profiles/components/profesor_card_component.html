@@ -16,7 +16,11 @@
                 Fecha de nacimiento
               </p>
               <p class="mr-8 mb-4 text-white">
-                {{profesor.fecha_nacimiento}}
+                {% if profesor.fecha_nacimiento %}
+                  {{profesor.fecha_nacimiento}}
+                {% else %}
+                  N/A
+                {% endif %}
               </p>
             </div>
             <div>
@@ -32,7 +36,11 @@
                 Dirección
               </p>
               <p class="mr-8 mb-4 text-white">
-                {{profesor.direccion}}
+                {% if profesor.direccion %}
+                  {{profesor.direccion}}
+                {% else %}
+                  N/A
+                {% endif %}
               </p>
             </div>
             <div>

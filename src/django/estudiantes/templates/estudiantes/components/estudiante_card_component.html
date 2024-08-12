@@ -16,7 +16,11 @@
               Fecha de nacimiento
             </p>
             <p class="mr-8 mb-4 text-white">
-              {{estudiante.fecha_nacimiento}}
+              {% if estudiante.fecha_nacimiento %}
+                {{estudiante.fecha_nacimiento}}
+              {% else %}
+                N/A
+              {% endif %}
             </p>
           </div>
           <div>
@@ -32,7 +36,11 @@
               Dirección
             </p>
             <p class="mr-8 mb-4 text-white">
-              {{estudiante.direccion}}
+              {% if estudiante.direccion %}
+                {{estudiante.direccion}}
+              {% else %}
+                N/A
+              {% endif %}
             </p>
           </div>
           <div>
@@ -48,7 +56,11 @@
               Contacto de emergencia
             </p>
             <p class="mr-8 mb-4 text-white">
-              {{estudiante.emergency_contact}}
+              {% if estudiante.emergency_contact %}
+                {{estudiante.emergency_contact}}
+              {% else %}
+                N/A
+              {% endif %}
             </p>
           </div>
           <div>

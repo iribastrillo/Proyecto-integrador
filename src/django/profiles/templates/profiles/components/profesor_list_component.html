@@ -3,7 +3,7 @@
         {% include 'base/components/avatars/placeholder_initials.html' with first_name=profesor.nombre last_name=profesor.apellido %}
         <div class="flex-1 min-w-0 ms-4">
             <p class="text-sm font-medium truncate text-white">
-                {{profesor.nombre}}
+              {{profesor.apellido}}, {{profesor.nombre}}
             </p>
             <p class="text-sm truncate text-gray-400">
                 {{profesor.email}}

@@ -31,6 +31,7 @@ class AlumnoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         "telefono",
         "email",
         "sexo",
+        "emergency_contact",
     ]
     template_name = "estudiantes/estudiante_form.html"
     success_message = "Se agregó al estudiante con éxito"

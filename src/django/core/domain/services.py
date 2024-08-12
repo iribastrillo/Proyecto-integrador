@@ -37,7 +37,7 @@ def calculate_payment(groups):
     for group in groups:
         if group.alumnos.count() > 0:
             course = group.curso
-            total += Decimal(course.payout_ratio) * Decimal(course.costo) * Decimal(get_class_to_salary_ratio(group))
+            total += Decimal(course.payout_ratio) * Decimal(course.costo) * group.alumnos.count()
     return total / IVA, total
 
 
