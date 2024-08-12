@@ -167,7 +167,7 @@ class Grupo(models.Model):
     @property
     def amount_payable(self):
         if self.alumnos.count() > 0:
-            return self.curso.costo * self.curso.payout_ratio
+            return self.curso.costo * self.curso.payout_ratio * self.alumnos.count()
         else:
             return 0
 
