@@ -135,6 +135,7 @@ class Salon(models.Model):
 
 class Grupo(models.Model):
     id=models.AutoField(primary_key=True)
+    identificador=models.CharField(max_length=30, blank=True, null=True)
     curso=models.ForeignKey(Curso, on_delete=models.CASCADE)
     alumnos=models.ManyToManyField(Alumno, blank=True) #validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
     cupo=models.IntegerField(null=False,default=1,validators=[MinValueValidator(1, "La cantidad de alumnos debe estar entre 1 y 50"),MaxValueValidator(50,"La cantidad de alumnos debe estar entre 1 y 50")])
@@ -166,7 +167,7 @@ class Grupo(models.Model):
     @property
     def amount_payable(self):
         if self.alumnos.count() > 0:
-            return self.curso.costo * self.curso.payout_ratio
+            return self.curso.costo * self.curso.payout_ratio * self.alumnos.count()
         else:
             return 0
 

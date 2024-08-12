@@ -17,9 +17,9 @@ class Persona(models.Model):
     apellido = models.CharField(max_length=50)
     dni = models.CharField(max_length=8)
     fecha_nacimiento = models.DateField(null=True, blank=True)
-    direccion = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=100, null=True, blank=True)
     telefono = models.CharField(max_length=20)
-    email = models.EmailField(validators=[EmailValidator()])
+    email = models.EmailField(validators=[EmailValidator()], null=True, blank=True)
     fecha_baja = models.DateField(null=True, blank=True)
     sexo = models.CharField(
         max_length=1, choices=[("M", "Masculino"), ("F", "Femenino")]
@@ -72,6 +72,9 @@ class Alumno(Persona):
             except AttributeError as e:
                 pass
         return up_to_date
+    
+    def get_absolute_url(self):
+        return reverse("estudiantes:detail-student", kwargs={"slug": self.slug})
 
 
 class Profesor(Persona):

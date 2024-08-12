@@ -8,7 +8,7 @@ from django.db.models.functions import ExtractMonth
 from django.db.models import Count
 
 from profiles.models import Profesor
-from domain.models import AlumnoCurso, Curso, Carrera, Pago
+from domain.models import AlumnoCurso, Curso, Carrera, Pago, Grupo
 from core.domain.services import (
     calculate_total_teacher_spending,
     calculate_total_product_earnings,
@@ -34,6 +34,7 @@ def dashboard(request):
     template = "base/home.html"
     enrolments = AlumnoCurso.objects.all()
     payments = Pago.objects.all()
+    n_groups = Grupo.objects.annotate (n_alumnos=Count("alumnos")).filter(n_alumnos__gt=0).count()
     total_spending = calculate_total_teacher_spending(Profesor.objects.all())
     total_earnings = calculate_total_product_earnings(payments)
     total_gains = calculate_gains(total_earnings, total_spending)
@@ -54,7 +55,8 @@ def dashboard(request):
         "careers": Carrera.objects.all(),
         "data": data,
         "monthly_additions": monthly_additions,
-        "total_additions": total_additions
+        "total_additions": total_additions,
+        "n_groups": n_groups
     }
     return render(request, template_name=template, context=context)
 

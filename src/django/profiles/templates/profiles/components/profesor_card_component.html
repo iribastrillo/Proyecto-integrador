@@ -16,7 +16,11 @@
                 Fecha de nacimiento
               </p>
               <p class="mr-8 mb-4 text-white">
-                {{profesor.fecha_nacimiento}}
+                {% if profesor.fecha_nacimiento %}
+                  {{profesor.fecha_nacimiento}}
+                {% else %}
+                  N/A
+                {% endif %}
               </p>
             </div>
             <div>
@@ -32,7 +36,11 @@
                 Dirección
               </p>
               <p class="mr-8 mb-4 text-white">
-                {{profesor.direccion}}
+                {% if profesor.direccion %}
+                  {{profesor.direccion}}
+                {% else %}
+                  N/A
+                {% endif %}
               </p>
             </div>
             <div>
@@ -70,10 +78,10 @@
                 {% for student in group.alumnos.all %}
                   <tr class="border-b bg-gray-900 border-gray-700">
                       <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                          {{student.apellido}}, {{student.nombre}}
+                          <a class="hover:text-accent-500 dark:hover:text-white" href="{{student.get_absolute_url}}">{{student.apellido}}, {{student.nombre}}</a>
                       </th>
                       <td class="px-6 py-4">
-                          {{group.identificador}} {{group.curso}}
+                          <a class="hover:text-accent-500 dark:hover:text-white" href="{{group.get_absolute_url}}">{{group.identificador}}</a>
                       </td>
                   </tr>
                 {% endfor %}
