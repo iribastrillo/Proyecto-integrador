@@ -140,7 +140,7 @@ class Grupo(models.Model):
     alumnos=models.ManyToManyField(Alumno, blank=True) #validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
     cupo=models.IntegerField(null=False,default=1,validators=[MinValueValidator(1, "La cantidad de alumnos debe estar entre 1 y 50"),MaxValueValidator(50,"La cantidad de alumnos debe estar entre 1 y 50")])
     profesores=models.ManyToManyField(Profesor) #validar que el profesor este asignado al curso
-    fecha_inicio = models.DateTimeField(null=False, blank=False, default=now().date())
+    fecha_inicio = models.DateTimeField(null=False, blank=False, default=now)
     fecha_baja=models.DateTimeField(null=True, blank=True)
     activo=models.BooleanField(default=True)
 
@@ -247,6 +247,20 @@ class Pago(models.Model):
 
     def __str__(self):
         return f"Pago:{self.id} {self.alumno} {self.monto} {self.fecha}"
+
+    class Meta:
+        ordering = ["-fecha"]
+
+
+class FaltaProfesor(models.Model):
+    profesor_titular=models.ForeignKey(Profesor, on_delete=models.CASCADE)
+    profesor_suplente=models.ForeignKey(Profesor, on_delete=models.CASCADE,blank=True, null=True, related_name="substituto")
+    grupo=models.ForeignKey(Grupo, on_delete=models.CASCADE)
+    fecha=models.DateTimeField()
+    descripcion=models.TextField(max_length=250, blank=True, null=True)
+
+    def __str__(self):
+        return f"Falta: {self.profesor_titular} {self.fecha}"
 
     class Meta:
         ordering = ["-fecha"]

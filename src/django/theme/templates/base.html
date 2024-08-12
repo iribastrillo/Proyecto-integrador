@@ -49,23 +49,27 @@
 			})
 			document.addEventListener("htmx:beforeSwap", function (e) {
 				if(e.detail.target.classList.contains("payment-form")&& !e.detail.xhr.response){
-					console.log("payment-form")
 					location.reload();
-
 				}
 			});
 			document.addEventListener("htmx:beforeSwap", function (e) {
 				if(e.detail.target.classList.contains("update-class-block-form")&& !e.detail.xhr.response){
-					console.log("update-class-block-form")
  					location.reload();
-
 				}
 			});
 			document.addEventListener("htmx:beforeSwap", function (e) {
 				if(e.detail.target.classList.contains("create-class-block")&& !e.detail.xhr.response){
-					console.log("create-class-block")
 					location.reload();
-
+				}
+			});
+			document.addEventListener("htmx:beforeSwap", function (e) {
+				if(e.detail.target.classList.contains("update-falta-form")&& !e.detail.xhr.response){
+ 					location.reload();
+				}
+			});
+			document.addEventListener("htmx:beforeSwap", function (e) {
+				if(e.detail.target.classList.contains("crate-falta-form")&& !e.detail.xhr.response){
+ 					location.reload();
 				}
 			});
 		</script>
