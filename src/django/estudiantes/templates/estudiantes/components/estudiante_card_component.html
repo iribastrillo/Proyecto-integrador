@@ -106,10 +106,10 @@
               {% for teacher in group.profesores.all %}
                 <tr class="border-b bg-gray-900 border-gray-700">
                     <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                        {{teacher.apellido}}, {{teacher.nombre}}
+                        <a class="hover:text-accent-500 dark:hover:text-white" href="{{teacher.get_absolute_url}}">{{teacher.apellido}}, {{teacher.nombre}}</a>
                     </th>
                     <td class="px-6 py-4">
-                        {{group.identificador}} {{group.curso}}
+                      <a class="hover:text-accent-500 dark:hover:text-white" href="{{group.get_absolute_url}}">{{group.identificador}}</a>
                     </td>
                 </tr>
               {% endfor %}

@@ -72,6 +72,9 @@ class Alumno(Persona):
             except AttributeError as e:
                 pass
         return up_to_date
+    
+    def get_absolute_url(self):
+        return reverse("estudiantes:detail-student", kwargs={"slug": self.slug})
 
 
 class Profesor(Persona):
