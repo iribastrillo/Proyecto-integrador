@@ -34,6 +34,11 @@ class ListCourses(LoginRequiredMixin, ListView):
 
 class DetailCourse(LoginRequiredMixin, DetailView):
     model = Curso
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["groups"] = context["object"].grupo_set.all()
+        return context
 
 
 class DeleteCourse(LoginRequiredMixin, SuccessMessageMixin, DeleteView):

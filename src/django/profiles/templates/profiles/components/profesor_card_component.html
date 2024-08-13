@@ -56,7 +56,7 @@
       </div>
       <div class="m-4">
         {% for course in profesor.cursos.all %}
-          <span class="text-xs font-medium me-2 p-2 rounded bg-green-900 text-green-300">{{course.nombre}}</span>
+          <a href="{{course.get_absolute_url}}"><span class="text-xs font-medium me-2 p-2 rounded bg-green-900 text-green-300">{{course.nombre}}</span></a>
         {% endfor %}
       </div>
     </div>

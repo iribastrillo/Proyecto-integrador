@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load random %}
 
 {% block navbar %}
 
@@ -52,7 +53,7 @@
   </div>
   <div class="flex flex-wrap gap-4">
     {% for profesor in professors %}
-      {% include 'profiles/components/profesor_list_component.html' %}
+      {% include 'profiles/components/profesor_list_component.html' with r=random%}
     {% endfor %}
   </div>
 </section>
