@@ -30,7 +30,6 @@ def home (request):
         return HttpResponse ("<h1>Entraste como profesor</h1>")
     
 
-
 @user_passes_test(is_staff)
 def dashboard(request):
     template = "base/home.html"
