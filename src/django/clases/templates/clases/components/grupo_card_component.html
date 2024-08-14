@@ -13,18 +13,10 @@
           <div class="py-2 text-sm w-full p-2">
             <div>
               <p class="mr-8 mb-2 text-gray-700">
-                Nombre
+                Identificador
               </p>
               <p class="mr-8 mb-4 text-white">
-                  {{grupo.curso.nombre}}
-              </p>
-            </div>
-            <div>
-              <p class="mr-8 mb-2 text-gray-700">
-                Curso
-              </p>
-              <p class="mr-8 mb-4 text-white">
-                {{grupo.curso.nombre}}
+                  {{grupo.identificador}}
               </p>
             </div>
             <div>
@@ -34,6 +26,14 @@
               <p class="mr-8 mb-4 text-white">
                 {{ grupo.profesores.all|join:"; " }}
               </p>
+            </div>
+            <div>
+              <p class="mr-8 mb-2 text-gray-700">
+                Curso
+              </p>
+              <a class="mr-8 mb-6 text-white hover:text-accent-500 dark:hover:text-white" href="{{grupo.curso.get_absolute_url}}">
+                {{grupo.curso.nombre}}
+              </a>
             </div>
           </div>
         </div>
@@ -50,17 +50,27 @@
                   <th scope="col" class="px-6 py-3">
                       Fecha de nacimiento
                   </th>
+                  <th scope="col" class="px-6 py-3">
+                    Edad
+                </th>
               </tr>
           </thead>
           <tbody>
               {% for student in grupo.alumnos.all %}
                   <tr class="border-b bg-gray-900 border-gray-700">
-                      <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                      <td scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
                           <a class="hover:text-accent-500 dark:hover:text-white" href="{{student.get_absolute_url}}">{{student.apellido}}, {{student.nombre}}</a>
-                      </th>
+                      </td>
                       <td class="px-6 py-4">
                         {% if student.fecha_nacimiento != None %}
                           <p>{{student.fecha_nacimiento}}</p>
+                        {% else %}
+                          <p>N/A</p>
+                        {% endif %}
+                      </td>
+                      <td class="px-6 py-4">
+                        {% if student.age != None %}
+                          <p>{{student.age}}</p>
                         {% else %}
                           <p>N/A</p>
                         {% endif %}
