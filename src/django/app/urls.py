@@ -69,6 +69,7 @@ urlpatterns = (
             include(
                 [
                     path("", views.home, name="home"),
+                    path("busqueda/", views.Search.as_view(), name="search"),
                     path("administracion/", views.dashboard, name="dashboard"),
                     path("carreras/", include("carreras.urls")),
                     path("profesores/", include("profesores.urls")),

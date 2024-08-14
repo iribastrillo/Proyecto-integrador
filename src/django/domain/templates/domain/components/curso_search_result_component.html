@@ -1,0 +1,7 @@
+<div>
+    <a href="{{course.get_absolute_url}}">
+      {% include 'base/components/avatars/placeholder_initials_squared.html' with first_name=course.nombre %}
+      <h5>{{course.nombre}}</h5>
+      <span class="text-sm text-gray-400 mb-2">{{course.descripcion}}</span>
+    </a>
+  </div>
