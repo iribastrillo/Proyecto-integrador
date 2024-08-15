@@ -1,7 +1,10 @@
+from typing import Any
 from django.utils.timezone import now
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+from utils.utils import generate_course_identifier_name
+
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 from functools import reduce
@@ -55,15 +58,15 @@ class Curso(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.nombre)
         super().save(*args, **kwargs)
-       
-    @property    
+
+    @property
     def amount_receivable(self):
         groups = self.grupo_set.all()
         receivable = 0
         for group in groups:
             receivable += group.amount_receivable
         return receivable
-        
+
 
 
 class Previa(models.Model):
@@ -167,13 +170,40 @@ class Grupo(models.Model):
             self.activo = False
         super().save(*args, **kwargs)
 
+
     def __str__(self) -> str:
 
-            return f"Grupo: {self.id} - Curso: {self.curso.nombre} - Activo: {self.activo}"
+            return f"Identificador: {self.identificador} - Curso: {self.curso.nombre} - Activo: {self.activo}"
 
 
     def get_absolute_url(self):
         return reverse("clases:detail-group", kwargs={"pk": self.pk})
+
+    @property
+    def generate_identificador(self):
+        print(f"Generando identificador para GRUPO {self.id}")
+        group_identifier=generate_course_identifier_name(self.curso.nombre)
+        print(f"Identificador generado {group_identifier}")
+        bloques_de_clase = BloqueDeClase.objects.filter(grupo=self)
+        print(f"bloques_de_clase {bloques_de_clase}")
+        if bloques_de_clase:
+            for bloque in bloques_de_clase:
+                day_names = [dia.name.lower() for dia in bloque.dia.all()]
+                if len(day_names) >=1:
+                    days_initials=[]
+                    for day_name in day_names:
+                        if "mie" in day_name:
+                            day_initial = "X"
+                        else:
+                            # Use the first letter of the other day names
+                            day_initial = day_name[0][0].upper()
+                        days_initials.append(day_initial)
+                    group_identifier += "-".join(days_initials)
+                    group_identifier += f"-{bloque.hora_inicio.strftime('%H:%M')}-{bloque.salon.nombre}"
+        print(f"Identificador final {group_identifier}")
+        self.identificador=group_identifier
+        print(f"Identificador actualizado {self.identificador}")
+        self.save()
 
     @property
     def amount_payable(self):
@@ -181,7 +211,7 @@ class Grupo(models.Model):
             return self.curso.costo * self.curso.payout_ratio * self.alumnos.count()
         else:
             return 0
-    @property    
+    @property
     def amount_receivable(self):
         receivable = 0
         for student in self.alumnos.all():
@@ -199,9 +229,19 @@ class BloqueDeClase(models.Model):
     salon = models.ForeignKey(Salon, on_delete=models.CASCADE)
     grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f"Bloque id: {self.id} :Dias: {', '.join([dia.name for dia in self.dia.all()])} - Hora inicio: {self.hora_inicio} - Hora fin: {self.hora_fin} - Grupo: {self.grupo} - Salon: {self.salon}"
 
+    def save(self, *args, **kwargs):
+        # Set or update the group identifier
+        super().save(*args, **kwargs)
+        # self.grupo.generate_identificador()
+
+    def delete(self, using=None, keep_parents=False):
+
+
+        return super().delete(using=using, keep_parents=keep_parents)
+
+    def __str__(self):
+        return f"Bloque id: {self.id} - Dias: {', '.join([dia.name for dia in self.dia.all()])} - Hora inicio: {self.hora_inicio} - Hora fin: {self.hora_fin} - Grupo: {self.grupo} - Salon: {self.salon}"
 
 class Leccion(models.Model):
     grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
