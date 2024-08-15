@@ -14,6 +14,7 @@ import os
 from os import getenv
 from pathlib import Path
 from shutil import which
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -92,6 +93,7 @@ TAILWIND_APP_NAME = "theme"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -102,6 +104,10 @@ DATABASES = {
         "NAME": BASE_DIR / "dbtesting.sqlite3",
     },
 }
+
+if not DEBUG:
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=False)
+
 
 INTERNAL_IPS = [
     "127.0.0.1",
