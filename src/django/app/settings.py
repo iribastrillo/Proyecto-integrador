@@ -32,7 +32,7 @@ ALLOWED_HOSTS = [
     getenv("APP_HOST"),
     "localhost",
     "127.0.0.1",
-    "hidden-fortress-37452-206e312e47f7.herokuapp.com",
+    "testing-env-portal-0334196a1e7e.herokuapp.com",
 ]
 
 INSTALLED_APPS = [
