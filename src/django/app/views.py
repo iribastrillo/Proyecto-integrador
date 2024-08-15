@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.contrib import messages
 from django.db.models.functions import ExtractMonth
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.views import View
 
 from profiles.models import Profesor, Alumno
@@ -76,8 +76,8 @@ class Search (View):
     def post (self, request, *args, **kwargs):
         q = request.POST["query"]
         context = {
-            "students" : Alumno.objects.filter (nombre__contains=q),
-            "teachers" : Profesor.objects.filter (nombre__contains=q),
+            "students" : Alumno.objects.filter (Q(nombre__contains=q) | Q(apellido__contains=q)),
+            "teachers" : Profesor.objects.filter (Q(nombre__contains=q) | Q(apellido__contains=q)),
             "courses" : Curso.objects.filter (nombre__contains=q),
             "careers" : Carrera.objects.filter (nombre__contains=q),
             "groups" : Grupo.objects.filter (curso__nombre__contains=q)
