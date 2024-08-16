@@ -150,15 +150,17 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",  # Cambiado para usar WhiteNoise
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+STATICFILES_DIRS = (
+  os.path.join(BASE_DIR, 'static'),
+)
 
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 MEDIA_URL = "/media/"
 
