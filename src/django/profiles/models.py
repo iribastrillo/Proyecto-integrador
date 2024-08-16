@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.db import IntegrityError
 from utils.validators import EmailValidator
 from django.urls import reverse
+from django.utils import timezone
 
 from datetime import date
 
@@ -73,6 +74,17 @@ class Alumno(Persona):
                 pass
         return up_to_date
     
+    @property
+    def age(self):
+        if self.fecha_nacimiento:
+            today = timezone.now().date()
+            age = int(
+                today.year
+                - (self.fecha_nacimiento.year)
+                - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
+            )
+            return age
+    
     def get_absolute_url(self):
         return reverse("estudiantes:detail-student", kwargs={"slug": self.slug})
 
@@ -81,7 +93,7 @@ class Profesor(Persona):
     cursos = models.ManyToManyField("domain.Curso")
 
     def __str__(self):
-        return f"Profesor: {self.apellido}, {self.nombre}"
+        return f"{self.apellido}, {self.nombre}"
 
     def get_absolute_url(self):
         return reverse("detail-professor", kwargs={"slug": self.slug})

@@ -1,0 +1,7 @@
+<div>
+    <a href="{{group.get_absolute_url}}">
+      {% include 'base/components/avatars/placeholder_initials_squared.html' with first_name=group.curso.nombre %}
+      <h5>{{group.curso.nombre}}</h5>
+      <span class="text-sm text-gray-400 mb-2">{{group.identificador}}</span>
+    </a>
+  </div>

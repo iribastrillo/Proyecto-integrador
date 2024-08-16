@@ -1,0 +1,7 @@
+<div>
+    <a href="{{career.get_absolute_url}}">
+      {% include 'base/components/avatars/placeholder_initials_squared.html' with first_name=career.nombre %}
+      <h5>{{career.nombre}}</h5>
+      <span class="text-sm text-gray-400 mb-2">{{career.descripcion}}</span>
+    </a>
+  </div>

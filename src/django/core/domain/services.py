@@ -19,6 +19,14 @@ def generate_group_label(course_group_count):
     return ascii_uppercase[course_group_count]
 
 
+def  get_current_month_amount_receivable (enrolments):
+    receivable = 0
+    for enrolment in enrolments:
+        if (enrolment.fecha_finalizado == None):
+            receivable += enrolment.fee
+    return receivable
+    
+
 def get_class_to_salary_ratio(group):
     csr = 1
     today = date.today()

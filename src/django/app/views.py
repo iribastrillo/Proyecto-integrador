@@ -5,16 +5,18 @@ from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.contrib import messages
 from django.db.models.functions import ExtractMonth
-from django.db.models import Count
+from django.db.models import Count, Q
+from django.views import View
 
-from profiles.models import Profesor
+from profiles.models import Profesor, Alumno
 from domain.models import AlumnoCurso, Curso, Carrera, Pago, Grupo
 from core.domain.services import (
     calculate_total_teacher_spending,
     calculate_total_product_earnings,
     calculate_gains,
     generate_data_enrolments,
-    prepare_monthly_addtions_data
+    prepare_monthly_addtions_data,
+    get_current_month_amount_receivable
 )
 from app.authorization import is_student, is_teacher, is_staff
 
@@ -28,7 +30,6 @@ def home (request):
         return HttpResponse ("<h1>Entraste como profesor</h1>")
     
 
-
 @user_passes_test(is_staff)
 def dashboard(request):
     template = "base/home.html"
@@ -37,6 +38,7 @@ def dashboard(request):
     n_groups = Grupo.objects.annotate (n_alumnos=Count("alumnos")).filter(n_alumnos__gt=0).count()
     total_spending = calculate_total_teacher_spending(Profesor.objects.all())
     total_earnings = calculate_total_product_earnings(payments)
+    current_month_amount_receivable = get_current_month_amount_receivable (enrolments)
     total_gains = calculate_gains(total_earnings, total_spending)
     data = generate_data_enrolments(Curso.objects.all())
     monthly_additions = prepare_monthly_addtions_data(
@@ -56,7 +58,8 @@ def dashboard(request):
         "data": data,
         "monthly_additions": monthly_additions,
         "total_additions": total_additions,
-        "n_groups": n_groups
+        "n_groups": n_groups,
+        "amount_receivable": current_month_amount_receivable
     }
     return render(request, template_name=template, context=context)
 
@@ -68,3 +71,15 @@ class CustomPasswordChangeView(PasswordChangeView):
     def form_valid(self, form):
         messages.success(self.request, "Cambiaste tu contraseña.")
         return super().form_valid(form)
+
+class Search (View):
+    def post (self, request, *args, **kwargs):
+        q = request.POST["query"]
+        context = {
+            "students" : Alumno.objects.filter (Q(nombre__contains=q) | Q(apellido__contains=q)),
+            "teachers" : Profesor.objects.filter (Q(nombre__contains=q) | Q(apellido__contains=q)),
+            "courses" : Curso.objects.filter (nombre__contains=q),
+            "careers" : Carrera.objects.filter (nombre__contains=q),
+            "groups" : Grupo.objects.filter (curso__nombre__contains=q)
+        }
+        return render (request, template_name="base/search_results.html", context=context)
