@@ -198,8 +198,8 @@ class Grupo(models.Model):
                             # Use the first letter of the other day names
                             day_initial = day_name[0][0].upper()
                         days_initials.append(day_initial)
-                    group_identifier += "-".join(days_initials)
-                    group_identifier += f"-{bloque.hora_inicio.strftime('%H:%M')}-{bloque.salon.nombre}"
+                    group_identifier += "".join(days_initials)
+                    group_identifier += f"{bloque.hora_inicio.strftime('%H%M')}S{bloque.salon.nombre}"
         print(f"Identificador final {group_identifier}")
         self.identificador=group_identifier
         print(f"Identificador actualizado {self.identificador}")
