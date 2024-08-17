@@ -13,7 +13,7 @@ from .models import (
     AlumnoExamen,
     Dia,
     Pago,
-    FaltaProfesor
+    FaltaProfesor,
 )
 
 

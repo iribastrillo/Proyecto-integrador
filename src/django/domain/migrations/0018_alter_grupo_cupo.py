@@ -5,15 +5,24 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('domain', '0017_alter_salon_nombre'),
+        ("domain", "0017_alter_salon_nombre"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='grupo',
-            name='cupo',
-            field=models.IntegerField(default=1, validators=[django.core.validators.MinValueValidator(1, 'La cantidad de alumnos debe ser mayor a 0'), django.core.validators.MaxValueValidator(50, 'La cantidad de alumnos debe ser menor a 50')]),
+            model_name="grupo",
+            name="cupo",
+            field=models.IntegerField(
+                default=1,
+                validators=[
+                    django.core.validators.MinValueValidator(
+                        1, "La cantidad de alumnos debe ser mayor a 0"
+                    ),
+                    django.core.validators.MaxValueValidator(
+                        50, "La cantidad de alumnos debe ser menor a 50"
+                    ),
+                ],
+            ),
         ),
     ]

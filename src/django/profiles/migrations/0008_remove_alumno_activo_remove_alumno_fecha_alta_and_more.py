@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("profiles", "0007_alter_alumno_slug_alter_profesor_slug"),
     ]

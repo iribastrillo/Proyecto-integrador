@@ -5,19 +5,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('domain', '0038_merge_20240807_1825'),
+        ("domain", "0038_merge_20240807_1825"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='pago',
-            options={'ordering': ['-fecha']},
+            name="pago",
+            options={"ordering": ["-fecha"]},
         ),
         migrations.AlterField(
-            model_name='grupo',
-            name='fecha_inicio',
+            model_name="grupo",
+            name="fecha_inicio",
             field=models.DateTimeField(default=datetime.date(2024, 8, 6)),
         ),
     ]

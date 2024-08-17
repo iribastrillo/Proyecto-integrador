@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("profiles", "0002_alumno_user_profesor_user"),
         ("domain", "0007_remove_curso_fecha_fin"),

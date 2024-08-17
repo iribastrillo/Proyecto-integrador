@@ -4,11 +4,9 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('domain', '0039_alter_pago_options_alter_grupo_fecha_inicio'),
-        ('domain', '0040_merge_20240807_1904'),
+        ("domain", "0039_alter_pago_options_alter_grupo_fecha_inicio"),
+        ("domain", "0040_merge_20240807_1904"),
     ]
 
-    operations = [
-    ]
+    operations = []

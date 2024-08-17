@@ -5,20 +5,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('domain', '0035_remove_grupo_identificador_alter_grupo_id'),
+        ("domain", "0035_remove_grupo_identificador_alter_grupo_id"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='grupo',
-            name='fecha_baja',
+            model_name="grupo",
+            name="fecha_baja",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='grupo',
-            name='fecha_inicio',
+            model_name="grupo",
+            name="fecha_inicio",
             field=models.DateField(default=datetime.date(2024, 8, 5)),
         ),
     ]

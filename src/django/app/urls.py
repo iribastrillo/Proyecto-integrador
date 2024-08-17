@@ -18,8 +18,9 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.contrib.auth import views as auth_views
+from django.views.generic.base import RedirectView
 from django.conf.urls.static import static
-from django.urls import path, include
+from django.urls import path, include, reverse_lazy
 
 
 from . import views
@@ -64,6 +65,7 @@ urlpatterns = (
             views.CustomPasswordChangeView.as_view(),
             name="password-change",
         ),
+        path("", RedirectView.as_view(url=reverse_lazy("home"))),
         path(
             "app/",
             include(
@@ -77,7 +79,7 @@ urlpatterns = (
                     path("clases/", include("clases.urls")),
                     path("perfil/", include("profiles.urls")),
                     path("estudiantes/", include("estudiantes.urls")),
-                    path("pagos/", include('pagos.urls')),
+                    path("pagos/", include("pagos.urls")),
                 ]
             ),
         ),
@@ -85,4 +87,3 @@ urlpatterns = (
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 )
-

@@ -5,25 +5,24 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('domain', '0040_faltaprofesor'),
+        ("domain", "0040_faltaprofesor"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='faltaprofesor',
-            old_name='Grupo',
-            new_name='grupo',
+            model_name="faltaprofesor",
+            old_name="Grupo",
+            new_name="grupo",
         ),
         migrations.RenameField(
-            model_name='faltaprofesor',
-            old_name='profesor_faltante',
-            new_name='profesor_titular',
+            model_name="faltaprofesor",
+            old_name="profesor_faltante",
+            new_name="profesor_titular",
         ),
         migrations.AlterField(
-            model_name='grupo',
-            name='fecha_inicio',
+            model_name="grupo",
+            name="fecha_inicio",
             field=models.DateTimeField(default=django.utils.timezone.now),
         ),
     ]

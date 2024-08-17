@@ -27,15 +27,16 @@ class SalonesCreateView(UserPassesTestMixin, SuccessMessageMixin, CreateView):
             for error in form.errors[field]:
                 messages.add_message(self.request, messages.ERROR, error)
         return response
-    
+
     def test_func(self):
         return is_staff(self.request.user)
+
 
 class SalonesListView(UserPassesTestMixin, ListView):
     model = Salon
     context_object_name = "lista_salones"
     template_name = "salones/salones_list.html"
-    
+
     def test_func(self):
         return is_staff(self.request.user)
 
@@ -43,7 +44,7 @@ class SalonesListView(UserPassesTestMixin, ListView):
 class SalonesDetailView(UserPassesTestMixin, DetailView):
     model = Salon
     template_name = "salones/salones_detail.html"
-    
+
     def test_func(self):
         return is_staff(self.request.user)
 
@@ -65,7 +66,7 @@ class SalonesUpdateView(UserPassesTestMixin, UpdateView):
             for error in form.errors["capacidad"]:
                 messages.add_message(self.request, messages.ERROR, error)
         return response
-    
+
     def test_func(self):
         return is_staff(self.request.user)
 
@@ -75,6 +76,6 @@ class SalonesDeleteView(UserPassesTestMixin, DeleteView):
     template_name = "salones/salones_confirm_delete.html"
     success_url = reverse_lazy("salones:classrooms")
     success_message = "El salon se eliminó con éxito"
-    
+
     def test_func(self):
         return is_staff(self.request.user)
