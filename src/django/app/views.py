@@ -81,10 +81,10 @@ class Search(View):
         q = request.POST["query"]
         context = {
             "students": Alumno.objects.filter(
-                Q(nombre__contains=q) | Q(apellido__icontains=q)
+                Q(nombre__icontains=q) | Q(apellido__icontains=q)
             ),
             "teachers": Profesor.objects.filter(
-                Q(nombre__contains=q) | Q(apellido__icontains=q)
+                Q(nombre__icontains=q) | Q(apellido__icontains=q)
             ),
             "courses": Curso.objects.filter(nombre__icontains=q),
             "careers": Carrera.objects.filter(nombre__icontains=q),
