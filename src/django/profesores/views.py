@@ -7,6 +7,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
@@ -37,7 +38,6 @@ class ProfesorCreateView(LoginRequiredMixin, CreateView):
 
 class ProfesorListView(LoginRequiredMixin, ListView):
     model = Profesor
-    # template_name = 'profesores/listar_profesores.html'
     context_object_name = "lista_profesores"
 
 
@@ -71,9 +71,10 @@ class ProfesorUpdateView(LoginRequiredMixin, UpdateView):
         )
 
 
-class ProfesorDeleteView(LoginRequiredMixin, DeleteView):
+class ProfesorDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Profesor
     success_url = reverse_lazy("profiles:users")
+    success_message = "Se eliminó al profesor con éxito"
 
 
 class Pagos(View):
