@@ -24,8 +24,8 @@ class InscripcionForm(forms.Form):
         required=True,
         validators=[
             MinValueValidator(0, "La cuota real debe ser mayor que 0."),
-            MaxValueValidator(50000, "La cuota real debe ser menor a 50000.")
-        ]
+            MaxValueValidator(50000, "La cuota real debe ser menor a 50000."),
+        ],
     )
 
 

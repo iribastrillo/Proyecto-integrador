@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("domain", "0014_alter_curso_payout_ratio"),
     ]

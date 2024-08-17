@@ -1,5 +1,6 @@
 from app import authorization
 
+
 def get_role_processor(request):
     if request.user.is_anonymous:
         return {}
@@ -9,4 +10,3 @@ def get_role_processor(request):
         return {"role": "teacher"}
     if authorization.is_student(request.user):
         return {"role": "student"}
-    

@@ -28,12 +28,33 @@
   </nav>
 {% endblock %}
 
+
 {% block content %}
+<section class="lg:flex gap-4 mb-4">
+    <form action="{% url 'search' %}" method="post" class="flex items-center lg:max-w-full lg:w-full"> {% csrf_token %}
+        <label for="simple-search" class="sr-only">Buscar</label>
+        <div class="relative w-full">
+            <input type="text" id="simple-search" name="query" class="border w-full text-sm rounded-lg block p-2.5 bg-gray-900 border-gray-700 placeholder-gray-400 text-white focus:ring-accent-500 focus:border-accent-100" placeholder="Buscar usuarios o productos..."/>
+        </div>
+        <button type="submit" class="p-2.5 ms-2 text-sm font-medium text-white rounded focus:ring-4 focus:outline-none bg-accent-100 hover:bg-accent-500 focus:ring-accent-500">
+            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+            <span class="sr-only">Buscar</span>
+        </button>
+    </form>
+</section>
+
 
 <section class="lg:flex gap-4 mb-4">
     <div class="max-w-full w-full p-6 border border-gray-700 rounded bg-gray-900 mb-4 md:lg:m-0">
-        <div class="flex gap-2 justify-between">
-            <h5 class="text-2xl font-bold tracking-tight text-white">${{total_earnings}}</h5>
+        <h5 data-tooltip-target="amount-received-tooltip" class="text-2xl font-bold tracking-tight text-white">${{total_earnings}}</h5>
+        <div id="amount-received-tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-700 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700">
+            Monto recibido en pagos este mes
+        </div>
+        <p data-tooltip-target="amount-receivable-tooltip" class="text-xs text-green-400">$ {{amount_receivable}}</p>
+        <div id="amount-receivable-tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-700 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700">
+            Monto esperado en pagos este mes
         </div>
         <h6 class="text-base font-bold tracking-tight text-gray-400">En pagos este mes</h6>
     </div>
@@ -41,12 +62,17 @@
         <div class="flex gap-2 justify-between">
             <h5 class="text-2xl font-bold tracking-tight text-white">${{total_gains|floatformat:"-2"}}</h5>
         </div>
+        <p data-tooltip-target="total-spending-tooltip" class="text-xs text-red-400">$ {{total_spending|floatformat:"-2"}}</p>
+        <div id="total-spending-tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-700 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700">
+            En gastos de salarios
+        </div>
         <h6 class="text-base font-bold tracking-tight text-gray-400">En ganancias esperadas</h6>
     </div>
     <div class="max-w-full w-full p-6 border border-gray-700 rounded bg-gray-900 mb-4 md:lg:m-0">
         <div class="flex gap-2 justify-between">
             <h5 class="text-2xl font-bold tracking-tight text-white">{{n_groups}}</h5>
         </div>
+        <p class="text-xs text-green-400">{{total_additions}} inscripciones</p>
         <h6 class="text-base font-bold tracking-tight text-gray-400">Grupos en funcionamiento</h6>
     </div>
 </section>
