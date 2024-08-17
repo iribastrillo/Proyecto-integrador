@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+from os import getenv
 from pathlib import Path
 from shutil import which
 from decouple import config
@@ -32,7 +33,7 @@ DEBUG = config("DEBUG", default=True, cast=bool)
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "testing-env-portal-c16a535d84ba.herokuapp.com",
+    "https://testing-env-portal-c16a535d84ba.herokuapp.com/",
 ]
 
 INSTALLED_APPS = [
@@ -92,7 +93,6 @@ TAILWIND_APP_NAME = "theme"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -108,7 +108,6 @@ DATABASES = {
 if not DEBUG:
     DATABASES["default"] = dj_database_url.config(conn_max_age=600, ssl_require=False)
 
-    
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
@@ -145,6 +144,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+STATIC_URL = "static/"
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 STORAGES = {
     "default": {
@@ -154,12 +156,6 @@ STORAGES = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
-
-
-STATIC_URL = "static/"
-
-
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
