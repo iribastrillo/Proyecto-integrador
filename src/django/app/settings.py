@@ -32,7 +32,7 @@ DEBUG = config("DEBUG", default=True, cast=bool)
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "hidden-fortress-37452-206e312e47f7.herokuapp.com",
+    "testing-env-portal-0334196a1e7e.herokuapp.com",
 ]
 
 INSTALLED_APPS = [
@@ -92,6 +92,7 @@ TAILWIND_APP_NAME = "theme"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -107,7 +108,7 @@ DATABASES = {
 if not DEBUG:
     DATABASES["default"] = dj_database_url.config(conn_max_age=600, ssl_require=False)
 
-
+    
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
@@ -144,9 +145,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
-
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 STORAGES = {
     "default": {
@@ -157,7 +155,9 @@ STORAGES = {
     },
 }
 
+
 STATIC_URL = "static/"
+
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 

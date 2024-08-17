@@ -345,6 +345,8 @@ class BloqueClaseUpdateView(LoginRequiredMixin, UpdateView):
                 pass
         # Save the updated form
         super().form_valid(form)
+        # Update Group add: day initial dia - hora start - salon name
+
         return HttpResponse()
 
     def get_success_url(self):
