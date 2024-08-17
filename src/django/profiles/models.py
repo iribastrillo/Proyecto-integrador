@@ -87,7 +87,6 @@ class Alumno(Persona):
                 )
             )
             return age
-
     def get_absolute_url(self):
         return reverse("estudiantes:detail-student", kwargs={"slug": self.slug})
 

@@ -32,7 +32,7 @@ DEBUG = config("DEBUG", default=True, cast=bool)
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "testing-env-portal-0334196a1e7e.herokuapp.com",
+    "testing-env-portal-c16a535d84ba.herokuapp.com",
 ]
 
 INSTALLED_APPS = [

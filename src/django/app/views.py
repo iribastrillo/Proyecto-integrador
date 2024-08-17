@@ -29,7 +29,6 @@ def home(request):
     if is_teacher(request.user):
         return HttpResponse("<h1>Entraste como profesor</h1>")
 
-
 @user_passes_test(is_staff)
 def dashboard(request):
     template = "base/home.html"
@@ -42,7 +41,7 @@ def dashboard(request):
     )
     total_spending = calculate_total_teacher_spending(Profesor.objects.all())
     total_earnings = calculate_total_product_earnings(payments)
-    current_month_amount_receivable = get_current_month_amount_receivable(enrolments)
+    current_month_amount_receivable = get_current_month_amount_receivable (enrolments)
     total_gains = calculate_gains(total_earnings, total_spending)
     data = generate_data_enrolments(Curso.objects.all())
     monthly_additions = prepare_monthly_addtions_data(
@@ -63,7 +62,7 @@ def dashboard(request):
         "monthly_additions": monthly_additions,
         "total_additions": total_additions,
         "n_groups": n_groups,
-        "amount_receivable": current_month_amount_receivable,
+        "amount_receivable": current_month_amount_receivable
     }
     return render(request, template_name=template, context=context)
 
