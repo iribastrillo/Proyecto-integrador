@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
-from os import getenv
 from pathlib import Path
 from shutil import which
 from decouple import config
