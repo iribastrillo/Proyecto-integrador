@@ -4,19 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('domain', '0034_grupo_activo_grupo_fecha_baja_grupo_fecha_inicio'),
+        ("domain", "0034_grupo_activo_grupo_fecha_baja_grupo_fecha_inicio"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='grupo',
-            name='identificador',
+            model_name="grupo",
+            name="identificador",
         ),
         migrations.AlterField(
-            model_name='grupo',
-            name='id',
+            model_name="grupo",
+            name="id",
             field=models.AutoField(primary_key=True, serialize=False),
         ),
     ]

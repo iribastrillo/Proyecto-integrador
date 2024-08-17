@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 
 
 class LoginTests(TestCase):
-
     @classmethod
     def setUpTestData(cls):
         user = User.objects.create(username="testuser")
@@ -32,7 +31,6 @@ class LoginTests(TestCase):
 
 
 class TestHome(TestCase):
-
     def test_unauthenticated_user_cant_reach_home(self) -> None:
         response = self.client.get(reverse("home"))
         self.assertEquals(response.status_code, 302)

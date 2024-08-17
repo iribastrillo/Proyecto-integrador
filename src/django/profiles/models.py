@@ -54,16 +54,16 @@ class Persona(models.Model):
 
     class Meta:
         abstract = True
-        
+
 
 class Alumno(Persona):
     emergency_contact = models.CharField(max_length=20, null=True, blank=True)
-    
+
     def __str__(self):
         return f"Alumno: {self.apellido}, {self.nombre}"
-    
+
     @property
-    def is_up_to_date_with_payments (self):
+    def is_up_to_date_with_payments(self):
         enrolments = self.alumnocurso_set.all()
         payments = self.pago_set.filter(fecha__month=date.today().month)
         up_to_date = True
@@ -73,7 +73,7 @@ class Alumno(Persona):
             except AttributeError as e:
                 pass
         return up_to_date
-    
+
     @property
     def age(self):
         if self.fecha_nacimiento:
@@ -81,10 +81,12 @@ class Alumno(Persona):
             age = int(
                 today.year
                 - (self.fecha_nacimiento.year)
-                - ((today.month, today.day) < (self.fecha_nacimiento.month, self.fecha_nacimiento.day))
+                - (
+                    (today.month, today.day)
+                    < (self.fecha_nacimiento.month, self.fecha_nacimiento.day)
+                )
             )
             return age
-    
     def get_absolute_url(self):
         return reverse("estudiantes:detail-student", kwargs={"slug": self.slug})
 

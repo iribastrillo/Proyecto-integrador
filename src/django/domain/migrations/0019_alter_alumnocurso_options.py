@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("domain", "0018_alumnocarrera_fecha_baja_alumnocurso_fecha_baja_and_more"),
     ]

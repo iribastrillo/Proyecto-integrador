@@ -16,26 +16,29 @@ from core.domain.services import (
     calculate_gains,
     generate_data_enrolments,
     prepare_monthly_addtions_data,
-    get_current_month_amount_receivable
+    get_current_month_amount_receivable,
 )
 from app.authorization import is_student, is_teacher, is_staff
 
 
-def home (request):
+def home(request):
     if is_staff(request.user):
-        return redirect ("dashboard")
+        return redirect("dashboard")
     if is_student(request.user):
-        return HttpResponse ("<h1>Entraste como estudiante</h1>")
+        return HttpResponse("<h1>Entraste como estudiante</h1>")
     if is_teacher(request.user):
-        return HttpResponse ("<h1>Entraste como profesor</h1>")
-    
+        return HttpResponse("<h1>Entraste como profesor</h1>")
 
 @user_passes_test(is_staff)
 def dashboard(request):
     template = "base/home.html"
     enrolments = AlumnoCurso.objects.all()
     payments = Pago.objects.all()
-    n_groups = Grupo.objects.annotate (n_alumnos=Count("alumnos")).filter(n_alumnos__gt=0).count()
+    n_groups = (
+        Grupo.objects.annotate(n_alumnos=Count("alumnos"))
+        .filter(n_alumnos__gt=0)
+        .count()
+    )
     total_spending = calculate_total_teacher_spending(Profesor.objects.all())
     total_earnings = calculate_total_product_earnings(payments)
     current_month_amount_receivable = get_current_month_amount_receivable (enrolments)
@@ -72,14 +75,21 @@ class CustomPasswordChangeView(PasswordChangeView):
         messages.success(self.request, "Cambiaste tu contraseña.")
         return super().form_valid(form)
 
-class Search (View):
-    def post (self, request, *args, **kwargs):
+
+class Search(View):
+    def post(self, request, *args, **kwargs):
         q = request.POST["query"]
         context = {
-            "students" : Alumno.objects.filter (Q(nombre__contains=q) | Q(apellido__contains=q)),
-            "teachers" : Profesor.objects.filter (Q(nombre__contains=q) | Q(apellido__contains=q)),
-            "courses" : Curso.objects.filter (nombre__contains=q),
-            "careers" : Carrera.objects.filter (nombre__contains=q),
-            "groups" : Grupo.objects.filter (curso__nombre__contains=q)
+            "students": Alumno.objects.filter(
+                Q(nombre__contains=q) | Q(apellido__icontains=q)
+            ),
+            "teachers": Profesor.objects.filter(
+                Q(nombre__contains=q) | Q(apellido__icontains=q)
+            ),
+            "courses": Curso.objects.filter(nombre__icontains=q),
+            "careers": Carrera.objects.filter(nombre__icontains=q),
+            "groups": Grupo.objects.filter(curso__nombre__icontains=q),
         }
-        return render (request, template_name="base/search_results.html", context=context)
+        return render(
+            request, template_name="base/search_results.html", context=context
+        )

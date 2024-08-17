@@ -11,9 +11,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
-from os import getenv
 from pathlib import Path
 from shutil import which
+from decouple import config
 import dj_database_url
 
 
@@ -24,13 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-@$qz#@%8n2njd)3dpu36!k8pitwydd^u@v4+rgpsblgd!e^jn2"
+SECRET_KEY = config("SECRET_KEY", cast=str)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", default=True, cast=bool)
 
 ALLOWED_HOSTS = [
-    getenv("APP_HOST"),
     "localhost",
     "127.0.0.1",
     "testing-env-portal-c16a535d84ba.herokuapp.com",
@@ -105,9 +104,11 @@ DATABASES = {
     },
 }
 
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=False)
 
+if not DEBUG:
+    DATABASES["default"] = dj_database_url.config(conn_max_age=600, ssl_require=False)
 
+    
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
@@ -154,7 +155,9 @@ STORAGES = {
     },
 }
 
-STATIC_URL = 'static/'
+
+STATIC_URL = "static/"
+
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
@@ -175,11 +178,11 @@ NPM_BIN_PATH = which("npm")
 
 # Email configuration
 
-#Para que funcione todo el flujo de cambio de contraseña hay que configurar, si se usa gmail, una password. 
-#Seguir las instrucciones en este enlace support.google.com/accounts/answer/185833 
+# Para que funcione todo el flujo de cambio de contraseña hay que configurar, si se usa gmail, una password.
+# Seguir las instrucciones en este enlace support.google.com/accounts/answer/185833
 
-EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend' # Para usar gmail, sustituir dummy por gmail.
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"  # Para usar gmail, sustituir dummy por gmail.
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "host"

@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('domain', '0027_alter_dia_name'),
+        ("domain", "0027_alter_dia_name"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='dia',
-            name='id',
+            model_name="dia",
+            name="id",
             field=models.IntegerField(primary_key=True, serialize=False),
         ),
     ]
