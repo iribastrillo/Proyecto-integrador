@@ -14,11 +14,8 @@ import os
 from os import getenv
 from pathlib import Path
 from shutil import which
-<<<<<<< Updated upstream
-=======
 from decouple import config
 import dj_database_url
->>>>>>> Stashed changes
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,11 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY", cast=str)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-<<<<<<< Updated upstream
-DEBUG = getenv("IS_DEVELOPMENT", True)
-=======
 DEBUG = config("DEBUG", default=True, cast=bool)
->>>>>>> Stashed changes
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -111,14 +104,11 @@ DATABASES = {
     },
 }
 
-<<<<<<< Updated upstream
-=======
 
 if not DEBUG:
     DATABASES["default"] = dj_database_url.config(conn_max_age=600, ssl_require=False)
 
 
->>>>>>> Stashed changes
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
@@ -168,9 +158,6 @@ STORAGES = {
     },
 }
 
-<<<<<<< Updated upstream
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-=======
 STATIC_URL = "static/"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
@@ -178,7 +165,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
->>>>>>> Stashed changes
 
 MEDIA_URL = "/media/"
 
