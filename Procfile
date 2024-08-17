@@ -1,2 +1,2 @@
-worker: sh -c "python src/django/manage.py migrate && python src/django/manage.py createsuperuser --noinput"
+release: python src/django/manage.py tailwind build 
 web: gunicorn app.wsgi:application --chdir 'src/django'
