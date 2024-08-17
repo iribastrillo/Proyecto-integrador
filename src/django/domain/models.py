@@ -189,18 +189,15 @@ class Grupo(models.Model):
 
 
     def __str__(self) -> str:
-        return f"Identificador: {self.identificador} - Curso: {self.curso.nombre} - Activo: {self.activo}"
+        return f"{self.identificador}"
 
     def get_absolute_url(self):
         return reverse("clases:detail-group", kwargs={"pk": self.pk})
 
     @property
     def generate_identificador(self):
-        print(f"Generando identificador para GRUPO {self.id}")
         group_identifier=generate_course_identifier_name(self.curso.nombre)
-        print(f"Identificador generado {group_identifier}")
         bloques_de_clase = BloqueDeClase.objects.filter(grupo=self)
-        print(f"bloques_de_clase {bloques_de_clase}")
         if bloques_de_clase:
             for bloque in bloques_de_clase:
                 day_names = [dia.name.lower() for dia in bloque.dia.all()]
@@ -215,9 +212,7 @@ class Grupo(models.Model):
                         days_initials.append(day_initial)
                     group_identifier += "".join(days_initials)
                     group_identifier += f"{bloque.hora_inicio.strftime('%H%M')}S{bloque.salon.nombre}"
-        print(f"Identificador final {group_identifier}")
         self.identificador=group_identifier
-        print(f"Identificador actualizado {self.identificador}")
         self.save()
 
     @property
