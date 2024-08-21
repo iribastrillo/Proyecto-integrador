@@ -1,6 +1,10 @@
+from decimal import Decimal
+
 from domain.models import Grupo, Alumno
 from domain.models import AlumnoCurso as Enrolments
 from datetime import date
+
+from core.domain.exceptions import StudentAlreadyEnroledException, GroupCompleteException
 
 
 def students_get_active ():  
@@ -16,6 +20,16 @@ def student_resign_course (student : Alumno, group : Grupo):
     enrolment = Enrolments.objects.filter (alumno=student, curso=group.curso, fecha_baja=None).first()
     enrolment.fecha_baja = date.today()
     enrolment.save()
+    group.save()
+    
+    
+def student_enroll (student : Alumno, group : Grupo, fee: Decimal):
+    if group.alumnos.filter(slug=student.slug).exists():
+        raise StudentAlreadyEnroledException()
+    if group.actives == group.cupo:
+        raise GroupCompleteException()
+    group.alumnos.add(student)
+    Enrolments.objects.create(alumno=student, curso=group.curso, fee=fee)
     group.save()
     
     

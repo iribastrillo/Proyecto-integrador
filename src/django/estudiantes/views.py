@@ -19,6 +19,7 @@ from domain.models import AlumnoCurso
 
 from core.domain.services import calculate_actual_fee
 from core.domain import student_services
+from core.domain.exceptions import GroupCompleteException, StudentAlreadyEnroledException
 
 
 class AlumnoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -96,44 +97,37 @@ class InscripcionNueva(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
-        student = Alumno.objects.get(slug=kwargs["slug"])
+        student = student_services.student_get_by_slug (kwargs["slug"])
         context = {"form": form, "student": student}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         form = InscripcionForm(request.POST)
-        student = Alumno.objects.get(slug=kwargs["slug"])
         if form.is_valid():
-            grupo = form.cleaned_data["grupo"]
+            student = student_services.student_get_by_slug (kwargs["slug"])
+            group = form.cleaned_data["grupo"]
             fee = form.cleaned_data["fee"]
-            if grupo.alumnos.filter(slug=student.slug).exists():
-                messages.add_message(
-                    request,
-                    messages.ERROR,
-                    "El estudiante ya está inscripto en ese grupo.",
-                )
-                return HttpResponseRedirect(
-                    reverse("estudiantes:detail-student", kwargs={"slug": student.slug})
-                )
-            else:
-                grupo.alumnos.add(student)
-                grupo.save()
-                AlumnoCurso.objects.create(alumno=student, curso=grupo.curso, fee=fee)
+            try:
+                student_services.student_enroll(student, group, fee)
                 messages.add_message(
                     request,
                     messages.SUCCESS,
                     f"Inscribiste a {student.apellido}, {student.nombre} en el grupo.",
                 )
+            except GroupCompleteException:
+                messages.add_message(
+                request, messages.ERROR, "El cupo del grupo ya está completo."
+                )
+            except StudentAlreadyEnroledException:
+                 messages.add_message(
+                    request,
+                    messages.ERROR,
+                    "El estudiante ya está inscripto en ese grupo.",
+                )
+            finally:
                 return HttpResponseRedirect(
                     reverse("estudiantes:detail-student", kwargs={"slug": student.slug})
                 )
-        else:
-            messages.add_message(
-                request, messages.ERROR, "El cupo del grupo ya está completo."
-            )
-            return HttpResponseRedirect(
-                reverse("estudiantes:detail-student", kwargs={"slug": student.slug})
-            )
 
 
 class BajaEstudiante(LoginRequiredMixin, View):
@@ -159,16 +153,13 @@ class BajaEstudiante(LoginRequiredMixin, View):
                 messages.SUCCESS,
                 f"Bajaste a {student.apellido}, {student.nombre} del grupo.",
             )
-            return HttpResponseRedirect(
-                reverse("estudiantes:detail-student", kwargs={"slug": student.slug})
-            )
         else:
             messages.add_message(
                 request, messages.ERROR, "Parece que hubo un problema."
             )
-            return HttpResponseRedirect(
-                reverse("estudiantes:detail-student", kwargs={"slug": student.slug})
-            )
+        return HttpResponseRedirect(
+            reverse("estudiantes:detail-student", kwargs={"slug": student.slug})
+        )
 
 
 class InhabilitarAlumno(LoginRequiredMixin, View):

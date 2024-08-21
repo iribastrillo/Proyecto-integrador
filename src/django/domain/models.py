@@ -242,6 +242,10 @@ class Grupo(models.Model):
             if enrolment.fecha_finalizado == None:
                 receivable += enrolment.fee
         return receivable
+    
+    @property
+    def actives (self):
+        return self.alumnos.count()
 
 
 class BloqueDeClase(models.Model):

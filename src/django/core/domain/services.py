@@ -2,7 +2,6 @@ import uuid
 from decimal import Decimal
 from string import ascii_uppercase
 from itertools import repeat
-from functools import partial
 from datetime import date
 import calendar
 

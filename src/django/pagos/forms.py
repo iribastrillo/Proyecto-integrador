@@ -1,5 +1,3 @@
-import datetime
-from typing import Any
 from django import forms
 from django.core.exceptions import ValidationError
 from domain.models import Pago, Alumno, AlumnoCurso, Curso
@@ -100,10 +98,6 @@ class PagoForm(forms.ModelForm):
         alumno = cleaned_data.get("alumno")
         curso = cleaned_data.get("curso")
         fecha_pago = cleaned_data.get("fecha")
-
-        # Check if alumno has made a payment for curso in the current month
-        # mes_actual = datetime.datetime.now().month
-        # anio_actual = datetime.datetime.now().year
         mes_actual = fecha_pago.month
         anio_actual = fecha_pago.year
 
