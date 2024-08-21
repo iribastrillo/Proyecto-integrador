@@ -15,7 +15,6 @@ from django.contrib import messages
 
 from .forms import InscripcionForm, BajaForm
 from profiles.models import Alumno
-from domain.models import AlumnoCurso
 
 from core.domain.services import calculate_actual_fee
 from core.domain import student_services

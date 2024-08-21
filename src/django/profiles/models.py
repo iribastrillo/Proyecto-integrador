@@ -51,6 +51,10 @@ class Persona(models.Model):
     def delete(self, *args, **kwargs):
         self.user.delete()
         super().delete(*args, **kwargs)
+        
+    @property
+    def is_active (self):
+        return self.user.is_active
 
     class Meta:
         abstract = True

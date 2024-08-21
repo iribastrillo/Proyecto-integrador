@@ -17,6 +17,8 @@ from .forms import FaltaProfesorForm
 from domain.models import Profesor, BloqueDeClase, Dia, FaltaProfesor, Grupo
 
 from core.domain.services import calculate_payment
+from core.domain.exceptions import TeacherHasGroupsException
+from core.domain import product_services
 from django.contrib import messages
 
 
@@ -168,8 +170,6 @@ class FaltaProfesorCreateView(LoginRequiredMixin, CreateView):
         self, request: HttpRequest, *args: str, **kwargs: reverse_lazy
     ) -> HttpResponse:
         return super().post(request, *args, **kwargs)
-
-    # success_url = reverse_lazy( "detail-professor", kwargs={"slug": "2445645"})
 
 
 def falta_profesor_create(request: HttpRequest, slug: str) -> HttpResponseRedirect:
