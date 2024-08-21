@@ -29,4 +29,5 @@ urlpatterns = [
         views.InhabilitarAlumno.as_view(),
         name="deactivate-student",
     ),
+    path("cambiar/<slug>/grupo/<id>/", views.CambioDeGrupo.as_view(), name="change-group"),
 ]

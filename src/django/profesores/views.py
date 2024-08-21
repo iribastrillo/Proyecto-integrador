@@ -17,8 +17,6 @@ from .forms import FaltaProfesorForm
 from domain.models import Profesor, BloqueDeClase, Dia, FaltaProfesor, Grupo
 
 from core.domain.services import calculate_payment
-from core.domain.exceptions import TeacherHasGroupsException
-from core.domain import product_services
 from django.contrib import messages
 
 

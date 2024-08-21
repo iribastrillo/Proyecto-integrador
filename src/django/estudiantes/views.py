@@ -13,12 +13,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 
-from .forms import InscripcionForm, BajaForm
+from .forms import InscripcionForm, BajaForm, CambioDeGrupoForm
 from profiles.models import Alumno
 
 from core.domain.services import calculate_actual_fee
-from core.domain import student_services
-from core.domain.exceptions import GroupCompleteException, StudentAlreadyEnroledException
+from core.domain import student_services, product_services
+from core.domain.exceptions import GroupCompleteException, StudentAlreadyEnroledException, NoAlternativeException
 
 
 class AlumnoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -173,3 +173,39 @@ class InhabilitarAlumno(LoginRequiredMixin, View):
         return HttpResponseRedirect(
             reverse("estudiantes:detail-student", kwargs={"slug": student.slug})
         )
+
+class CambioDeGrupo (LoginRequiredMixin, View):
+    form_class = CambioDeGrupoForm
+    template_name = "estudiantes/partials/group_change_form.html"
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        group = product_services.group_get_by_id(kwargs["id"])
+        student = student_services.student_get_by_slug (kwargs["slug"])
+        try:
+            alternatives = product_services.group_get_change_alternatives(group)
+            form.fields["grupo"].choices = (
+            (grupo.pk, grupo) for grupo in alternatives)
+        except NoAlternativeException:
+            pass
+        context = {"form": form, "student": student, "group": group}
+        return render(request, self.template_name, context)
+    
+    def post (self, request, *args, **kwargs):
+        form = BajaForm(request.POST)
+        if form.is_valid():
+            student = student_services.student_get_by_slug (kwargs["slug"])
+            fr = product_services.group_get_by_id(kwargs["id"])
+            to = form.cleaned_data["grupo"]
+            try:
+                student_services.student_change_group(student, fr, to)
+            except GroupCompleteException:
+                messages.add_message(
+                request, messages.ERROR, "El cupo del grupo ya está completo."
+                )
+            finally:
+                return HttpResponseRedirect(
+                    reverse("estudiantes:detail-student", kwargs={"slug": student.slug})
+                )
+                
+            

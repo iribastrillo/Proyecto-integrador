@@ -4,7 +4,7 @@ from domain.models import Grupo, Alumno
 from domain.models import AlumnoCurso as Enrolments
 from datetime import date
 
-from core.domain.exceptions import StudentAlreadyEnroledException, GroupCompleteException
+from core.domain.exceptions import StudentAlreadyEnroledException, GroupCompleteException, ProductsDoNotMatchException
 
 
 def students_get_active ():  
@@ -31,6 +31,18 @@ def student_enroll (student : Alumno, group : Grupo, fee: Decimal):
     group.alumnos.add(student)
     Enrolments.objects.create(alumno=student, curso=group.curso, fee=fee)
     group.save()
+    
+    
+def student_change_group (student : Alumno, fr: Grupo, to: Grupo):
+    if to.actives == to.cupo:
+        raise GroupCompleteException()
+    if fr.curso.nombre != to.curso.nombre:
+        raise ProductsDoNotMatchException()
+    fr.alumnos.remove(student)
+    to.alumnos.add (student)
+    fr.save()
+    to.save()
+    
     
     
 def student_get_groups (student : Alumno):
