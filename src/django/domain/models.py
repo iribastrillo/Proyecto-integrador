@@ -67,6 +67,14 @@ class Curso(models.Model):
         for group in groups:
             receivable += group.amount_receivable
         return receivable
+    
+    @property
+    def active_enrolments(self):
+        return self.alumnocurso_set.filter(fecha_baja=None).count()
+    
+    @property
+    def inactive_enrolments(self):
+        return self.alumnocurso_set.exclude(fecha_baja=None).count()
 
       
 class Previa(models.Model):
@@ -115,6 +123,10 @@ class AlumnoCurso(models.Model):
 
     def __str__(self):
         return f"Inscripcion: {self.alumno.apellido} -> {self.curso.nombre}"
+
+    @property
+    def has_dropped_out (self):
+        return self.fecha_baja != None
 
     class Meta:
         ordering = ["-fecha_inscripcion"]

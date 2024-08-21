@@ -2,6 +2,7 @@ import uuid
 from decimal import Decimal
 from string import ascii_uppercase
 from itertools import repeat
+from functools import partial
 from datetime import date
 import calendar
 
@@ -78,14 +79,27 @@ def calculate_gains(earnings, spending):
     return earnings - spending
 
 
-def generate_data_enrolments(products):
+def generate_additions_data(products):
     data = []
     for product in products:
-        data.append({"x": product.nombre, "y": product.alumnocurso_set.count()})
+        data.append({"x": product.nombre, "y": product.active_enrolments})
     return data
 
 
-def prepare_monthly_addtions_data(query):
+def generate_dropouts_data(products):
+    data = []
+    for product in products:
+        data.append({"x": product.nombre, "y": product.inactive_enrolments})
+    return data
+
+
+def generate_monthly_addtions_data(query):
+    data = {"month": list(calendar.month_name)[1:], "value": [i for i in repeat(0, 12)]}
+    for d in query:
+        data["value"][d["month"] - 1] = d["count"]
+    return data
+
+def generate_monthly_dropouts_data(query):
     data = {"month": list(calendar.month_name)[1:], "value": [i for i in repeat(0, 12)]}
     for d in query:
         data["value"][d["month"] - 1] = d["count"]

@@ -13,11 +13,13 @@
     </div>
   </div>
 
-{{monthly_additions|json_script:"additions"}}
+{{monthly_additions|json_script:"monthly_additions"}}
+{{monthly_dropouts|json_script:"monthly_dropouts"}}
 
 <script>
 
-    const additions = JSON.parse(document.getElementById('additions').textContent);
+    const monthly_additions = JSON.parse(document.getElementById('monthly_additions').textContent);
+    const monthly_dropouts = JSON.parse(document.getElementById('monthly_dropouts').textContent);
 
     const options = {
         chart: {
@@ -57,7 +59,12 @@
         series: [
           {
             name: "Additions",
-            data: additions.value,
+            data: monthly_additions.value,
+            color: "#D1904B",
+          },
+          {
+            name: "Dropouts",
+            data: monthly_dropouts.value,
             color: "#D8C1B5",
           },
         ],
@@ -68,7 +75,7 @@
           curve: 'straight'
         },
         xaxis: {
-          categories: additions.month,
+          categories: monthly_additions.month,
           labels: {
             show: false,
             style: {

@@ -87,6 +87,11 @@ class Alumno(Persona):
                 )
             )
             return age
+        
+    @property
+    def active_enrolents(self):
+        return self.alumnocurso_set.filter(fecha_baja=None).count()
+    
     def get_absolute_url(self):
         return reverse("estudiantes:detail-student", kwargs={"slug": self.slug})
 
