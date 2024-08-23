@@ -44,7 +44,6 @@ def student_change_group (student : Alumno, fr: Grupo, to: Grupo):
     to.save()
     
     
-    
 def student_get_groups (student : Alumno):
     return student.grupo_set.all()
 

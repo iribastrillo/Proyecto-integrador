@@ -199,6 +199,11 @@ class CambioDeGrupo (LoginRequiredMixin, View):
             to = form.cleaned_data["grupo"]
             try:
                 student_services.student_change_group(student, fr, to)
+                messages.add_message(
+                    request,
+                    messages.SUCCESS,
+                    f"Cambiaste a {student.apellido}, {student.nombre} al grupo {to.identificador}.",
+                )
             except GroupCompleteException:
                 messages.add_message(
                 request, messages.ERROR, "El cupo del grupo ya está completo."

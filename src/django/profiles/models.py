@@ -32,7 +32,6 @@ class Persona(models.Model):
         except User.DoesNotExist as e:
             while True:
                 new_code = generate_unique_code()
-                print(new_code)
                 try:
                     user = User.objects.create(
                         username=new_code, password=make_password(self.dni)

@@ -1,4 +1,3 @@
-from typing import Any
 from django.utils.timezone import now
 from django.db import models
 from django.urls import reverse
@@ -171,7 +170,7 @@ class Grupo(models.Model):
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
     alumnos = models.ManyToManyField(
         Alumno, blank=True
-    )  # validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
+    )  
     cupo = models.IntegerField(
         null=False,
         default=1,
@@ -182,7 +181,7 @@ class Grupo(models.Model):
     )
     profesores = models.ManyToManyField(
         Profesor
-    )  # validar que el profesor este asignado al curso
+    )
     fecha_inicio = models.DateTimeField(null=False, blank=False, default=now)
     fecha_baja = models.DateTimeField(null=True, blank=True)
     activo = models.BooleanField(default=True)

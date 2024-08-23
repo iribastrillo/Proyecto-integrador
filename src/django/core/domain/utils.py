@@ -1,4 +1,6 @@
 import calendar
+from django.db.models.functions import ExtractMonth
+from django.db.models import Count
 
 
 def get_weekdays_per_month(day, month):

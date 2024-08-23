@@ -40,7 +40,7 @@ def dashboard(request):
     template = "base/home.html"
     payments = Pago.objects.all()
     enrolments = student_services.students_get_active()
-    inactive = student_services.students_get_inactive()
+    inactives = student_services.students_get_inactive()
     courses = product_services.products_get_acives()
     n_groups = (
         Grupo.objects.annotate(n_alumnos=Count("alumnos"))
@@ -60,7 +60,7 @@ def dashboard(request):
         .values("month", "count")
     )
     monthly_dropouts = generate_monthly_dropouts_data(
-        inactive.annotate(month=ExtractMonth("fecha_baja"))
+        inactives.annotate(month=ExtractMonth("fecha_baja"))
         .values("month")
         .annotate(count=Count("id"))
         .values("month", "count")
