@@ -21,7 +21,6 @@ def create_pago(request: HttpRequest, slug: str) -> HttpResponseRedirect:
             pago.save()
             return HttpResponse()
         else:
-            print(f"form invalid {form.errors}")
             response = render(
                 request, "pagos/pago_form.html", {"form": form, "slug": student.slug}
             )
@@ -30,7 +29,6 @@ def create_pago(request: HttpRequest, slug: str) -> HttpResponseRedirect:
             return response
     else:
         form = PagoForm(initial={"student_slug": student.slug})
-        print(f"get {student.slug}")
     return render(request, "pagos/pago_form.html", {"form": form, "slug": student.slug})
 
 
@@ -128,17 +126,13 @@ class DeletePago(LoginRequiredMixin, DeleteView):
 
 class UpdatePago(LoginRequiredMixin, UpdateView):
     model = Pago
-    # form_class = PagoForm
     template_name = "pagos/update_form.html"
     fields = ["monto", "descripcion", "comprobante"]
 
     def post(self, request, *args, **kwargs):
-        print("Update posts")
         student = Alumno.objects.get(slug=kwargs["slug"])
         form = self.form_class(request.POST, request.FILES, student_slug=student.slug)
-        print(f"student slug{student.slug}")
         if form.is_valid():
-            print("update form valid")
             pago = form.save(commit=False)
             pago.alumno = student
             pago.save()
