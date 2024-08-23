@@ -4,8 +4,6 @@ from django.urls import reverse_lazy
 from domain.models import Grupo
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-from .validators import group_is_not_full
-
 
 class InscripcionForm(forms.Form):
     grupo = forms.ModelChoiceField(
