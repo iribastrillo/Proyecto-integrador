@@ -102,7 +102,6 @@ class InscripcionNueva(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         form = InscripcionForm(request.POST)
-        print(form.is_valid())
         if form.is_valid():
             student = student_services.student_get_by_slug (kwargs["slug"])
             group = form.cleaned_data["grupo"]

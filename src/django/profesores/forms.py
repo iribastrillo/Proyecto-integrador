@@ -1,4 +1,3 @@
-import datetime
 from typing import Any
 from django import forms
 from django.core.exceptions import ValidationError
@@ -64,7 +63,6 @@ class FaltaProfesorForm(forms.ModelForm):
 
     def clean(self) -> Any:
         cleaned_data = super().clean()
-        print(f"cleaned_data {cleaned_data}")
         grupo = cleaned_data.get("grupo")
         profesor_suplente = cleaned_data.get("profesor_suplente")
         if profesor_suplente:

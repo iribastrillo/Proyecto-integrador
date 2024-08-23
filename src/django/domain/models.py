@@ -5,9 +5,6 @@ from django.utils.text import slugify
 from utils.utils import generate_course_identifier_name
 
 from django.core.validators import MaxValueValidator, MinValueValidator
-
-from functools import reduce
-
 from profiles.models import Alumno, Profesor
 
 
