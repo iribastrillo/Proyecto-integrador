@@ -115,7 +115,7 @@
                       <a class="hover:text-accent-500 dark:hover:text-white" href="{{group.get_absolute_url}}">{{group.identificador}}</a>
                     </td>
                     <td class="px-6 py-4">
-                      <a hx-get="{% url 'estudiantes:change-group' estudiante.slug group.id %}" hx-trigger="click" hx-swap="innerHTML" hx-target="#enrolment-form" class="hover:text-accent-500 dark:hover:text-white" data-modal-target="enrolment-modal" data-modal-toggle="enrolment-modal" >
+                      <a hx-get="{% url 'estudiantes:change-group' estudiante.slug group.id %}" hx-trigger="click" hx-swap="innerHTML" hx-target="#change-modal-body" class="hover:text-accent-500 dark:hover:text-white" data-modal-target="change-modal" data-modal-toggle="change-modal" >
                         <svg class="w-6 h-6 text-white  hover:text-accent-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16h13M4 16l4-4m-4 4 4 4M20 8H7m13 0-4 4m4-4-4-4"/>
                         </svg>                        

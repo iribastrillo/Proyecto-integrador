@@ -1,4 +1,7 @@
 <form method="post" action="{% url 'estudiantes:change-group' student.slug group.id %}" class="p-4 md:p-5"> {% csrf_token %}
+    {% if messages %}
+        {% include "base/components/alerts/full_w_alert.html" %}
+    {% else %}
     <div class="flex flex-col items-stretch mb-4">
         <p class="text-xs mb-2">
             Ingresa el grupo al que se va a cambiar
@@ -6,5 +9,6 @@
         {{form.grupo.errors}}
         {{ form.grupo }}
     </div>
-    <input class='main-action-button w-full' type="submit" value="Inscribir">
+    <input class='main-action-button w-full' type="submit" value="Cambiar">
+    {% endif %}
 </form>

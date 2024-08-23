@@ -4,7 +4,7 @@ from domain.models import Grupo, Alumno
 from domain.models import AlumnoCurso as Enrolments
 from datetime import date
 
-from core.domain.exceptions import StudentAlreadyEnroledException, GroupCompleteException, ProductsDoNotMatchException
+from core.domain.exceptions import StudentAlreadyEnroledException, GroupCompleteException, ProductsDoNotMatchException, StudentHasEnroledException
 
 
 def students_get_active ():  
@@ -21,11 +21,13 @@ def student_resign_course (student : Alumno, group : Grupo):
     enrolment.fecha_baja = date.today()
     enrolment.save()
     group.save()
-    
+         
     
 def student_enroll (student : Alumno, group : Grupo, fee: Decimal):
     if group.alumnos.filter(slug=student.slug).exists():
         raise StudentAlreadyEnroledException()
+    if student.alumnocurso_set.filter(curso__nombre=group.curso.nombre, fecha_baja=None).exists():
+        raise StudentHasEnroledException()
     if group.actives == group.cupo:
         raise GroupCompleteException()
     group.alumnos.add(student)

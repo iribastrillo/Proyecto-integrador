@@ -14,11 +14,10 @@ class InscripcionForm(forms.Form):
         widget=forms.Select(
             attrs={
                 "class": "form-control",
-                "hx-target": "#group-info",
+                "hx-target": "#enrolment-modal-info",
                 "hx-get": reverse_lazy("clases:load-group"),
             }
         ),
-        validators=[group_is_not_full],
     )
     fee = forms.DecimalField(
         required=True,
@@ -35,7 +34,7 @@ class CambioDeGrupoForm(forms.Form):
         widget=forms.Select(
             attrs={
                 "class": "form-control",
-                "hx-target": "#group-info",
+                "hx-target": "#change-modal-info",
                 "hx-get": reverse_lazy("clases:load-group"),
             }
         )

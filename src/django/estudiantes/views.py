@@ -18,7 +18,7 @@ from profiles.models import Alumno
 
 from core.domain.services import calculate_actual_fee
 from core.domain import student_services, product_services
-from core.domain.exceptions import GroupCompleteException, StudentAlreadyEnroledException, NoAlternativeException
+from core.domain.exceptions import GroupCompleteException, StudentAlreadyEnroledException, NoAlternativeException, StudentHasEnroledException
 
 
 class AlumnoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -102,6 +102,7 @@ class InscripcionNueva(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         form = InscripcionForm(request.POST)
+        print(form.is_valid())
         if form.is_valid():
             student = student_services.student_get_by_slug (kwargs["slug"])
             group = form.cleaned_data["grupo"]
@@ -122,6 +123,12 @@ class InscripcionNueva(LoginRequiredMixin, View):
                     request,
                     messages.ERROR,
                     "El estudiante ya está inscripto en ese grupo.",
+                )
+            except StudentHasEnroledException:
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    "El estudiante ya tiene una inscripción activa a este producto.",
                 )
             finally:
                 return HttpResponseRedirect(
@@ -187,7 +194,9 @@ class CambioDeGrupo (LoginRequiredMixin, View):
             form.fields["grupo"].choices = (
             (grupo.pk, grupo) for grupo in alternatives)
         except NoAlternativeException:
-            pass
+            messages.add_message(
+                request, messages.ERROR, "¡Parece que no hay grupo al cual cambiar!"
+                )
         context = {"form": form, "student": student, "group": group}
         return render(request, self.template_name, context)
     
