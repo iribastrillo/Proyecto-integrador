@@ -5,8 +5,6 @@ from domain.models import Pago, Alumno, AlumnoCurso, Curso
 
 class PagoForm(forms.ModelForm):
     alumno = forms.SlugField()
-    print(f"Pago Form")
-
     class Meta:
         model = Pago
         fields = ["monto", "fecha", "descripcion", "comprobante", "curso"]
@@ -22,9 +20,6 @@ class PagoForm(forms.ModelForm):
     )
 
     def __init__(self, *args, **kwargs):
-        print("Pago Form init")
-        print(kwargs)
-        print(args)
         super(PagoForm, self).__init__(*args, **kwargs)
         if initial := kwargs.get("initial"):
             if "student_slug" in initial:
@@ -42,7 +37,6 @@ class PagoForm(forms.ModelForm):
                         widget=forms.Select(attrs={"class": "form-control"}),
                     )
             if "fecha" in self.initial:
-                print("Hay fecha in initial y es {}".format(self.initial["fecha"]))
                 self.initial["fecha"] = self.initial["fecha"].strftime("%Y-%m-%d")
                 self.fields["fecha"].widget.attrs.update(
                     {
