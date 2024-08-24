@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404, render
-from django.views.generic import ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, DeleteView
 from domain.models import Alumno, Pago
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import PagoForm
@@ -122,22 +122,3 @@ class DeletePago(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         student = self.object.alumno
         return reverse_lazy("pagos:payments", kwargs={"slug": student.slug})
-
-
-class UpdatePago(LoginRequiredMixin, UpdateView):
-    model = Pago
-    template_name = "pagos/update_form.html"
-    fields = ["monto", "descripcion", "comprobante"]
-
-    def post(self, request, *args, **kwargs):
-        student = Alumno.objects.get(slug=kwargs["slug"])
-        form = self.form_class(request.POST, request.FILES, student_slug=student.slug)
-        if form.is_valid():
-            pago = form.save(commit=False)
-            pago.alumno = student
-            pago.save()
-            return reverse("pagos:payments", kwargs={"slug": student.slug})
-
-    def get_success_url(self):
-        student = self.object.alumno
-        return reverse("pagos:payments", kwargs={"slug": student.slug})
