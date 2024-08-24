@@ -171,11 +171,9 @@ class BajaEstudiante(LoginRequiredMixin, View):
 
 class InhabilitarAlumno(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        print(f" Inhabilitar estudiante get {kwargs}")
         student = Alumno.objects.get(slug=kwargs["slug"])
         groups = Grupo.objects.filter(alumnos=student)
         context = {"student": student, "groups": groups}
-        print(f" Inhabilitar estudiante get {context}")
         return render(request, "estudiantes/partials/disable_student.html", context)
 
 
@@ -250,7 +248,6 @@ class CambioDeGrupo (LoginRequiredMixin, View):
             
 class HabilitarAlumno(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        print(f"  habilitar estudiante get {kwargs}")
         student = Alumno.objects.get(slug=kwargs["slug"])
         context = {"student": student}
 
