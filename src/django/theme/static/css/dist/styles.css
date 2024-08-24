@@ -1127,7 +1127,7 @@ label {
   margin-bottom: 1rem;
 }
 
-input[type='text'], input[type='password'], input[type='number'], input[type='email'], textarea, select {
+input[type='text'], input[type='password'], input[type='number'], input[type='email'], input[type='date'], textarea, select {
   border-radius: 0.25rem !important;
   border-bottom-width: 1px !important;
   --tw-border-opacity: 1 !important;
@@ -1805,6 +1805,10 @@ select option {
   max-width: 24rem;
 }
 
+.max-w-xs {
+  max-width: 20rem;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -1976,6 +1980,12 @@ select option {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .space-y-2 > :not([hidden]) ~ :not([hidden]) {
@@ -2531,6 +2541,11 @@ select option {
 
 .tracking-tight {
   letter-spacing: -0.025em;
+}
+
+.text-accent-100 {
+  --tw-text-opacity: 1;
+  color: rgb(209 144 75 / var(--tw-text-opacity));
 }
 
 .text-accent-500 {
@@ -3147,6 +3162,11 @@ select option {
 
   .sm\:p-8 {
     padding: 2rem;
+  }
+
+  .sm\:py-2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 
   .sm\:py-4 {

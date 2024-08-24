@@ -1,4 +1,3 @@
-from typing import Any
 from django.utils.timezone import now
 from django.db import models
 from django.urls import reverse
@@ -6,9 +5,6 @@ from django.utils.text import slugify
 from utils.utils import generate_course_identifier_name
 
 from django.core.validators import MaxValueValidator, MinValueValidator
-
-from functools import reduce
-
 from profiles.models import Alumno, Profesor
 
 
@@ -60,6 +56,8 @@ class Curso(models.Model):
         self.slug = slugify(self.nombre)
         super().save(*args, **kwargs)
 
+
+
     @property
     def amount_receivable(self):
         groups = self.grupo_set.all()
@@ -67,8 +65,16 @@ class Curso(models.Model):
         for group in groups:
             receivable += group.amount_receivable
         return receivable
+    
+    @property
+    def active_enrolments(self):
+        return self.alumnocurso_set.filter(fecha_baja=None).count()
+    
+    @property
+    def inactive_enrolments(self):
+        return self.alumnocurso_set.exclude(fecha_baja=None).count()
 
-      
+
 class Previa(models.Model):
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE, related_name="curso")
     previa = models.ForeignKey(Curso, on_delete=models.CASCADE, related_name="previa")
@@ -116,6 +122,10 @@ class AlumnoCurso(models.Model):
     def __str__(self):
         return f"Inscripcion: {self.alumno.apellido} -> {self.curso.nombre}"
 
+    @property
+    def has_dropped_out (self):
+        return self.fecha_baja != None
+
     class Meta:
         ordering = ["-fecha_inscripcion"]
 
@@ -159,7 +169,7 @@ class Grupo(models.Model):
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
     alumnos = models.ManyToManyField(
         Alumno, blank=True
-    )  # validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
+    )  
     cupo = models.IntegerField(
         null=False,
         default=1,
@@ -170,7 +180,7 @@ class Grupo(models.Model):
     )
     profesores = models.ManyToManyField(
         Profesor
-    )  # validar que el profesor este asignado al curso
+    )
     fecha_inicio = models.DateTimeField(null=False, blank=False, default=now)
     fecha_baja = models.DateTimeField(null=True, blank=True)
     activo = models.BooleanField(default=True)
@@ -221,7 +231,7 @@ class Grupo(models.Model):
             return self.curso.costo * self.curso.payout_ratio * self.alumnos.count()
         else:
             return 0
-          
+
     @property
     def amount_receivable(self):
         receivable = 0
@@ -230,6 +240,10 @@ class Grupo(models.Model):
             if enrolment.fecha_finalizado == None:
                 receivable += enrolment.fee
         return receivable
+    
+    @property
+    def actives (self):
+        return self.alumnos.count()
 
 
 class BloqueDeClase(models.Model):

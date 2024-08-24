@@ -169,8 +169,6 @@ class FaltaProfesorCreateView(LoginRequiredMixin, CreateView):
     ) -> HttpResponse:
         return super().post(request, *args, **kwargs)
 
-    # success_url = reverse_lazy( "detail-professor", kwargs={"slug": "2445645"})
-
 
 def falta_profesor_create(request: HttpRequest, slug: str) -> HttpResponseRedirect:
     professor = Profesor.objects.get(slug=slug)

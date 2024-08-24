@@ -27,6 +27,12 @@ urlpatterns = [
     path(
         "<slug>/inhabilitar",
         views.InhabilitarAlumno.as_view(),
-        name="deactivate-student",
+        name="disable-student",
     ),
+    path(
+        "<slug>/habilitar",
+        views.HabilitarAlumno.as_view(),
+        name="enable-student",
+    ),
+    path("cambiar/<slug>/grupo/<id>/", views.CambioDeGrupo.as_view(), name="change-group"),
 ]

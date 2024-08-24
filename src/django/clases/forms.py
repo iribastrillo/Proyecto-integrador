@@ -34,7 +34,6 @@ class CreateGroupForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print(self.fields)
         self.fields["curso"].widget.attrs.update(
             {"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700 "}
         )
@@ -65,8 +64,6 @@ class CreateGroupForm(forms.ModelForm):
                 cursos__id=curso_id
             ).order_by("nombre")
         elif self.initial and "curso" in self.initial:
-            print(f"THERE IS AN INITIAL VALUE:  {self.initial} ")
-            # curso_id = self.initial['curso'].id
             curso_id = self.initial["curso"]
 
             self.fields["profesores"].queryset = Profesor.objects.filter(
@@ -98,8 +95,6 @@ class BloqueDeClaseForm(forms.ModelForm):
             self.fields["id"] = forms.CharField(
                 widget=forms.HiddenInput(), initial=self.initial["id"]
             )
-            print(f"bloque_Clase_id {self.initial['id']}")
-            # self.fields["dia"].initial = self.initial['dia']
             self.fields["dia"] = forms.ModelMultipleChoiceField(
                 queryset=Dia.objects.all(),
                 widget=forms.CheckboxSelectMultiple(
@@ -193,8 +188,6 @@ class BloqueDeClaseForm(forms.ModelForm):
         hora_inicio = cleaned_data.get("hora_inicio")
         hora_fin = cleaned_data.get("hora_fin")
         salon = cleaned_data.get("salon")
-        print(f"cleaned data {cleaned_data}")
-        # Check if a block already exists for the same day, salon, and overlapping time range
         if hora_fin <= hora_inicio:
             raise forms.ValidationError(
                 "La hora de fin debe ser mayor a la hora de inicio"

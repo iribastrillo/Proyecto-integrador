@@ -58,11 +58,9 @@ class SalonesUpdateView(UserPassesTestMixin, UpdateView):
     def form_invalid(self, form):
         response = super().form_invalid(form)
         if "nombre" in form.errors:
-            print(f"Nombre form errors: {form.errors['nombre']}")
             for error in form.errors["nombre"]:
                 messages.add_message(self.request, messages.ERROR, error)
         if "capacidad" in form.errors:
-            print(f"Capacidad form errors: {form.errors['capacidad']}")
             for error in form.errors["capacidad"]:
                 messages.add_message(self.request, messages.ERROR, error)
         return response

@@ -32,7 +32,6 @@ class Persona(models.Model):
         except User.DoesNotExist as e:
             while True:
                 new_code = generate_unique_code()
-                print(new_code)
                 try:
                     user = User.objects.create(
                         username=new_code, password=make_password(self.dni)
@@ -51,6 +50,10 @@ class Persona(models.Model):
     def delete(self, *args, **kwargs):
         self.user.delete()
         super().delete(*args, **kwargs)
+        
+    @property
+    def is_active (self):
+        return self.user.is_active
 
     class Meta:
         abstract = True
@@ -87,6 +90,11 @@ class Alumno(Persona):
                 )
             )
             return age
+        
+    @property
+    def active_enrolents(self):
+        return self.alumnocurso_set.filter(fecha_baja=None).count()
+    
     def get_absolute_url(self):
         return reverse("estudiantes:detail-student", kwargs={"slug": self.slug})
 
