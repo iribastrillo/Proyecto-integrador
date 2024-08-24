@@ -21,7 +21,7 @@
         @apply mb-4;
     }
 
-    input[type='text'], input[type='password'], input[type='number'], input[type='email'], textarea, select {
+    input[type='text'], input[type='password'], input[type='number'], input[type='email'], input[type='date'], textarea, select {
         @apply border-b border-gray-300 bg-inherit rounded !important;
     }
 

@@ -34,4 +34,5 @@ urlpatterns = [
         views.HabilitarAlumno.as_view(),
         name="enable-student",
     ),
+    path("cambiar/<slug>/grupo/<id>/", views.CambioDeGrupo.as_view(), name="change-group"),
 ]

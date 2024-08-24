@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
-from os import getenv
 from pathlib import Path
 from shutil import which
 from decouple import config
@@ -29,6 +28,10 @@ SECRET_KEY = config("SECRET_KEY", cast=str)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=True, cast=bool)
+
+CSRF_COOKIE_SECURE= config("CSRF_COOKIE_SECURE", default=True, cast=bool)
+
+SESSION_COOKIE_SECURE = config("SESSION_COOKIE_SECURE", default=True, cast=bool)
 
 ALLOWED_HOSTS = [
     "localhost",

@@ -1,4 +1,3 @@
-from typing import Any
 from django.utils.timezone import now
 from django.db import models
 from django.urls import reverse
@@ -6,9 +5,6 @@ from django.utils.text import slugify
 from utils.utils import generate_course_identifier_name
 
 from django.core.validators import MaxValueValidator, MinValueValidator
-
-from functools import reduce
-
 from profiles.models import Alumno, Profesor
 
 
@@ -69,6 +65,14 @@ class Curso(models.Model):
         for group in groups:
             receivable += group.amount_receivable
         return receivable
+    
+    @property
+    def active_enrolments(self):
+        return self.alumnocurso_set.filter(fecha_baja=None).count()
+    
+    @property
+    def inactive_enrolments(self):
+        return self.alumnocurso_set.exclude(fecha_baja=None).count()
 
 
 class Previa(models.Model):
@@ -118,6 +122,10 @@ class AlumnoCurso(models.Model):
     def __str__(self):
         return f"Inscripcion: {self.alumno.apellido} -> {self.curso.nombre}"
 
+    @property
+    def has_dropped_out (self):
+        return self.fecha_baja != None
+
     class Meta:
         ordering = ["-fecha_inscripcion"]
 
@@ -161,7 +169,7 @@ class Grupo(models.Model):
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
     alumnos = models.ManyToManyField(
         Alumno, blank=True
-    )  # validar que el alumno este inscripto en el curso, y que la cantidad sea menor o igual al cupo de la clase
+    )  
     cupo = models.IntegerField(
         null=False,
         default=1,
@@ -172,7 +180,7 @@ class Grupo(models.Model):
     )
     profesores = models.ManyToManyField(
         Profesor
-    )  # validar que el profesor este asignado al curso
+    )
     fecha_inicio = models.DateTimeField(null=False, blank=False, default=now)
     fecha_baja = models.DateTimeField(null=True, blank=True)
     activo = models.BooleanField(default=True)
@@ -191,18 +199,15 @@ class Grupo(models.Model):
 
 
     def __str__(self) -> str:
-        return f"Identificador: {self.identificador} - Curso: {self.curso.nombre} - Activo: {self.activo}"
+        return f"{self.identificador}"
 
     def get_absolute_url(self):
         return reverse("clases:detail-group", kwargs={"pk": self.pk})
 
     @property
     def generate_identificador(self):
-        print(f"Generando identificador para GRUPO {self.id}")
         group_identifier=generate_course_identifier_name(self.curso.nombre)
-        print(f"Identificador generado {group_identifier}")
         bloques_de_clase = BloqueDeClase.objects.filter(grupo=self)
-        print(f"bloques_de_clase {bloques_de_clase}")
         if bloques_de_clase:
             for bloque in bloques_de_clase:
                 day_names = [dia.name.lower() for dia in bloque.dia.all()]
@@ -217,9 +222,7 @@ class Grupo(models.Model):
                         days_initials.append(day_initial)
                     group_identifier += "".join(days_initials)
                     group_identifier += f"{bloque.hora_inicio.strftime('%H%M')}S{bloque.salon.nombre}"
-        print(f"Identificador final {group_identifier}")
         self.identificador=group_identifier
-        print(f"Identificador actualizado {self.identificador}")
         self.save()
 
     @property
@@ -237,6 +240,10 @@ class Grupo(models.Model):
             if enrolment.fecha_finalizado == None:
                 receivable += enrolment.fee
         return receivable
+    
+    @property
+    def actives (self):
+        return self.alumnos.count()
 
 
 class BloqueDeClase(models.Model):
