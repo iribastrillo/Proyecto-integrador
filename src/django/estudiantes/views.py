@@ -1,3 +1,4 @@
+import datetime
 from django.views.generic import (
     CreateView,
     ListView,
@@ -15,7 +16,7 @@ from django.contrib import messages
 
 from .forms import InscripcionForm, BajaForm
 from profiles.models import Alumno
-from domain.models import AlumnoCurso
+from domain.models import AlumnoCurso,Grupo
 
 from core.domain.services import calculate_actual_fee
 
@@ -174,13 +175,59 @@ class BajaEstudiante(LoginRequiredMixin, View):
 
 
 class InhabilitarAlumno(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        print(f" Inhabilitar estudiante get {kwargs}")
+        student = Alumno.objects.get(slug=kwargs["slug"])
+        groups = Grupo.objects.filter(alumnos=student)
+        context = {"student": student, "groups": groups}
+        print(f" Inhabilitar estudiante get {context}")
+        return render(request, "estudiantes/partials/disable_student.html", context)
+
+
     def post(self, request, *args, **kwargs):
         student = Alumno.objects.get(slug=kwargs["slug"])
+        alumno_curso = AlumnoCurso.objects.filter(alumno=student)
+        for ac in alumno_curso:
+            ac.fecha_baja = datetime.date.today()
+            ac.save()
+
+
         student.user.is_active = False
+        student.user.save()
+
+        grupo = student.grupo_set.all()
+        for g in grupo:
+            g.alumnos.remove(student)
+            g.save()
+        student.save()
+
         messages.add_message(
             request,
             messages.SUCCESS,
             f"Inhabilitaste el usuario de {student.apellido}, {student.nombre}.",
+        )
+        return HttpResponseRedirect(
+            reverse("estudiantes:detail-student", kwargs={"slug": student.slug})
+        )
+
+class HabilitarAlumno(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        print(f"  habilitar estudiante get {kwargs}")
+        student = Alumno.objects.get(slug=kwargs["slug"])
+        context = {"student": student}
+
+        return render(request, "estudiantes/partials/disable_student.html", context)
+
+
+    def post(self, request, *args, **kwargs):
+        student = Alumno.objects.get(slug=kwargs["slug"])
+        student.user.is_active = True
+        student.user.save()
+
+        messages.add_message(
+            request,
+            messages.SUCCESS,
+            f"Habilitaste el usuario de {student.apellido}, {student.nombre}.",
         )
         return HttpResponseRedirect(
             reverse("estudiantes:detail-student", kwargs={"slug": student.slug})

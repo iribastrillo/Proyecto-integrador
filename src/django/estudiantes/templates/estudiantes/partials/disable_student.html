@@ -1,0 +1,35 @@
+
+
+
+{%if student.user.is_active%}
+<form method="POST" action="{% url 'estudiantes:disable-student' student.slug %}" class="p-4 md:p-5">
+    <h2 class="mb-2">Estas seguro de dar de baja a este estudiante?:</h2>
+    {%else%}
+    <form method="POST" action="{% url 'estudiantes:enable-student' student.slug %}" class="p-4 md:p-5">
+    <h2 class="mb-2">Estas seguro de dar de alta a este estudiante?:</h2>
+    {% endif %}
+    {% csrf_token %}
+        <p class="text-xs mb-2">{{ student }}</p>
+        {% if groups.exists  and groups.count > 0  %}
+        <h2 class="mb-2">Grupos de donde el estudiante será eliminado:</h2>
+        <ul class="mb-2">
+
+                {% for group in groups %}
+                    <li>{{ group }}</li>
+                {% endfor %}
+        </ul>
+
+            {% else %}
+            <h2 class="mb-2"> El usuario no tiene grupos asignados</h2>
+            {% endif %}
+
+        <button type="submit" class='main-action-button w-full' >
+            {%if  student.user.is_active%}
+            Dar de baja
+            {%else%}
+            Dar de alta
+            {% endif %}
+        </button>
+
+     </form>
+

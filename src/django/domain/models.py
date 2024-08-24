@@ -60,6 +60,8 @@ class Curso(models.Model):
         self.slug = slugify(self.nombre)
         super().save(*args, **kwargs)
 
+
+
     @property
     def amount_receivable(self):
         groups = self.grupo_set.all()
@@ -68,7 +70,7 @@ class Curso(models.Model):
             receivable += group.amount_receivable
         return receivable
 
-      
+
 class Previa(models.Model):
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE, related_name="curso")
     previa = models.ForeignKey(Curso, on_delete=models.CASCADE, related_name="previa")
@@ -226,7 +228,7 @@ class Grupo(models.Model):
             return self.curso.costo * self.curso.payout_ratio * self.alumnos.count()
         else:
             return 0
-          
+
     @property
     def amount_receivable(self):
         receivable = 0
