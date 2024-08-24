@@ -11,9 +11,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
-from os import getenv
 from pathlib import Path
 from shutil import which
+from decouple import config
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,16 +24,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-@$qz#@%8n2njd)3dpu36!k8pitwydd^u@v4+rgpsblgd!e^jn2"
+SECRET_KEY = config("SECRET_KEY", cast=str)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = getenv("IS_DEVELOPMENT", True)
+DEBUG = config("DEBUG", default=True, cast=bool)
+
+CSRF_COOKIE_SECURE= config("CSRF_COOKIE_SECURE", default=True, cast=bool)
+
+SESSION_COOKIE_SECURE = config("SESSION_COOKIE_SECURE", default=True, cast=bool)
 
 ALLOWED_HOSTS = [
-    getenv("APP_HOST"),
     "localhost",
     "127.0.0.1",
-    "hidden-fortress-37452-206e312e47f7.herokuapp.com",
+    "testing-env-portal-c16a535d84ba.herokuapp.com",
 ]
 
 INSTALLED_APPS = [
@@ -103,6 +107,10 @@ DATABASES = {
     },
 }
 
+
+if not DEBUG:
+    DATABASES["default"] = dj_database_url.config(conn_max_age=600, ssl_require=False)
+
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
@@ -152,7 +160,9 @@ STORAGES = {
     },
 }
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 MEDIA_URL = "/media/"
 
@@ -167,11 +177,11 @@ NPM_BIN_PATH = which("npm")
 
 # Email configuration
 
-#Para que funcione todo el flujo de cambio de contraseña hay que configurar, si se usa gmail, una password. 
-#Seguir las instrucciones en este enlace support.google.com/accounts/answer/185833 
+# Para que funcione todo el flujo de cambio de contraseña hay que configurar, si se usa gmail, una password.
+# Seguir las instrucciones en este enlace support.google.com/accounts/answer/185833
 
-EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend' # Para usar gmail, sustituir dummy por gmail.
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"  # Para usar gmail, sustituir dummy por gmail.
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "host"

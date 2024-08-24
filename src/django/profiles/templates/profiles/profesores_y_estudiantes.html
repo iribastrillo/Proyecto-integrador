@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load random %}
 
 {% block navbar %}
 
@@ -50,12 +51,10 @@
             </svg>          
           </a>
   </div>
-  <div class="flow-root">
-          <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-              {% for profesor in professors %}
-                {% include 'profiles/components/profesor_list_component.html' %}
-              {% endfor %}
-          </ul>
+  <div class="flex flex-wrap gap-4">
+    {% for profesor in professors %}
+      {% include 'profiles/components/profesor_list_component.html' with r=random%}
+    {% endfor %}
   </div>
 </section>
 
@@ -69,12 +68,10 @@
             </svg>          
           </a>
   </div>
-  <div class="flow-root">
-          <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-              {% for student in students %}
-                {% include 'profiles/components/estudiante_list_component.html' %}
-              {% endfor %}
-          </ul>
+  <div class="flex flex-wrap gap-4">
+    {% for student in students %}
+      {% include 'profiles/components/estudiante_list_component.html' %}
+    {% endfor %}
   </div>
 </section>
 

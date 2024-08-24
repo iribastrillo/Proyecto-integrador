@@ -1,0 +1,37 @@
+
+<form  hx-post="{% url 'missing-professor' slug=professor.slug%}" enctype="multipart/form-data"  class="col-span-3 md:col-span-2 lg:col-span-2 max-w-full bg-gray-900 border border-gray-700 rounded p-8 crate-falta-form">
+    {% csrf_token %}
+    {% if form.errors %}
+    <ul class="error-list">
+       {% for error in form.errors.values %}
+           <li>{{ error }}</li>
+       {% endfor %}
+   </ul>
+    {% endif %}
+    <div class="flex flex-col mb-4">
+
+        {{ form.profesor_titular }}
+    </div>
+    <div class="flex flex-col mb-4">
+        {{ form.fecha.label_tag }}
+        {{ form.fecha }}
+    </div>
+    <div class="flex flex-col mb-4">
+        {{ form.grupo.label_tag }}
+        {{ form.grupo }}
+    </div>
+    <div class="flex flex-col mb-4">
+        {{ form.profesor_suplente.label_tag }}
+        {{ form.profesor_suplente }}
+    </div>
+    <div class="flex flex-col mb-4">
+        {{ form.descripcion.label_tag }}
+        {{ form.descripcion }}
+    </div>
+
+    <button type="submit" class='main-action-button w-full'>Crear</button>
+
+
+</form>
+
+

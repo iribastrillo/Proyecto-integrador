@@ -15,4 +15,22 @@ urlpatterns = [
     ),
     path("<slug>/pagos", views.Pagos.as_view(), name="payments-professor"),
     path("<slug>/reporte_clases", views.reporte_clases, name="report-professor-class"),
- ]
+    path(
+        "<slug>/falta_profesor", views.falta_profesor_create, name="missing-professor"
+    ),
+    path(
+        "<slug>/listar_faltas",
+        views.list_faltas_profesor,
+        name="list-missing-professor",
+    ),
+    path("<pk>/modificar_falta", views.update_falta, name="update-falta"),
+    path(
+        "<pk>/detail_falta",
+        views.FaltaProfesorDetailView.as_view(),
+        name="detail-falta",
+    ),
+    path(
+        "<pk>/eliminar_falta", views.DeleteFaltaProfesor.as_view(), name="delete-falta"
+    ),
+    path("<pk>/cargar-profesores/", views.load_professors, name="load-profesors"),
+]

@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("domain", "0003_remove_bloquedeclase_duracion_remove_carrera_costo_and_more"),
     ]

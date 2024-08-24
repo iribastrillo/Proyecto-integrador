@@ -26,19 +26,26 @@
     </div>
 </div>
 
-{{data|json_script:"data"}}
+{{additions|json_script:"additions"}}
+{{dropouts|json_script:"dropouts"}}
 
 <script>
 
-  const data = JSON.parse(document.getElementById('data').textContent);
+  const additions = JSON.parse(document.getElementById('additions').textContent);
+  const dropouts = JSON.parse(document.getElementById('dropouts').textContent);
 
   const enrolments_options = {
     colors: ["#1A56DB", "#BF7A31"],
     series: [
       {
-        name: "Mes actual",
+        name: "Activos",
+        color: "#D1904B",
+        data: additions,
+      },
+      {
+        name: "Bajas",
         color: "#D8C1B5",
-        data: data,
+        data: dropouts,
       },
     ],
     chart: {

@@ -5,12 +5,12 @@
 @layer base {
     @font-face {
         font-family: 'Metropolis';
-        src: url(../../../static/fonts/Metropolis-Regular.woff2) format('woff2');
+        src: url(../../fonts/Metropolis-Regular.woff2) format('woff2');
     }
     @font-face {
         font-family: 'Metropolis';
         font-weight: 800;
-        src: url(../../../static/fonts/Metropolis-Black.woff2) format('woff2');
+        src: url(../../fonts/Metropolis-Black.woff2) format('woff2');
     }
 
     h1, h2, h3 {
@@ -21,7 +21,7 @@
         @apply mb-4;
     }
 
-    input[type='text'], input[type='password'], input[type='number'], input[type='email'], textarea, select {
+    input[type='text'], input[type='password'], input[type='number'], input[type='email'], input[type='date'], textarea, select {
         @apply border-b border-gray-300 bg-inherit rounded !important;
     }
 
@@ -34,7 +34,7 @@
     }
 
     .wooden-cover {
-        background-image: url(../../../static/app/wood-texture.png);
+        background-image: url(../../assets/wood-texture.png);
         background-repeat: no-repeat;
         background-size: cover;
     }

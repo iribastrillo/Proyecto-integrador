@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('domain', '0032_merge_20240731_2027'),
+        ("domain", "0032_merge_20240731_2027"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='pago',
-            name='id',
+            model_name="pago",
+            name="id",
             field=models.AutoField(primary_key=True, serialize=False),
         ),
     ]

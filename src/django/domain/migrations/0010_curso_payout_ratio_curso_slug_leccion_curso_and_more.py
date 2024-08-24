@@ -6,7 +6,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("domain", "0009_alter_dia_name_alter_grupo_alumnos"),
     ]
