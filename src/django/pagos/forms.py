@@ -5,6 +5,7 @@ from domain.models import Pago, Alumno, AlumnoCurso, Curso
 
 class PagoForm(forms.ModelForm):
     alumno = forms.SlugField()
+
     class Meta:
         model = Pago
         fields = ["monto", "fecha", "descripcion", "comprobante", "curso"]

@@ -98,6 +98,7 @@ def generate_monthly_addtions_data(query):
         data["value"][d["month"] - 1] = d["count"]
     return data
 
+
 def generate_monthly_dropouts_data(query):
     data = {"month": list(calendar.month_name)[1:], "value": [i for i in repeat(0, 12)]}
     for d in query:

@@ -24,7 +24,8 @@ class InscripcionForm(forms.Form):
             MaxValueValidator(50000, "La cuota real debe ser menor a 50000."),
         ],
     )
-    
+
+
 class CambioDeGrupoForm(forms.Form):
     grupo = forms.ModelChoiceField(
         queryset=Grupo.objects.none(),
@@ -35,7 +36,7 @@ class CambioDeGrupoForm(forms.Form):
                 "hx-target": "#change-modal-info",
                 "hx-get": reverse_lazy("clases:load-group"),
             }
-        )
+        ),
     )
 
 
