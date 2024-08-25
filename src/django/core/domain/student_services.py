@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from domain.models import Grupo, Alumno
+from domain.models import Grupo, Alumno, Pago
 from domain.models import AlumnoCurso as Enrolments
 from datetime import date
 
@@ -10,6 +10,16 @@ from core.domain.exceptions import StudentAlreadyEnroledException, GroupComplete
 def students_get_active ():  
     return Enrolments.objects.filter (fecha_baja=None)
 
+
+def student_get_active_products(student : Alumno):
+    return Enrolments.objects.filter(alumno=student,
+                                     fecha_baja=None,
+                                     fecha_finalizado=None,
+                                     aprobado=False)
+    
+
+def student_get_last_payments(student : Alumno):
+    return Pago.objects.filter (alumno=student)[:5]
 
 def students_get_inactive ():  
     return Enrolments.objects.exclude (fecha_baja=None)
@@ -52,6 +62,10 @@ def student_get_groups (student : Alumno):
 
 def student_get_by_slug (student_slug : str) -> Alumno:
     return Alumno.objects.get (slug=student_slug)
+
+
+def student_get_by_user (user_id : str) -> Alumno:
+    return Alumno.objects.get (user__id=user_id)
 
 
 def student_get_active_enrolments(student : Alumno):

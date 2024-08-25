@@ -29,7 +29,7 @@ def home(request):
         if is_staff(request.user):
             return redirect("dashboard")
         if is_student(request.user):
-            return HttpResponse("<h1>Entraste como estudiante</h1>")
+            return redirect ("estudiantes:dashboard")
         if is_teacher(request.user):
             return HttpResponse("<h1>Entraste como profesor</h1>")
     else:

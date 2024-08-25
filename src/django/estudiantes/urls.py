@@ -6,6 +6,7 @@ app_name = "estudiantes"
 
 urlpatterns = [
     path("", views.AlumnoListView.as_view(), name="students"),
+    path("dashboard/", views.Dashboard.as_view(), name="dashboard"),
     path(
         "ficha-del-estudiante/nuevo",
         views.AlumnoCreateView.as_view(),

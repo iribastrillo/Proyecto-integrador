@@ -13,11 +13,13 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 from .forms import InscripcionForm, BajaForm, CambioDeGrupoForm
 from profiles.models import Alumno
 from domain.models import AlumnoCurso,Grupo
 
+from app.authorization import is_student
 from core.domain.services import calculate_actual_fee
 from core.domain import student_services, product_services
 from core.domain.exceptions import GroupCompleteException, StudentAlreadyEnroledException, NoAlternativeException, StudentHasEnroledException
@@ -267,3 +269,16 @@ class HabilitarAlumno(LoginRequiredMixin, View):
         return HttpResponseRedirect(
             reverse("estudiantes:detail-student", kwargs={"slug": student.slug})
         )
+
+
+class Dashboard (LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, *args, **kwargs):
+        student = student_services.student_get_by_user(request.user.id)
+        context = {
+            "student" : student,
+            "enrolments" : student_services.student_get_active_products(student),
+            "payments": student_services.student_get_last_payments(student)
+        }
+        return render(request, "estudiantes/dashboard.html", context)
+    def test_func(self):
+        return is_student(self.request.user)
