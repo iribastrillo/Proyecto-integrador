@@ -3,6 +3,8 @@ from decimal import Decimal
 from string import ascii_uppercase
 from itertools import repeat
 from datetime import date
+from typing import Union
+from django.contrib.auth.models import User
 import calendar
 
 from .utils import get_weekdays_per_month

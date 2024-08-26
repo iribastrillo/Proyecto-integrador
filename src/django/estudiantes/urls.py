@@ -36,6 +36,11 @@ urlpatterns = [
         name="enable-student",
     ),
     path(
+        "grupos/",
+        views.Groups.as_view(),
+        name="groups",
+    ),
+    path(
         "cambiar/<slug>/grupo/<id>/", views.CambioDeGrupo.as_view(), name="change-group"
     ),
 ]

@@ -32,37 +32,22 @@
 
 <section class="lg:flex gap-4 mb-4">
     <div class="max-w-full w-full p-6 border border-gray-700 rounded bg-gray-900 mb-4 md:lg:m-0">
-        <h5 data-tooltip-target="amount-received-tooltip" class="text-2xl font-bold tracking-tight text-white">${{student.amount_paid}}</h5>
+        <h5 data-tooltip-target="amount-received-tooltip" class="text-2xl font-bold tracking-tight text-white">${{profile.amount_paid}}</h5>
         <div id="amount-received-tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-700 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700">
             Monto enviado en pagos este mes
-        </div>
-        <p data-tooltip-target="amount-receivable-tooltip" class="text-xs text-red-400">${{student.amount_due}}</p>
-        <div id="amount-receivable-tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-700 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700">
-            Monto total a pagar por mes
         </div>
         <h6 class="text-base font-bold tracking-tight text-gray-400">En pagos este mes</h6>
     </div>
     <div class="max-w-full w-full p-6 border border-gray-700 rounded bg-gray-900 mb-4 md:lg:m-0">
         <div class="flex gap-2 justify-between">
-            <h5 class="text-2xl font-bold tracking-tight text-white">$DUMMY</h5>
+            <h5 class="text-2xl font-bold tracking-tight text-white">{{profile.active_enrolments}}</h5>
         </div>
-        <p data-tooltip-target="total-spending-tooltip" class="text-xs text-red-400">$DUMMY</p>
-        <div id="total-spending-tooltip" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-700 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700">
-            En gastos de salarios
-        </div>
-        <h6 class="text-base font-bold tracking-tight text-gray-400">Monto total a pagar por mes</h6>
-    </div>
-    <div class="max-w-full w-full p-6 border border-gray-700 rounded bg-gray-900 mb-4 md:lg:m-0">
-        <div class="flex gap-2 justify-between">
-            <h5 class="text-2xl font-bold tracking-tight text-white">{{student.active_enrolments}}</h5>
-        </div>
-        <p class="text-xs text-green-400">$DUMMY</p>
         <h6 class="text-base font-bold tracking-tight text-gray-400">Inscripciones a materias</h6>
     </div>
 </section>
 
 
-<section class="relative overflow-x-auto rounded">
+<section class="relative overflow-x-auto rounded mb-4">
     <table class="max-w-full w-full text-sm text-left rtl:text-right text-gray-400 border-gray-700 border">
         <thead class="text-xs uppercase bg-gray-900 text-gray-400">
             <tr>
@@ -91,7 +76,7 @@
                             ${{enrolment.fee}}
                         </td>
                         <td class="px-6 py-4">
-                            {% if enrolment.aprobada %}
+                            {% if not enrolment.aprobada %}
                                 <div class="flex items-center">
                                     <div class="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> Activa
                                 </div>
@@ -111,6 +96,37 @@
                             </div>
                         </td>
                     </tr>
+                {% endfor %}
+            {% endif%}
+        </tbody>
+    </table>
+</section>
+
+<section class="relative overflow-x-auto rounded">
+    <table class="max-w-full w-full text-sm text-left rtl:text-right text-gray-400 border-gray-700 border">
+        <thead class="text-xs uppercase bg-gray-900 text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Profesor
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Grupo
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if enrolments %}
+                {% for group in profile.grupo_set.all %}
+                    {% for teacher in group.profesores.all %}
+                        <tr class="border-b bg-gray-900 border-gray-700 hover:bg-gray-600">
+                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap text-white">
+                                {{teacher.apellido}}, {{teacher.nombre}}
+                            </th>
+                            <td class="px-6 py-4">
+                                {{group}}
+                            </td>
+                        </tr>
+                    {% endfor %}
                 {% endfor %}
             {% endif%}
         </tbody>

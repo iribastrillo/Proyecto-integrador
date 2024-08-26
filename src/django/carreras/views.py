@@ -14,6 +14,10 @@ from django.shortcuts import render
 from domain.models import Curso, Carrera
 from .forms import CreateCareerForm
 
+from app.authorization import is_student
+
+from core.domain import student_services
+
 
 class CreateCourse(LoginRequiredMixin, CreateView):
     model = Curso

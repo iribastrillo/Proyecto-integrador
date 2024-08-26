@@ -216,6 +216,20 @@ class CambioDeGrupo(LoginRequiredMixin, View):
     template_name = "estudiantes/partials/group_change_form.html"
 
     def get(self, request, *args, **kwargs):
+        """
+        Handles HTTP GET requests for the CambioDeGrupo view.
+
+        Retrieves the student and group based on the provided slug and id,
+        and generates a form with available group alternatives for the student.
+
+        Args:
+            request: The current HTTP request.
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments containing 'id' and 'slug'.
+
+        Returns:
+            A rendered HTML template with the form and student information.
+        """
         form = self.form_class()
         group = product_services.group_get_by_id(kwargs["id"])
         student = student_services.student_get_by_slug(kwargs["slug"])
@@ -230,6 +244,21 @@ class CambioDeGrupo(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
+        """
+        Handles HTTP POST requests for the CambioDeGrupo view.
+
+        Validates the provided form data, retrieves the student and group based on the provided slug and id,
+        and attempts to change the student's group. If the group change is successful, a success message is added
+        to the request. If the group change fails due to the group being full, an error message is added to the request.
+
+        Args:
+            request: The current HTTP request.
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments containing 'id' and 'slug'.
+
+        Returns:
+            A redirect response to the student's detail page.
+        """
         form = BajaForm(request.POST)
         if form.is_valid():
             student = student_services.student_get_by_slug(kwargs["slug"])
@@ -276,13 +305,25 @@ class HabilitarAlumno(LoginRequiredMixin, View):
 
 class Dashboard(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
-        student = student_services.student_get_by_user(request.user.id)
+        student = Alumno.objects.get(user=request.user)
         context = {
-            "student": student,
+            "profile": student,
             "enrolments": student_services.student_get_active_products(student),
             "payments": student_services.student_get_last_payments(student),
         }
         return render(request, "estudiantes/dashboard.html", context)
+
+    def test_func(self):
+        return is_student(self.request.user)
+
+
+class Groups(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, *args, **kwargs):
+        student = Alumno.objects.get(user=request.user)
+        context = {
+            "lista_grupos": student_services.student_get_groups(student),
+        }
+        return render(request, "clases/grupo_list.html", context)
 
     def test_func(self):
         return is_student(self.request.user)
