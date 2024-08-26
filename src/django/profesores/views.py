@@ -13,27 +13,37 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.shortcuts import redirect, render
 
-from .forms import FaltaProfesorForm
+from .forms import FaltaProfesorForm, ProfesorForm
 from domain.models import Profesor, BloqueDeClase, Dia, FaltaProfesor, Grupo
 
 from core.domain.services import calculate_payment
 from django.contrib import messages
 
 
-class ProfesorCreateView(LoginRequiredMixin, CreateView):
+class ProfesorCreateView(LoginRequiredMixin,SuccessMessageMixin, CreateView):
     model = Profesor
-    fields = [
-        "nombre",
-        "apellido",
-        "dni",
-        "fecha_nacimiento",
-        "direccion",
-        "telefono",
-        "email",
-        "sexo",
-        "cursos",
-    ]
-    success_url = reverse_lazy("profiles:users")
+    form_class = ProfesorForm
+
+    def get_success_url(self,*args, **kwargs):
+        success_message = "Se agregó profesor con éxito"
+        messages.success(self.request, success_message)
+        return reverse_lazy(
+            "detail-professor", kwargs={"slug": kwargs["slug"]}
+        )
+
+    def form_valid(self, form):
+        profesor = form.save(commit=False)
+        profesor.save()
+        profesor.cursos.set(form.cleaned_data["cursos"])
+        return redirect(self.get_success_url(slug=profesor.slug))
+
+    def form_invalid(self, form):
+        error_message=f"El formulario contiene error(es): "
+        for field, error_list in form.errors.items():
+            for error in error_list:
+                error_message+=  f" {error} \n"
+        messages.error(self.request, error_message)
+        return super().form_invalid(form)
 
 
 class ProfesorListView(LoginRequiredMixin, ListView):
@@ -51,24 +61,31 @@ class ProfesorDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class ProfesorUpdateView(LoginRequiredMixin, UpdateView):
+class ProfesorUpdateView(LoginRequiredMixin,SuccessMessageMixin, UpdateView):
     model = Profesor
-    fields = [
-        "nombre",
-        "apellido",
-        "dni",
-        "fecha_nacimiento",
-        "direccion",
-        "telefono",
-        "email",
-        "sexo",
-        "cursos",
-    ]
+    form_class = ProfesorForm
 
-    def get_success_url(self):
+
+    def get_success_url(self,*args, **kwargs):
+        success_message = "Profesor modificado con éxito"
+        messages.success(self.request, success_message)
         return reverse_lazy(
-            "detail-professor", kwargs={"slug": self.object.user.username}
+            "detail-professor", kwargs={"slug": kwargs["slug"]}
         )
+
+    def form_valid(self, form):
+        profesor = form.save(commit=False)
+        profesor.save()
+        profesor.cursos.set(form.cleaned_data["cursos"])
+        return redirect(self.get_success_url(slug=profesor.slug))
+
+    def form_invalid(self, form):
+        error_message=f"El formulario contiene error(es): "
+        for field, error_list in form.errors.items():
+            for error in error_list:
+                error_message+=  f" {error} \n"
+        messages.error(self.request, error_message)
+        return super().form_invalid(form)
 
 
 class ProfesorDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):

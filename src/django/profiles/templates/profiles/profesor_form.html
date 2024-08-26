@@ -45,7 +45,8 @@
 
 {% block content %}
 
-<form method="post" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-full bg-gray-900 border border-gray-700 rounded p-8">{% csrf_token %}
+<form method="post" class="col-span-3 md:col-span-2 lg:col-span-2 max-w-full bg-gray-900 border border-gray-700 rounded p-8">
+  {% csrf_token %}
     <h5 class="text-xl font-bold leading-nonetext-white">Ficha del profesor</h5>
     <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"/>
     <div class="flex flex-col mb-4">
@@ -61,6 +62,10 @@
         {{ form.dni }}
     </div>
     <div class="flex flex-col mb-4">
+      {{ form.direccion.label_tag }}
+      {{ form.direccion }}
+  </div>
+    <div class="flex flex-col mb-4">
         {{ form.telefono.label_tag }}
         {{ form.telefono }}
     </div>
@@ -69,17 +74,13 @@
         {{ form.email }}
     </div>
     <div class="flex flex-col mb-4">
+      {{ form.fecha_nacimiento.label_tag }}
+      {{ form.fecha_nacimiento }}
+  </div>
+    <div class="flex flex-col mb-4">
       {{ form.sexo.label_tag }}
       {{ form.sexo }}
   </div>
-    <div class="flex flex-col mb-4">
-        {{ form.direccion.label_tag }}
-        {{ form.direccion }}
-    </div>
-    <div class="flex flex-col mb-4">
-        {{ form.fecha_nacimiento.label_tag }}
-        {{ form.fecha_nacimiento }}
-    </div>
     <div class="flex flex-col mb-4">
         {{ form.cursos.label_tag }}
         {{ form.cursos }}
