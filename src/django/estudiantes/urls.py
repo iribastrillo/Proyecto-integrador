@@ -6,6 +6,7 @@ app_name = "estudiantes"
 
 urlpatterns = [
     path("", views.AlumnoListView.as_view(), name="students"),
+    path("dashboard/", views.Dashboard.as_view(), name="dashboard"),
     path(
         "ficha-del-estudiante/nuevo",
         views.AlumnoCreateView.as_view(),
@@ -34,5 +35,12 @@ urlpatterns = [
         views.HabilitarAlumno.as_view(),
         name="enable-student",
     ),
-    path("cambiar/<slug>/grupo/<id>/", views.CambioDeGrupo.as_view(), name="change-group"),
+    path(
+        "grupos/",
+        views.Groups.as_view(),
+        name="groups",
+    ),
+    path(
+        "cambiar/<slug>/grupo/<id>/", views.CambioDeGrupo.as_view(), name="change-group"
+    ),
 ]

@@ -70,16 +70,16 @@
     </div>
     <div class="flex flex-col mb-4">
       <p class="text-xs mb-2">
+        Dirección
+      </p>
+        {{ form.direccion }}
+    </div>
+    <div class="flex flex-col mb-4">
+      <p class="text-xs mb-2">
         Teléfono
       </p>
       {{ form.telefono }}
     </div>
-    <div class="flex flex-col mb-4">
-      <p class="text-xs mb-2">
-        Contacto de emergencia
-      </p>
-      {{ form.emergency_contact }}
-  </div>
     <div class="flex flex-col mb-4">
       <p class="text-xs mb-2">
         Correo electrónico
@@ -88,22 +88,22 @@
     </div>
     <div class="flex flex-col mb-4">
       <p class="text-xs mb-2">
+        Contacto de emergencia
+      </p>
+      {{ form.emergency_contact }}
+  </div>
+  <div class="flex flex-col mb-4">
+    <p class="text-xs mb-2">
+      Fecha de nacimiento
+    </p>
+      {{ form.fecha_nacimiento }}
+  </div>
+    <div class="flex flex-col mb-4">
+      <p class="text-xs mb-2">
         Sexo
       </p>
       {{ form.sexo }}
   </div>
-    <div class="flex flex-col mb-4">
-      <p class="text-xs mb-2">
-        Dirección
-      </p>
-        {{ form.direccion }}
-    </div>
-    <div class="flex flex-col mb-4">
-      <p class="text-xs mb-2">
-        Fecha de nacimiento
-      </p>
-        {{ form.fecha_nacimiento }}
-    </div>
     <input class='main-action-button w-full' type="submit" value="Aceptar">
 </form>
 

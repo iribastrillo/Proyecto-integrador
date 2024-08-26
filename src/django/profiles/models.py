@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from datetime import date
+from functools import reduce
 
 from core.domain.services import generate_unique_code
 
@@ -50,9 +51,9 @@ class Persona(models.Model):
     def delete(self, *args, **kwargs):
         self.user.delete()
         super().delete(*args, **kwargs)
-        
+
     @property
-    def is_active (self):
+    def is_active(self):
         return self.user.is_active
 
     class Meta:
@@ -90,11 +91,29 @@ class Alumno(Persona):
                 )
             )
             return age
-        
+
     @property
-    def active_enrolents(self):
+    def active_enrolments(self):
         return self.alumnocurso_set.filter(fecha_baja=None).count()
-    
+
+    @property
+    def amount_paid(self):
+        total = 0
+        for payment in self.pago_set.filter(
+            alumno=self, fecha__month=date.today().month
+        ):
+            total += payment.monto
+        return total
+
+    @property
+    def amount_due(self):
+        total = 0
+        for enrolment in self.alumnocurso_set.filter(
+            alumno=self, fecha_baja=None, fecha_finalizado=None, aprobado=False
+        ):
+            total += enrolment.fee
+        return total
+
     def get_absolute_url(self):
         return reverse("estudiantes:detail-student", kwargs={"slug": self.slug})
 

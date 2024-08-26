@@ -21,7 +21,12 @@
 
 		<main class="flex">
 			<div class="wrapper">
-				{% block sidebar %} {% endblock %}
+				{% if role == "staff" %}
+					{% include 'base/components/sidebar/staff.html' %}
+				{% endif %}
+				{% if role == "student" %}
+					{% include 'base/components/sidebar/student.html' %}
+				{% endif %}
 			</div>
 			<div class="flex flex-col w-full items-stretch">
 				{% block navbar %} {% endblock %}

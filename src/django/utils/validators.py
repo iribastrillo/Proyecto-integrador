@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 
 EMPTY_VALUES = (None, "", [], (), {})
 
+
 @deconstructible
 class EmailValidator:
     message = _("Enter a valid email address.")
