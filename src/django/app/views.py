@@ -25,15 +25,16 @@ from app.authorization import is_student, is_teacher, is_staff
 
 
 def home(request):
-    if request.user.is_authenticated:            
+    if request.user.is_authenticated:
         if is_staff(request.user):
             return redirect("dashboard")
         if is_student(request.user):
-            return HttpResponse("<h1>Entraste como estudiante</h1>")
+            return redirect("estudiantes:dashboard")
         if is_teacher(request.user):
             return HttpResponse("<h1>Entraste como profesor</h1>")
     else:
-        return redirect ("login")
+        return redirect("login")
+
 
 @user_passes_test(is_staff)
 def dashboard(request):
@@ -49,10 +50,10 @@ def dashboard(request):
     )
     total_spending = calculate_total_teacher_spending(Profesor.objects.all())
     total_earnings = calculate_total_product_earnings(payments)
-    current_month_amount_receivable = get_current_month_amount_receivable (enrolments)
+    current_month_amount_receivable = get_current_month_amount_receivable(enrolments)
     total_gains = calculate_gains(total_earnings, total_spending)
     additions = generate_additions_data(courses)
-    dropouts = generate_dropouts_data (courses)
+    dropouts = generate_dropouts_data(courses)
     monthly_additions = generate_monthly_addtions_data(
         enrolments.annotate(month=ExtractMonth("fecha_inscripcion"))
         .values("month")
@@ -79,7 +80,7 @@ def dashboard(request):
         "monthly_dropouts": monthly_dropouts,
         "total_additions": total_additions,
         "n_groups": n_groups,
-        "amount_receivable": current_month_amount_receivable
+        "amount_receivable": current_month_amount_receivable,
     }
     return render(request, template_name=template, context=context)
 

@@ -28,6 +28,7 @@ class InscripcionForm(forms.Form):
         ],
     )
 
+
 class CambioDeGrupoForm(forms.Form):
     grupo = forms.ModelChoiceField(
         queryset=Grupo.objects.none(),
@@ -38,7 +39,7 @@ class CambioDeGrupoForm(forms.Form):
                 "hx-target": "#change-modal-info",
                 "hx-get": reverse_lazy("clases:load-group"),
             }
-        )
+        ),
     )
 
 

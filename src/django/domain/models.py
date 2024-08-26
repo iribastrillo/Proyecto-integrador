@@ -56,8 +56,6 @@ class Curso(models.Model):
         self.slug = slugify(self.nombre)
         super().save(*args, **kwargs)
 
-
-
     @property
     def amount_receivable(self):
         groups = self.grupo_set.all()
@@ -65,11 +63,11 @@ class Curso(models.Model):
         for group in groups:
             receivable += group.amount_receivable
         return receivable
-    
+
     @property
     def active_enrolments(self):
         return self.alumnocurso_set.filter(fecha_baja=None).count()
-    
+
     @property
     def inactive_enrolments(self):
         return self.alumnocurso_set.exclude(fecha_baja=None).count()
@@ -123,7 +121,7 @@ class AlumnoCurso(models.Model):
         return f"Inscripcion: {self.alumno.apellido} -> {self.curso.nombre}"
 
     @property
-    def has_dropped_out (self):
+    def has_dropped_out(self):
         return self.fecha_baja != None
 
     class Meta:
@@ -167,9 +165,7 @@ class Grupo(models.Model):
     id = models.AutoField(primary_key=True)
     identificador = models.CharField(max_length=30, blank=True, null=True)
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
-    alumnos = models.ManyToManyField(
-        Alumno, blank=True
-    )  
+    alumnos = models.ManyToManyField(Alumno, blank=True)
     cupo = models.IntegerField(
         null=False,
         default=1,
@@ -178,9 +174,7 @@ class Grupo(models.Model):
             MaxValueValidator(50, "La cantidad de alumnos debe estar entre 1 y 50"),
         ],
     )
-    profesores = models.ManyToManyField(
-        Profesor
-    )
+    profesores = models.ManyToManyField(Profesor)
     fecha_inicio = models.DateTimeField(null=False, blank=False, default=now)
     fecha_baja = models.DateTimeField(null=True, blank=True)
     activo = models.BooleanField(default=True)
@@ -197,7 +191,6 @@ class Grupo(models.Model):
             self.activo = False
         super().save(*args, **kwargs)
 
-
     def __str__(self) -> str:
         return f"{self.identificador}"
 
@@ -206,13 +199,13 @@ class Grupo(models.Model):
 
     @property
     def generate_identificador(self):
-        group_identifier=generate_course_identifier_name(self.curso.nombre)
+        group_identifier = generate_course_identifier_name(self.curso.nombre)
         bloques_de_clase = BloqueDeClase.objects.filter(grupo=self)
         if bloques_de_clase:
             for bloque in bloques_de_clase:
                 day_names = [dia.name.lower() for dia in bloque.dia.all()]
-                if len(day_names) >=1:
-                    days_initials=[]
+                if len(day_names) >= 1:
+                    days_initials = []
                     for day_name in day_names:
                         if "mie" in day_name:
                             day_initial = "X"
@@ -221,8 +214,10 @@ class Grupo(models.Model):
                             day_initial = day_name[0][0].upper()
                         days_initials.append(day_initial)
                     group_identifier += "".join(days_initials)
-                    group_identifier += f"{bloque.hora_inicio.strftime('%H%M')}S{bloque.salon.nombre}"
-        self.identificador=group_identifier
+                    group_identifier += (
+                        f"{bloque.hora_inicio.strftime('%H%M')}S{bloque.salon.nombre}"
+                    )
+        self.identificador = group_identifier
         self.save()
 
     @property
@@ -240,9 +235,9 @@ class Grupo(models.Model):
             if enrolment.fecha_finalizado == None:
                 receivable += enrolment.fee
         return receivable
-    
+
     @property
-    def actives (self):
+    def actives(self):
         return self.alumnos.count()
 
 
@@ -254,19 +249,17 @@ class BloqueDeClase(models.Model):
     salon = models.ForeignKey(Salon, on_delete=models.CASCADE)
     grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
 
-
     def save(self, *args, **kwargs):
         # Set or update the group identifier
         super().save(*args, **kwargs)
         # self.grupo.generate_identificador()
 
     def delete(self, using=None, keep_parents=False):
-
-
         return super().delete(using=using, keep_parents=keep_parents)
 
     def __str__(self):
         return f"Bloque id: {self.id} - Dias: {', '.join([dia.name for dia in self.dia.all()])} - Hora inicio: {self.hora_inicio} - Hora fin: {self.hora_fin} - Grupo: {self.grupo} - Salon: {self.salon}"
+
 
 class Leccion(models.Model):
     grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
