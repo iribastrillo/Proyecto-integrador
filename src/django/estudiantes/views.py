@@ -9,12 +9,12 @@ from django.views.generic import (
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 
-from .forms import InscripcionForm, BajaForm, CambioDeGrupoForm
+from .forms import InscripcionForm, BajaForm, CambioDeGrupoForm,EstudianteForm
 from profiles.models import Alumno
 from domain.models import AlumnoCurso,Grupo
 
@@ -25,24 +25,28 @@ from core.domain.exceptions import GroupCompleteException, StudentAlreadyEnroled
 
 class AlumnoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Alumno
-    fields = [
-        "nombre",
-        "apellido",
-        "dni",
-        "fecha_nacimiento",
-        "direccion",
-        "telefono",
-        "email",
-        "sexo",
-        "emergency_contact",
-    ]
+    form_class = EstudianteForm
     template_name = "estudiantes/estudiante_form.html"
-    success_message = "Se agregó al estudiante con éxito"
 
-    def get_success_url(self):
+    def get_success_url(self,**kwargs):
+        success_message = "Se agregó al estudiante con éxito"
+        messages.success(self.request, success_message)
         return reverse_lazy(
-            "estudiantes:detail-student", kwargs={"slug": self.object.user.username}
+            "estudiantes:detail-student", kwargs={"slug": kwargs["slug"]}
         )
+
+    def form_valid(self, form):
+        alumno = form.save(commit=False)
+        alumno.save()
+        return redirect(self.get_success_url(slug=alumno.slug))
+
+    def form_invalid(self, form):
+        error_message=f"El formulario contiene error(es): "
+        for field, error_list in form.errors.items():
+            for error in error_list:
+                error_message+=  f" {error} \n"
+        messages.error(self.request, error_message)
+        return super().form_invalid(form)
 
 
 class AlumnoListView(LoginRequiredMixin, ListView):
@@ -65,23 +69,28 @@ class AlumnoDetailView(LoginRequiredMixin, DetailView):
 
 class AlumnoUpdateView(LoginRequiredMixin, UpdateView):
     model = Alumno
-    fields = [
-        "nombre",
-        "apellido",
-        "dni",
-        "fecha_nacimiento",
-        "direccion",
-        "telefono",
-        "email",
-        "sexo",
-        "emergency_contact",
-    ]
+    form_class = EstudianteForm
     template_name = "estudiantes/estudiante_form.html"
 
-    def get_success_url(self):
+    def get_success_url(self,**kwargs):
+        success_message = "Se modificó al estudiante con éxito"
+        messages.success(self.request, success_message)
         return reverse_lazy(
-            "estudiantes:detail-student", kwargs={"slug": self.get_object().slug}
+            "estudiantes:detail-student", kwargs={"slug": kwargs["slug"]}
         )
+
+    def form_valid(self, form):
+        alumno = form.save(commit=False)
+        alumno.save()
+        return redirect(self.get_success_url(slug=alumno.slug))
+
+    def form_invalid(self, form):
+        error_message=f"El formulario contiene error(es): "
+        for field, error_list in form.errors.items():
+            for error in error_list:
+                error_message+=  f" {error} \n"
+        messages.error(self.request, error_message)
+        return super().form_invalid(form)
 
 
 class AlumnoDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
@@ -205,7 +214,7 @@ class InhabilitarAlumno(LoginRequiredMixin, View):
             reverse("estudiantes:detail-student", kwargs={"slug": student.slug})
         )
 
-      
+
 class CambioDeGrupo (LoginRequiredMixin, View):
     form_class = CambioDeGrupoForm
     template_name = "estudiantes/partials/group_change_form.html"
@@ -224,7 +233,7 @@ class CambioDeGrupo (LoginRequiredMixin, View):
                 )
         context = {"form": form, "student": student, "group": group}
         return render(request, self.template_name, context)
-    
+
     def post (self, request, *args, **kwargs):
         form = BajaForm(request.POST)
         if form.is_valid():
@@ -246,8 +255,8 @@ class CambioDeGrupo (LoginRequiredMixin, View):
                 return HttpResponseRedirect(
                     reverse("estudiantes:detail-student", kwargs={"slug": student.slug})
                 )
-                
-            
+
+
 class HabilitarAlumno(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         print(f"  habilitar estudiante get {kwargs}")
