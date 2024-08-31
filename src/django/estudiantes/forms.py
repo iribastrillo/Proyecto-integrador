@@ -3,9 +3,10 @@ from django import forms
 from django.urls import reverse_lazy
 
 from domain.models import Grupo
-from profiles.models import Alumno
+from profiles.models import Alumno,Profesor
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
+from datetime import date, timedelta
 
 
 class InscripcionForm(forms.Form):
@@ -114,10 +115,18 @@ class EstudianteForm(forms.ModelForm):
         cleaned_data = super().clean()
         email = cleaned_data.get("email")
         if email:
-            if Alumno.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
-                raise ValidationError("Ya existe un estudiante con ese email")
+            if Alumno.objects.filter(email=email).exclude(pk=self.instance.pk).exists() or Profesor.objects.filter(email=email).exists():
+                raise ValidationError("Ya existe un usuario con ese email")
         dni = cleaned_data.get("dni")
         if dni:
-            if Alumno.objects.filter(dni=dni).exclude(pk=self.instance.pk).exists():
-                raise ValidationError("Ya existe un estudiante con esa Cedula")
+            if Alumno.objects.filter(dni=dni).exclude(pk=self.instance.pk).exists() or Profesor.objects.filter(dni=dni).exists():
+                raise ValidationError("Ya existe un usuario con esa Cedula")
+        fecha_nacimiento=cleaned_data.get("fecha_nacimiento")
+        if fecha_nacimiento:
+            today=date.today()
+            age = today.year - fecha_nacimiento.year - ((today.month, today.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
+            if age > 100:
+                raise ValidationError("El estudiante no puede tener más de 100 años")
+            if fecha_nacimiento > date.today():
+                raise ValidationError("La fecha de nacimiento no puede ser mayor al dia de la fecha")
         return cleaned_data
