@@ -1,4 +1,5 @@
 from app import authorization
+from profiles.models import Profesor, Alumno
 
 
 def get_role_processor(request):

@@ -1,7 +1,90 @@
 from typing import Any
 from django import forms
 from django.core.exceptions import ValidationError
-from domain.models import Grupo, FaltaProfesor, Profesor
+from domain.models import Grupo, FaltaProfesor, Profesor,Curso,Alumno
+from datetime import date, timedelta
+
+class ProfesorForm(forms.ModelForm):
+    class Meta:
+        model = Profesor
+        fields = [
+            "nombre",
+            "apellido",
+            "dni",
+            "fecha_nacimiento",
+            "direccion",
+            "telefono",
+            "email",
+            "sexo",
+            "cursos",
+        ]
+
+    fecha_nacimiento = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                "type": "date",
+                "class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700",
+            }
+        )
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(ProfesorForm, self).__init__(*args, **kwargs)
+        self.fields["cursos"].widget = forms.SelectMultiple()
+        self.fields["cursos"].queryset = Curso.objects.filter(activo=True)
+        self.fields["cursos"].label = "Cursos"
+        self.fields["cursos"].help_text = "Seleccione los cursos que dictará el profesor"
+        self.fields["fecha_nacimiento"].widget.attrs.update(
+            {"class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"})
+        self.fields["nombre"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Nombre"}
+        )
+        self.fields["apellido"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Apellido"}
+        )
+        self.fields["dni"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Cédula"}
+        )
+        self.fields["email"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Email"}
+        )
+        self.fields["telefono"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Teléfono"}
+        )
+        self.fields["direccion"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Dirección"}
+        )
+        if self.initial:
+            print(f"initial: {self.initial['fecha_nacimiento']}")
+            self.initial["fecha_nacimiento"] = self.initial["fecha_nacimiento"].strftime("%Y-%m-%d")
+            self.fields["fecha_nacimiento"].widget.attrs.update(
+                {
+                    "class": "bg-gray-900 divide-y divide-gray-100  shadow dark:bg-gray-700"
+                }
+            )
+
+    def clean(self) -> Any:
+        cleaned_data = super().clean()
+        email = cleaned_data.get("email")
+        if email:
+            if Profesor.objects.filter(email=email).exclude(pk=self.instance.pk).exists() or Alumno.objects.filter(email=email).exists():
+                raise ValidationError("Ya existe un usuario con ese email")
+        dni=cleaned_data.get("dni")
+        if dni:
+            if Profesor.objects.filter(dni=dni).exclude(pk=self.instance.pk).exists() or Alumno.objects.filter(dni=dni).exists():
+                raise ValidationError("Ya existe un usuario con ese dni")
+        fecha_nacimiento=cleaned_data.get("fecha_nacimiento")
+        if fecha_nacimiento:
+            today=date.today()
+            age = today.year - fecha_nacimiento.year - ((today.month, today.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
+            eighteen_years_ago = date.today() - timedelta(days=18*365)
+            if fecha_nacimiento.year > eighteen_years_ago.year :
+                raise ValidationError(f"El profesor debe ser mayor de edad (al menos haber nacido el {eighteen_years_ago.strftime('%d/%m/%Y')} o antes)")
+            elif age > 100:
+                raise ValidationError("El profesor no puede tener más de 100 años")
+            elif fecha_nacimiento > date.today():
+                raise ValidationError("La fecha de nacimiento no puede ser mayor al dia de la fecha")
+        return cleaned_data
 
 
 class FaltaProfesorForm(forms.ModelForm):

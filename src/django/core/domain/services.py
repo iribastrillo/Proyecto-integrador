@@ -3,6 +3,8 @@ from decimal import Decimal
 from string import ascii_uppercase
 from itertools import repeat
 from datetime import date
+from typing import Union
+from django.contrib.auth.models import User
 import calendar
 
 from .utils import get_weekdays_per_month
@@ -97,6 +99,7 @@ def generate_monthly_addtions_data(query):
     for d in query:
         data["value"][d["month"] - 1] = d["count"]
     return data
+
 
 def generate_monthly_dropouts_data(query):
     data = {"month": list(calendar.month_name)[1:], "value": [i for i in repeat(0, 12)]}
